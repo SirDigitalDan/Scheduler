@@ -1,26 +1,15 @@
 package com.example.project362.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.project362.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
+
+
 public class editInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText editEmail, editPass, editName, editPass2;
@@ -30,7 +19,7 @@ public class editInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_editinfo);
 
         editName = (EditText) findViewById(R.id.editName);
         editEmail = (EditText) findViewById(R.id.editEmail);
@@ -38,9 +27,7 @@ public class editInfoActivity extends AppCompatActivity implements View.OnClickL
         editPass2 = (EditText) findViewById(R.id.editPass2);
 
         mAuth = FirebaseAuth.getInstance();
-        findViewById(R.id.editEmail)
-        mAuth.auth();
-
+        ((EditText) findViewById(R.id.editEmail)).setText(mAuth.getCurrentUser().getEmail());
 
     }
 
@@ -80,6 +67,12 @@ public class editInfoActivity extends AppCompatActivity implements View.OnClickL
             editPass2.requestFocus();
             return;
         }
+        else
+        {
+            mAuth.getCurrentUser().updatePassword(password);
+            mAuth.getCurrentUser().updateEmail(email);
+        }
+
 
 
     }
@@ -88,7 +81,7 @@ public class editInfoActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view){
         switch(view.getId()){
             case R.id.buttonSignUp:
-                updateUser();User();
+                updateUser();
                 break;
 
         }
