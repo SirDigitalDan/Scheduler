@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.adapters.ShiftsAdapter;
+import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,10 +27,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    public ArrayList<Object> shifts = new ArrayList<Shift>();
+    public ArrayList<Shift> shifts = new ArrayList<Shift>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -53,32 +55,37 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         CollectionReference ref = db.collection("Shifts");
 
 
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(HomeActivity.this, "Firebase Query Success!", Toast.LENGTH_SHORT).show();
-                            for (QueryDocumentSnapshot shiftDoc : task.getResult()) {
-                                Shift s = new Shift(shiftDoc.getId(), shiftDoc.getTimestamp("startTime").toDate(), shiftDoc.getTimestamp("endTime").toDate(), shiftDoc.getString("note"));
+        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            {
+                if (task.isSuccessful())
+                {
+                    Toast.makeText(HomeActivity.this, "Firebase Query Success!",
+                            Toast.LENGTH_SHORT).show();
+                    for (QueryDocumentSnapshot shiftDoc : task.getResult())
+                    {
+                        Shift s = new Shift(shiftDoc);
 
+                        shifts.add(s);
 
-                                shifts.add(s);
-
-                            }
-
-                            Toast.makeText(HomeActivity.this, "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
-                            mAdapter = new ShiftsAdapter(shifts);
-                            recyclerView.setAdapter(mAdapter);
-                        } else {
-
-                            Toast.makeText(HomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
-
-                        }
                     }
-                });
 
+                    Toast.makeText(HomeActivity.this,
+                            "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
+                    mAdapter = new ShiftsAdapter(shifts);
+                    recyclerView.setAdapter(mAdapter);
+                }
+                else
+                {
 
+                    Toast.makeText(HomeActivity.this, "No Shifts At This Time!",
+                            Toast.LENGTH_SHORT).show();
 
+                }
+            }
+        });
     }
 
     @Override
