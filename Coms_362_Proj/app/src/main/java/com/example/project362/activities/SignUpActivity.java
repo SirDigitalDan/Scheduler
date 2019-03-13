@@ -27,6 +27,7 @@ import java.util.Map;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     EditText editTextEmail, editTextPassword, editTextName;
     private FirebaseAuth mAuth;
+    String email, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +43,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
         private void registerUser(){
-            String email= editTextEmail.getText().toString();
-            String password= editTextPassword.getText().toString();
+            email= editTextEmail.getText().toString();
+            password= editTextPassword.getText().toString();
             if(email.isEmpty())
             {
                 editTextEmail.setError("Email is required");
@@ -80,16 +81,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     newEmployeeData.put("EmpID", mAuth.getCurrentUser().getUid());
                     newEmployeeData.put("Name", editTextName.getText().toString());
 
-                    employeeRef.add(newEmployeeData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("SignUp", "Success");
-                        }
-                    })
+                    employeeRef.document(email)
+                            .set(newEmployeeData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                                }
+                            })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w("Error - Sign Up", e);
+                                    //Log.w(TAG, "Error writing document", e);
                                 }
                             });
 
