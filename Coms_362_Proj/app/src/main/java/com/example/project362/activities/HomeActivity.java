@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.adapters.ShiftsAdapter;
-import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,7 +26,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+    public ArrayList<Object> shifts = new ArrayList<Shift>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

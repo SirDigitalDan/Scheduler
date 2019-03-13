@@ -12,14 +12,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 
 public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     //all of the variables
-    EditText editEmail, editPass, editName, editPass2;
+    EditText editEmail, editPass, editName, editPass2,userEmail;
     //button to submit the information
     Button editSub;
     private FirebaseAuth mAuth;
@@ -32,17 +37,33 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
         //get the instances of the employee user authroization
         mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         //get all of the views
         editName =  findViewById(R.id.editName);
         editEmail =  findViewById(R.id.editEmail);
         editPass =  findViewById(R.id.editPass);
         editPass2 =  findViewById(R.id.editPass2);
+        userEmail = findViewById(R.id.deleteUser);
 
         //get button
         findViewById(R.id.buttonSub).setOnClickListener(EditInfoActivity.this);
         findViewById(R.id.buttonSignout).setOnClickListener(EditInfoActivity.this);
+        findViewById(R.id.buttonDelete).setOnClickListener(EditInfoActivity.this);
+
         ((EditText) findViewById(R.id.editEmail)).setText(mAuth.getCurrentUser().getEmail());
+
+    }
+    private void deleteUser(){
+
+        String em = userEmail.getText().toString().trim();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference ref = db.collection("Employees");
+        DocumentReference em1 = ref.document(em);
+
+        em1.delete();
+
 
     }
 
@@ -135,6 +156,11 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+
+            case R.id.buttonDelete:
+                finish();
+                deleteUser();
                 break;
 
         }
