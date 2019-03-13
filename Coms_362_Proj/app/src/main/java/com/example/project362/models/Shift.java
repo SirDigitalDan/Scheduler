@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -94,7 +95,6 @@ public class Shift
 				{
 					if (task.getException() != null)
 						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
 				}
 			}
 		});
@@ -105,8 +105,22 @@ public class Shift
 	public Task<Void> addEmployee(final DocumentReference employee)
 	{
 		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
-		temp.add(employee);
 
+		boolean contained = false;
+		for (int i = 0; i < temp.size(); i++)
+		{
+			if (temp.get(i).getId().equals(employee.getId()))
+			{
+				contained = true;
+				break;
+			}
+		}
+
+		if (contained)
+			return Tasks.forException(new Exception("That employee is not assigned to the selected " +
+					"shift"));
+
+		temp.add(employee);
 		Task<Void> t = this.update(EMPLOYEES, temp);
 
 		t.addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -118,7 +132,6 @@ public class Shift
 				{
 					if (task.getException() != null)
 						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
 				}
 			}
 		});
@@ -129,7 +142,20 @@ public class Shift
 	public Task<Void> removeEmployee(DocumentReference employee)
 	{
 		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
-		temp.remove(employee);
+		boolean contained = false;
+		for (int i = 0; i < temp.size(); i++)
+		{
+			if (temp.get(i).getId().equals(employee.getId()))
+			{
+				temp.remove(i);
+				contained = true;
+				break;
+			}
+		}
+
+		if (!contained)
+			return Tasks.forException(new Exception("That employee is not assigned to the selected " +
+				"shift"));
 
 		Task<Void> t = this.update(EMPLOYEES, temp);
 
@@ -142,7 +168,6 @@ public class Shift
 				{
 					if (task.getException() != null)
 						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
 				}
 			}
 		});
@@ -152,7 +177,7 @@ public class Shift
 
 	public Task<Void> setNote(final String note)
 	{
-		Task<Void> t = this.update(EMPLOYEES, note);
+		Task<Void> t = this.update(NOTE, note);
 
 		t.addOnCompleteListener(new OnCompleteListener<Void>() {
 			@Override
@@ -163,7 +188,6 @@ public class Shift
 				{
 					if (task.getException() != null)
 						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
 				}
 			}
 		});
@@ -212,7 +236,8 @@ public class Shift
 		this.startTime = (Date) src.get(START_TIME);
 		this.endTime = (Date) src.get(END_TIME);
 		this.note = (String) src.get(NOTE);
-		this.employees = new ArrayList<>();
+		Log.i(TAG, src.get(EMPLOYEES).toString());
+		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
 	}
 
 	// DATABASE LOGIC

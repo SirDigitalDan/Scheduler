@@ -23,60 +23,69 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.*;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity
+{
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+	private RecyclerView recyclerView;
+	private RecyclerView.Adapter mAdapter;
+	private RecyclerView.LayoutManager layoutManager;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+	public ArrayList<Shift> shifts = new ArrayList<Shift>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);
 
-        //super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
+		//super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);
+		recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
+		// use this setting to improve performance if you know that changes
+		// in content do not change the layout size of the RecyclerView
+		recyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+		// use a linear layout manager
+		layoutManager = new LinearLayoutManager(this);
+		recyclerView.setLayoutManager(layoutManager);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference ref = db.collection("Shifts");
-
-
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(HomeActivity.this, "Firebase Query Success!", Toast.LENGTH_SHORT).show();
-                            for (QueryDocumentSnapshot shiftDoc : task.getResult()) {
-                                Shift s = new Shift(shiftDoc.getId(), shiftDoc.getTimestamp("startTime").toDate(), shiftDoc.getTimestamp("endTime").toDate(), shiftDoc.getString("note"));
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		CollectionReference ref = db.collection("Shifts");
 
 
-                                shifts.add(s);
+		ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<QuerySnapshot> task)
+			{
+				if (task.isSuccessful())
+				{
+					Toast.makeText(HomeActivity.this, "Firebase Query Success!",
+                            Toast.LENGTH_SHORT).show();
+					for (QueryDocumentSnapshot shiftDoc : task.getResult())
+					{
+						Shift s = new Shift(shiftDoc);
 
-                            }
+						shifts.add(s);
 
-                            Toast.makeText(HomeActivity.this, "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
-                            mAdapter = new ShiftsAdapter(shifts);
-                            recyclerView.setAdapter(mAdapter);
-                        } else {
+					}
 
-                            Toast.makeText(HomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(HomeActivity.this,
+                            "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
+					mAdapter = new ShiftsAdapter(shifts);
+					recyclerView.setAdapter(mAdapter);
+				}
+				else
+				{
 
-                        }
-                    }
-                });
+					Toast.makeText(HomeActivity.this, "No Shifts At This Time!",
+                            Toast.LENGTH_SHORT).show();
+
+				}
+			}
+		});
 
 
-
-    }
+	}
 }

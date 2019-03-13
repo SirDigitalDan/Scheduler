@@ -9,7 +9,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="392dp"
-        android:layout_height="558dp"
+        android:layout_height="700dp"
         android:layout_margin="10dp">
 
         <TextView
@@ -47,13 +47,63 @@
             android:textColor="@android:color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.486"
+            app:layout_constraintHorizontal_bias="0.469"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shiftTitle" />
 
+
+        <TextView
+            android:id="@+id/shiftEmployees"
+            android:layout_width="308dp"
+            android:layout_height="94dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Employees"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shiftInfo" />
+
+        <Button
+            android:id="@+id/pickUpShiftButton"
+            android:layout_width="62dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="52dp"
+            android:layout_marginRight="52dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorAccent"
+            android:text="Pick Up"
+            app:layout_constraintBottom_toTopOf="@+id/dropShiftButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shiftEmployees"
+            app:layout_constraintVertical_bias="0.107" />
+
+        <Button
+            android:id="@+id/dropShiftButton"
+            android:layout_width="62dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="52dp"
+            android:layout_marginRight="52dp"
+            android:layout_marginBottom="124dp"
+            android:background="@color/colorAccent"
+            android:text="Drop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/shiftNote"
-            android:layout_width="308dp"
+            android:layout_width="194dp"
             android:layout_height="94dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -63,10 +113,10 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/editTextShiftNote"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.487"
+            app:layout_constraintHorizontal_bias="0.186"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shiftInfo"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.713" />
 
         <EditText
             android:id="@+id/editTextShiftNote"
@@ -89,16 +139,20 @@
             android:id="@+id/noteButton"
             android:layout_width="62dp"
             android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="52dp"
             android:layout_marginRight="52dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="44dp"
             android:background="@color/colorAccent"
             android:text="+"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shiftNote"
-            app:layout_constraintVertical_bias="0.466" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dropShiftButton"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
