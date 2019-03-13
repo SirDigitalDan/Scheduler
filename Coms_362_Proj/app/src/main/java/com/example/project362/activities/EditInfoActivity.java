@@ -1,6 +1,7 @@
 package com.example.project362.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     private void updateUser() {
         String name = editName.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
-        String password = editPass.getText().toString().trim();
+        final String password = editPass.getText().toString().trim();
         String password2 = editPass2.getText().toString().trim();
 
         if (name.isEmpty()) {
@@ -83,12 +84,27 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()) {
                         Toast.makeText(EditInfoActivity.this, "User Email Succsesful", Toast.LENGTH_SHORT).show();
+                        mAuth.getCurrentUser().updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()) {
+                                    Toast.makeText(EditInfoActivity.this, "User Pass Succsesful", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(EditInfoActivity.this, profileActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                     else{
                         Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 }
             });
+            /*
             mAuth.getCurrentUser().updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -100,7 +116,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
             });
-
+            */
         }
 
 

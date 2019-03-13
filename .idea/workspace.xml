@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1220e27-1047-47fc-885a-6fa68847059e" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/res/layout/activity_edit_info.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/EditInfoActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/EditInfoActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/SignUpActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/java/com/example/project362/activities/SignUpActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/res/layout/activity_editinfo.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Coms_362_Proj/app/src/main/res/layout/activity_main.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
