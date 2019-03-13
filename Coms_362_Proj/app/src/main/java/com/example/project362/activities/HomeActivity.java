@@ -22,74 +22,80 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+  
+	private RecyclerView recyclerView;
+	private RecyclerView.Adapter mAdapter;
+	private RecyclerView.LayoutManager layoutManager;
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+	public ArrayList<Shift> shifts = new ArrayList<Shift>();
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+		//super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home);
+		recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
 
-        //super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
+		// use this setting to improve performance if you know that changes
+		// in content do not change the layout size of the RecyclerView
+		recyclerView.setHasFixedSize(true);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-
-        //get onclikc for floating action button
-        findViewById(R.id.floatingActionButtonEdit).setOnClickListener(HomeActivity.this);
-
-
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference ref = db.collection("Shifts");
+    //get onclikc for floating action button
+    findViewById(R.id.floatingActionButtonEdit).setOnClickListener(HomeActivity.this);
 
 
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(HomeActivity.this, "Firebase Query Success!", Toast.LENGTH_SHORT).show();
-                            for (QueryDocumentSnapshot shiftDoc : task.getResult()) {
-                                Shift s = new Shift(shiftDoc.getId(), shiftDoc.getTimestamp("startTime").toDate(), shiftDoc.getTimestamp("endTime").toDate(), shiftDoc.getString("note"));
+    // use a linear layout manager
+    layoutManager = new LinearLayoutManager(this);
+    recyclerView.setLayoutManager(layoutManager);
+
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		CollectionReference ref = db.collection("Shifts");
 
 
-                                shifts.add(s);
+		ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<QuerySnapshot> task)
+			{
+				if (task.isSuccessful())
+				{
+					Toast.makeText(HomeActivity.this, "Firebase Query Success!",
+                            Toast.LENGTH_SHORT).show();
+					for (QueryDocumentSnapshot shiftDoc : task.getResult())
+					{
+						Shift s = new Shift(shiftDoc);
 
-                            }
+						shifts.add(s);
 
-                            Toast.makeText(HomeActivity.this, "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
-                            mAdapter = new ShiftsAdapter(shifts);
-                            recyclerView.setAdapter(mAdapter);
-                        } else {
+					}
 
-                            Toast.makeText(HomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(HomeActivity.this,
+                            "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
+					mAdapter = new ShiftsAdapter(shifts);
+					recyclerView.setAdapter(mAdapter);
+				}
+				else
+				{
 
-                        }
-                    }
-                });
+					Toast.makeText(HomeActivity.this, "No Shifts At This Time!",
+                            Toast.LENGTH_SHORT).show();
 
+				}
+			}
+		});
+  }
 
-
-    }
-
-    @Override
-    public void onClick(View view){
-        switch(view.getId()){
-            case R.id.floatingActionButtonEdit:
-                finish();
-                Intent i = new Intent(this, EditInfoActivity.class);
-                startActivity(i);
-                break;
-        }
-    }
+  @Override
+  public void onClick(View view){
+      switch(view.getId()){
+          case R.id.floatingActionButtonEdit:
+              finish();
+              Intent i = new Intent(this, EditInfoActivity.class);
+              startActivity(i);
+              break;
+      }
+  }
 }
