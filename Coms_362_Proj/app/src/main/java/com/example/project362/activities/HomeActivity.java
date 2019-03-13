@@ -52,9 +52,6 @@ public class HomeActivity extends AppCompatActivity {
         CollectionReference ref = db.collection("Shifts");
 
 
-
-
-
         ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -64,16 +61,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Shift s = new Shift(shiftDoc.getId(), shiftDoc.getTimestamp("startTime").toDate(), shiftDoc.getTimestamp("endTime").toDate(), shiftDoc.getString("note"));
 
 
-                               // Map<String, Object> map = shiftDoc.getData();
-
-                                /*Toast.makeText(HomeActivity.this, shiftDoc.getId(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(HomeActivity.this, shiftDoc.getTimestamp("startTime").toString(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(HomeActivity.this, shiftDoc.getTimestamp("endTime").toString(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(HomeActivity.this, shiftDoc.getString("note"), Toast.LENGTH_SHORT).show();*/
-
-
                                 shifts.add(s);
-
 
                             }
 
@@ -88,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
 
-        // specify an adapter (see also next example)
+
 
     }
 }
