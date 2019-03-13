@@ -1,91 +1,128 @@
 package com.example.project362.models;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Employee
 {
-    private static final String TAG = "com-s-362-shift-project";
-    private static final String COLLECTION = "Employees";
-    private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
+	private static final String TAG = "com-s-362-shift-project";
 
-    private String empId;
-    private String email;
-    private String name;
-    private String status;
+	private static final String COLLECTION = "Employees";
 
+	private static final String EMP_ID = "empId";
+	private static final String EMAIL = "email";
+	private static final String NAME = "name";
+	private static final String STATUS = "status";
 
-    public Employee() {}
+	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public Employee(DocumentSnapshot doc)
-    {
-        this.empId = doc.getId();
-        this.copyFrom(doc.toObject(Employee.class));
-    }
+	private String id;
+	private String empId;
+	private String email;
+	private String name;
+	private String status;
 
-    public Employee(String empId, String email, String name, String status)
-    {
-        this.empId = empId;
-        this.email = email;
-        this.name = name;
-        this.status = status;
-    }
+	public Employee(DocumentSnapshot doc)
+	{
+		this.copyFromDocumentSnapshot(doc);
+	}
 
-    public String setempId(String s)
-    {
-        return this.empId = s;
-    }
+	public Task<Void> setEmpId(final String empId)
+	{
+		return this.update(EMP_ID, empId).addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful())
+					Employee.this.empId = empId;
+			}
+		});
+	}
 
-    public String email(String e)
-    {
-        return this.email = e;
-    }
+	public Task<Void> setEmail(String email)
+	{
+		return this.update(EMAIL, email).addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful())
+					Employee.this.email = empId;
+			}
+		});
+	}
 
-    public String setName(String n)
-    {
-        return this.name = n;
-    }
+	public Task<Void> setName(final String name)
+	{
+		return this.update(NAME, name).addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful())
+					Employee.this.name = name;
+			}
+		});
+	}
 
-    public String setStatus(String s)
-    {
-        return this.status = s;
-    }
+	public Task<Void> setStatus(final String status)
+	{
+		return this.update(STATUS, status).addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful())
+					Employee.this.status = status;
+			}
+		});
+	}
 
-    public String getempId()
-    {
-        return this.empId;
-    }
+	public String getEmpId()
+	{
+		return this.empId;
+	}
 
-    public String getName()
-    {
-        return this.name;
-    }
+	public String getName()
+	{
+		return this.name;
+	}
 
-    public String getEmail()
-    {
-        return this.email;
-    }
+	public String getEmail()
+	{
+		return this.email;
+	}
 
-    public String getStatus()
-    {
-        return this.status;
-    }
+	public String getStatus()
+	{
+		return this.status;
+	}
 
-    // DATABASE LOGIC
-    public static Task<DocumentSnapshot> getEmployeeByEmail(String email)
-    {
-        return db.collection(COLLECTION).document(email).get();
-    }
+	// DATABASE LOGIC
+	public static Task<DocumentSnapshot> getEmployeeByEmail(String email)
+	{
+		return db.collection(COLLECTION).document(email).get();
+	}
 
-    public void copyFrom(Employee src)
-    {
-        this.empId = src.empId;
-        this.email = src.email;
-        this.name = src.name;
-        this.status = src.status;
-    }
+	public void copyFromDocumentSnapshot(DocumentSnapshot src)
+	{
+		this.id = src.getId();
+		this.empId = (String) src.get(EMP_ID);
+		this.email = (String) src.get(EMAIL);
+		this.name = (String) src.get(NAME);
+		this.status = (String) src.get(STATUS);
+	}
+
+	private Task<Void> update(String field, final Object datum)
+	{
+		Map<String, Object> data = new HashMap<>();
+		data.put(field, datum);
+		return db.collection(COLLECTION).document(this.id).update(data);
+	}
 }
