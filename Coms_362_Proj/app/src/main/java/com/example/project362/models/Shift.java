@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Shift
 {
 	private static final String TAG = "com-s-362-shift-project";
