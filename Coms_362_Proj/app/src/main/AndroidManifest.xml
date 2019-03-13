@@ -8,7 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.EditInfoActivity"></activity>
+        <activity
+            android:name=".activities.AdminControls"
+            android:label="@string/title_activity_admin_controls"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.EditInfoActivity" />
         <activity android:name=".activities.ShiftActivity" />
         <activity android:name=".activities.profileActivity" />
         <activity android:name=".Tester" />
