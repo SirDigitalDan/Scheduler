@@ -88,6 +88,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 	@Override
 	public void onBindViewHolder(@NonNull final ShiftsViewHolder shiftsViewHolder, int i)
 	{
+		Employee e;
 		final Shift currentShift = shiftList.get(i);
 		shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
 		shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
