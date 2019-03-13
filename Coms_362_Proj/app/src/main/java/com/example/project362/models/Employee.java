@@ -1,61 +1,90 @@
 package com.example.project362.models;
 
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Employee
 {
     private static final String TAG = "com-s-362-shift-project";
+
     private static final String COLLECTION = "Employees";
+
+    private static final String EMP_ID = "empId";
+    private static final String EMAIL = "email";
+    private static final String NAME = "name";
+    private static final String STATUS = "status";
+
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private String id;
     private String empId;
     private String email;
     private String name;
     private String status;
 
-
-    public Employee() {}
-
     public Employee(DocumentSnapshot doc)
     {
-        this.empId = doc.getId();
-        this.copyFrom(doc.toObject(Employee.class));
+        this.copyFromDocumentSnapshot(doc);
     }
 
-    public Employee(String empId, String email, String name, String status)
+    public Task<Void> setEmpId(final String empId)
     {
-        this.empId = empId;
-        this.email = email;
-        this.name = name;
-        this.status = status;
+        return this.update(EMP_ID, empId).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                    Employee.this.empId = empId;
+            }
+        });
     }
 
-    public String setempId(String s)
+    public Task<Void> setEmail(String email)
     {
-        return this.empId = s;
+        return this.update(EMAIL, email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                    Employee.this.email = empId;
+            }
+        });
     }
 
-    public String email(String e)
+    public Task<Void> setName(final String name)
     {
-        return this.email = e;
+        return this.update(NAME, name).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                    Employee.this.name = name;
+            }
+        });
     }
 
-    public String setName(String n)
+    public Task<Void> setStatus(final String status)
     {
-        return this.name = n;
+        return this.update(STATUS, status).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                    Employee.this.status = status;
+            }
+        });
     }
 
-    public String setStatus(String s)
-    {
-        return this.status = s;
-    }
-
-    public String getempId()
+    public String getEmpId()
     {
         return this.empId;
     }
@@ -81,11 +110,19 @@ public class Employee
         return db.collection(COLLECTION).document(email).get();
     }
 
-    public void copyFrom(Employee src)
+    public void copyFromDocumentSnapshot(DocumentSnapshot src)
     {
-        this.empId = src.empId;
-        this.email = src.email;
-        this.name = src.name;
-        this.status = src.status;
+        this.id = src.getId();
+        this.empId = (String) src.get(EMP_ID);
+        this.email = (String) src.get(EMAIL);
+        this.name = (String) src.get(NAME);
+        this.status = (String) src.get(STATUS);
+    }
+
+    private Task<Void> update(String field, final Object datum)
+    {
+        Map<String, Object> data = new HashMap<>();
+        data.put(field, datum);
+        return db.collection(COLLECTION).document(this.id).update(data);
     }
 }

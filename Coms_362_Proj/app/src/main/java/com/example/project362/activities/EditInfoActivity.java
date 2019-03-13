@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +13,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.models.Employee;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +34,13 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     //button to submit the information
     Button editSub;
     private FirebaseAuth mAuth;
+    String email, password, password2, name;
+
+    String oldEmail;
+
+    Employee employee;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +57,8 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         editPass =  findViewById(R.id.editPass);
         editPass2 =  findViewById(R.id.editPass2);
 
+    oldEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
         //get button
         findViewById(R.id.buttonSub).setOnClickListener(EditInfoActivity.this);
         findViewById(R.id.buttonSignout).setOnClickListener(EditInfoActivity.this);
@@ -48,12 +68,15 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void updateUser() {
         //get the input of what the employee wants to edit
-        String name = editName.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
-        final String password = editPass.getText().toString().trim();
-        String password2 = editPass2.getText().toString().trim();
+
+        name = editName.getText().toString().trim();
+        email = editEmail.getText().toString().trim();
+        password = editPass.getText().toString().trim();
+        password2 = editPass2.getText().toString().trim();
 
         //checks to see if there are errors and then records the errors
+
+
         if (name.isEmpty()) {
             editName.setError("Name is required");
             editName.requestFocus();
@@ -92,6 +115,25 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()) {
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        //CollectionReference employeeRef = db.collection("Employees");
+
+                        Task<DocumentSnapshot> t = db.collection("Employees").document(oldEmail).get();
+
+                        DocumentSnapshot docSnap = t.getResult();
+
+                        employee = new Employee(docSnap);
+
+                        employee.setEmail(email);
+
+
+                        employee.setName(name);
+
+
+
+
+
                         Toast.makeText(EditInfoActivity.this, "User Email Succsesful", Toast.LENGTH_SHORT).show();
                         mAuth.getCurrentUser().updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
