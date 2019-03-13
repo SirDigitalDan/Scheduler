@@ -13,6 +13,9 @@
             android:label="@string/title_activity_admin_controls"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activities.EditInfoActivity" />
+        <activity android:name=".activities.HomeActivity"></activity>
+
+        <activity android:name=".activities.EditInfoActivity"></activity>
         <activity android:name=".activities.ShiftActivity" />
         <activity android:name=".activities.profileActivity" />
         <activity android:name=".Tester" />

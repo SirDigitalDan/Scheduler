@@ -11,29 +11,38 @@ import android.widget.Toast;
 
 import com.example.project362.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
-    EditText editTextEmail, editTextPassword;
+    EditText editTextEmail, editTextPassword, editTextName;
     private FirebaseAuth mAuth;
+    String email, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword=  findViewById(R.id.editTextPassword);
+        editTextName=  findViewById(R.id.editTextName);
 
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
-       // findViewById(R.id.button_send).setOnClickListener(this);
+        // findViewById(R.id.button_send).setOnClickListener(this);
     }
 
         private void registerUser(){
-            String email= editTextEmail.getText().toString();
-            String password= editTextPassword.getText().toString();
+            email= editTextEmail.getText().toString();
+            password= editTextPassword.getText().toString();
             if(email.isEmpty())
             {
                 editTextEmail.setError("Email is required");
@@ -60,9 +69,39 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    //Toast.makeText(getApplicationContext(),"User Register Succsesful"), Toast.LENGTH_SHORT);
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    CollectionReference employeeRef = db.collection("Employees");
+
+                    Map<String, Object> newEmployeeData = new HashMap<>();
+                    newEmployeeData.put("Email", mAuth.getCurrentUser().getEmail());
+                    newEmployeeData.put("Status", "employee");
+                    newEmployeeData.put("EmpID", mAuth.getCurrentUser().getUid());
+                    newEmployeeData.put("Name", editTextName.getText().toString());
+
+                    employeeRef.document(email)
+                            .set(newEmployeeData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    //Log.w(TAG, "Error writing document", e);
+                                }
+                            });
+
+
+
                     Toast.makeText(SignUpActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignUpActivity.this, EditInfoActivity.class);
+
+                    Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+
+
+
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }

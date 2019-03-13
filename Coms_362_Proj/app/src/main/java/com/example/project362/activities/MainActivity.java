@@ -65,21 +65,23 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             editTextPassword.requestFocus();
             return;
         }
+
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    //Toast.makeText(getApplicationContext(),"User Register Succsesful"), Toast.LENGTH_SHORT);
+
                     Toast.makeText(MainActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {
             if(task.isSuccessful()){
-                Toast.makeText(MainActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, AdminControls.class);
+                Toast.makeText(MainActivity.this, "User Sign In Succsesful", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -97,11 +99,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         switch(view.getId()){
             case R.id.button_send:
                 finish();
-                // Intent i = new Intent(this, SignUpActivity.class);
-                //startActivity(i);
+
                 Intent i = new Intent(MainActivity.this, SignUpActivity.class);
                 startActivity(i);
-                //startActivity(new Intent(this, SignUpActivity.class));
+
                 break;
 
 
