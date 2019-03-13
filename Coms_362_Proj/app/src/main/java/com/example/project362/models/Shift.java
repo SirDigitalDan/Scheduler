@@ -1,8 +1,14 @@
 package com.example.project362.models;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -13,7 +19,6 @@ public class Shift
 {
 	private static final String TAG = "com-s-362-shift-project";
 
-	private static final String ID = "id";
 	private static final String START_TIME = "startTime";
 	private static final String END_TIME = "endTime";
 	private static final String EMPLOYEES = "employees";
@@ -26,65 +31,143 @@ public class Shift
 	private String id;
 	private Date startTime;
 	private Date endTime;
-	private ArrayList<Object> employees;
+	private ArrayList<DocumentReference> employees;
 	private String note;
 
-	public Shift() {}
-
-	public Shift(DocumentSnapshot doc)
+	public Shift(DocumentSnapshot docSnap)
 	{
-		this.id = doc.getId();
-		this.copyFromDocumentSnapshot(doc);
+		this.copyFromDocumentSnapshot(docSnap);
 	}
 
-	public Shift(String id, Date startTime, Date endTime, String note)
+	public Task<Void> setStartTime(final Date date)
 	{
-		this.id = id;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.note = note;
+		Task<Void> t = this.update(START_TIME, date);
+
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.startTime = date;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+
+		return t;
 	}
 
-	public Date setStartTime(Date d)
+	public Task<Void> setEndTime(final Date date)
 	{
-		this.startTime = d;
-		Shift.update(this.id, START_TIME, this.startTime);
-		return this.startTime;
+		Task<Void> t = this.update(END_TIME, date);
+
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.endTime = date;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+		return t;
 	}
 
-	public Date setEndTime(Date d)
+	public Task<Void> setEmployees(final ArrayList<DocumentReference> employees)
 	{
-		this.endTime = d;
-		Shift.update(this.id, END_TIME, this.endTime);
-		return this.endTime;
+		Task<Void> t = this.update(EMPLOYEES, employees);
+
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.employees = employees;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+
+		return t;
 	}
 
-	public ArrayList<Object> setEmployees(ArrayList<Object> employees)
+	public Task<Void> addEmployee(final DocumentReference employee)
 	{
-		this.employees = employees;
-		Shift.update(this.id, EMPLOYEES, this.employees);
-		return this.employees;
+		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
+		temp.add(employee);
+
+		Task<Void> t = this.update(EMPLOYEES, temp);
+
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.employees = temp;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+
+		return t;
 	}
 
-	public ArrayList<Object> addEmployee(Object employee)
+	public Task<Void> removeEmployee(DocumentReference employee)
 	{
-		this.employees.add(employee);
-		Shift.update(this.id, EMPLOYEES, this.employees);
-		return this.employees;
+		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
+		temp.remove(employee);
+
+		Task<Void> t = this.update(EMPLOYEES, temp);
+
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.employees = temp;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+
+		return t;
 	}
 
-	public ArrayList<Object> removeEmployee(Object employee)
+	public Task<Void> setNote(final String note)
 	{
-		this.employees.remove(employee);
-		Shift.update(this.id, EMPLOYEES, this.employees);
-		return this.employees;
-	}
+		Task<Void> t = this.update(EMPLOYEES, note);
 
-	public String setNote(String note)
-	{
-		this.note = note;
-		Shift.update(this.id, NOTE, this.note);
-		return this.note;
+		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task)
+			{
+				if (task.isSuccessful()) Shift.this.note = note;
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					throw new Error("Operation unsuccessful");
+				}
+			}
+		});
+
+		return t;
 	}
 
 	public String setId(String id)
@@ -102,7 +185,7 @@ public class Shift
 		return this.endTime;
 	}
 
-	public ArrayList<Object> getEmployees()
+	public ArrayList<DocumentReference> getEmployees()
 	{
 		return this.employees;
 	}
@@ -124,10 +207,11 @@ public class Shift
 	 */
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
+		this.id = src.getId();
 		this.startTime = (Date) src.get(START_TIME);
 		this.endTime = (Date) src.get(END_TIME);
-		this.employees = (ArrayList<Object>) src.get(EMPLOYEES);
 		this.note = (String) src.get(NOTE);
+		this.employees = new ArrayList<>();
 	}
 
 	// DATABASE LOGIC
@@ -136,10 +220,15 @@ public class Shift
 		return db.collection(COLLECTION).document(key).get();
 	}
 
-	private static void update(String key, final String field, final Object datum)
+	public static Task<QuerySnapshot> getShifts()
+	{
+		return db.collection(COLLECTION).get();
+	}
+
+	private Task<Void> update(String field, final Object datum)
 	{
 		Map<String, Object> data = new HashMap<>();
 		data.put(field, datum);
-		db.collection(COLLECTION).document(key).update(data);
+		return db.collection(COLLECTION).document(this.id).update(data);
 	}
 }

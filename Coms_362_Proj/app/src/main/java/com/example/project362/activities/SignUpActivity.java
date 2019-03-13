@@ -29,6 +29,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
        // findViewById(R.id.button_send).setOnClickListener(this);
+
+	    // TODO: Remove this
+        Intent intent = new Intent(SignUpActivity.this, ShiftActivity.class);
+        startActivity(intent);
     }
 
         private void registerUser(){
