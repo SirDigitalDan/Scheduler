@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         public void onComplete(@NonNull Task<AuthResult> task) {
             if(task.isSuccessful()){
                 Toast.makeText(MainActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, profileActivity.class);
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

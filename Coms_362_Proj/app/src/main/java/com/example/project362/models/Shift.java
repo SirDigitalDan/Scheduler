@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
+
 public class Shift
 {
     private static final String TAG = "com-s-362-shift-project";
