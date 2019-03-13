@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -97,12 +95,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             });
 
 
-                    //Toast.makeText(getApplicationContext(),"User Register Succsesful"), Toast.LENGTH_SHORT);
+
                     Toast.makeText(SignUpActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
 
-                    //Intent intent = new Intent(SignUpActivity.this, EditInfoActivity.class);
+
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
