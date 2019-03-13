@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +44,8 @@ public class Shift
 
 	public Task<Void> setStartTime(final Date date)
 	{
-		Task<Void> t = this.update(START_TIME, date);
-
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(START_TIME, date).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -58,15 +58,12 @@ public class Shift
 				}
 			}
 		});
-
-		return t;
 	}
 
 	public Task<Void> setEndTime(final Date date)
 	{
-		Task<Void> t = this.update(END_TIME, date);
-
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(END_TIME, date).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -79,14 +76,12 @@ public class Shift
 				}
 			}
 		});
-		return t;
 	}
 
 	public Task<Void> setEmployees(final ArrayList<DocumentReference> employees)
 	{
-		Task<Void> t = this.update(EMPLOYEES, employees);
-
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(EMPLOYEES, employees).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -98,13 +93,11 @@ public class Shift
 				}
 			}
 		});
-
-		return t;
 	}
 
 	public Task<Void> addEmployee(final DocumentReference employee)
 	{
-		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
+		final ArrayList<DocumentReference> temp = new ArrayList<>(employees);
 
 		boolean contained = false;
 		for (int i = 0; i < temp.size(); i++)
@@ -117,13 +110,14 @@ public class Shift
 		}
 
 		if (contained)
-			return Tasks.forException(new Exception("That employee is not assigned to the selected " +
+			return Tasks.forException(new Exception("That employee is not assigned to the selected" +
+					" " +
 					"shift"));
 
 		temp.add(employee);
-		Task<Void> t = this.update(EMPLOYEES, temp);
 
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(EMPLOYEES, temp).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -135,13 +129,12 @@ public class Shift
 				}
 			}
 		});
-
-		return t;
 	}
 
 	public Task<Void> removeEmployee(DocumentReference employee)
 	{
-		final ArrayList<DocumentReference> temp = (ArrayList<DocumentReference>) employees.clone();
+		final ArrayList<DocumentReference> temp = new ArrayList<>(employees);
+
 		boolean contained = false;
 		for (int i = 0; i < temp.size(); i++)
 		{
@@ -154,12 +147,12 @@ public class Shift
 		}
 
 		if (!contained)
-			return Tasks.forException(new Exception("That employee is not assigned to the selected " +
-				"shift"));
+			return Tasks.forException(new Exception("That employee is not assigned to the selected" +
+					" " +
+					"shift"));
 
-		Task<Void> t = this.update(EMPLOYEES, temp);
-
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(EMPLOYEES, temp).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -171,15 +164,12 @@ public class Shift
 				}
 			}
 		});
-
-		return t;
 	}
 
 	public Task<Void> setNote(final String note)
 	{
-		Task<Void> t = this.update(NOTE, note);
-
-		t.addOnCompleteListener(new OnCompleteListener<Void>() {
+		return this.update(NOTE, note).addOnCompleteListener(new OnCompleteListener<Void>()
+		{
 			@Override
 			public void onComplete(@NonNull Task<Void> task)
 			{
@@ -191,8 +181,6 @@ public class Shift
 				}
 			}
 		});
-
-		return t;
 	}
 
 	public String setId(String id)
@@ -228,6 +216,7 @@ public class Shift
 	/**
 	 * Performs a <strong>SHALLOW</strong> copy on the attributes of the given
 	 * Shift into the attributes of this shit
+	 *
 	 * @param src - Shift to copy attributes from
 	 */
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
@@ -236,7 +225,6 @@ public class Shift
 		this.startTime = (Date) src.get(START_TIME);
 		this.endTime = (Date) src.get(END_TIME);
 		this.note = (String) src.get(NOTE);
-		Log.i(TAG, src.get(EMPLOYEES).toString());
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
 	}
 
