@@ -38,6 +38,7 @@
                 android:fontFamily="sans-serif"
                 android:hint="Name"
                 android:paddingBottom="15dp"
+                android:text="Name"
                 android:textColorHint="@color/colorAccent" />
             <EditText
                 android:id="@+id/editPass"
@@ -62,7 +63,14 @@
                 android:id="@+id/buttonSub"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="UPDATE" />
+                android:text="Update Profile"
+                />
+            <Button
+                android:id="@+id/buttonSignout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sign Out"
+                />
 
 
         </LinearLayout>

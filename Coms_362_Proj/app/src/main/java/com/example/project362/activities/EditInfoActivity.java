@@ -41,8 +41,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
         //get button
         findViewById(R.id.buttonSub).setOnClickListener(EditInfoActivity.this);
-
-        //get the email that the user used to register to edit it
+        findViewById(R.id.buttonSignout).setOnClickListener(EditInfoActivity.this);
         ((EditText) findViewById(R.id.editEmail)).setText(mAuth.getCurrentUser().getEmail());
 
     }
@@ -116,6 +115,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
             });
+
         }
 
 
@@ -128,6 +128,13 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             case R.id.buttonSub:
                 finish();
                 updateUser();
+                break;
+            case R.id.buttonSignout:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(EditInfoActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
 
         }
