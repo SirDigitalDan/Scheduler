@@ -5,11 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.HomeActivity">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/shiftsList"
-        android:scrollbars="vertical"
-        android:background="@android:color/darker_gray"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="723dp"
+        android:layout_marginBottom="4dp"
+        android:background="@android:color/darker_gray"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="64dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButtonEdit"
+        android:layout_width="43dp"
+        android:layout_height="67dp"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_popup_sync"
+        tools:layout_editor_absoluteX="299dp"
+        tools:layout_editor_absoluteY="545dp" />
 
 </android.support.constraint.ConstraintLayout>

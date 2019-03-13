@@ -1,11 +1,12 @@
 package com.example.project362.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.project362.R;
@@ -15,17 +16,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.*;
 
-public class HomeActivity extends AppCompatActivity
-{
-
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+  
 	private RecyclerView recyclerView;
 	private RecyclerView.Adapter mAdapter;
 	private RecyclerView.LayoutManager layoutManager;
@@ -46,9 +43,13 @@ public class HomeActivity extends AppCompatActivity
 		// in content do not change the layout size of the RecyclerView
 		recyclerView.setHasFixedSize(true);
 
-		// use a linear layout manager
-		layoutManager = new LinearLayoutManager(this);
-		recyclerView.setLayoutManager(layoutManager);
+    //get onclikc for floating action button
+    findViewById(R.id.floatingActionButtonEdit).setOnClickListener(HomeActivity.this);
+
+
+    // use a linear layout manager
+    layoutManager = new LinearLayoutManager(this);
+    recyclerView.setLayoutManager(layoutManager);
 
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
 		CollectionReference ref = db.collection("Shifts");
@@ -85,7 +86,16 @@ public class HomeActivity extends AppCompatActivity
 				}
 			}
 		});
+  }
 
-
-	}
+  @Override
+  public void onClick(View view){
+      switch(view.getId()){
+          case R.id.floatingActionButtonEdit:
+              finish();
+              Intent i = new Intent(this, EditInfoActivity.class);
+              startActivity(i);
+              break;
+      }
+  }
 }
