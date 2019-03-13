@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
+                android:hint="Name"
                 android:paddingBottom="15dp"
                 android:textColorHint="@color/colorAccent" />
             <EditText
@@ -56,11 +57,12 @@
                 android:inputType="textPassword"
                 android:paddingBottom="15dp"
                 android:textColorHint="@color/colorAccent" />
+
             <Button
                 android:id="@+id/buttonSub"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                />
+                android:text="UPDATE" />
 
 
         </LinearLayout>
