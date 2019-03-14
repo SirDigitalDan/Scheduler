@@ -16,7 +16,7 @@ public class Employee
 {
 	private static final String TAG = "com-s-362-shift-project";
 
-	private static final String COLLECTION = "Employees";
+	public static final String COLLECTION = "Employees";
 
 	private static final String EMP_ID = "empId";
 	private static final String EMAIL = "email";
