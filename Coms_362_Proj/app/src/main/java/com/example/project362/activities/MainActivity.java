@@ -93,50 +93,46 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 			}
 		});
 
-		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
+		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener((Task<AuthResult> task) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<AuthResult> task)
+			if (task.isSuccessful())
 			{
-				if (task.isSuccessful())
-				{
-					FirebaseFirestore db = FirebaseFirestore.getInstance();
+				FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-					db.collection(Admin.COLLECTION).get()
-						.addOnCompleteListener((Task<QuerySnapshot> t) -> {
-							if (t.isSuccessful())
+				db.collection(Admin.COLLECTION).get()
+					.addOnCompleteListener((Task<QuerySnapshot> t) -> {
+						if (t.isSuccessful())
+						{
+							boolean isAdmin = false;
+							for (QueryDocumentSnapshot document : t.getResult())
+								if (document.getId().equals(mAuth.getCurrentUser().getEmail()))
+									isAdmin = true;
+
+							if (isAdmin)
 							{
-								boolean isAdmin = false;
-								for (QueryDocumentSnapshot document : t.getResult())
-									if (document.getId().equals(mAuth.getCurrentUser().getEmail()))
-										isAdmin = true;
-
-								if (isAdmin)
-								{
-									Toast.makeText(MainActivity.this, "Admin Sign In " +
-											"Succsesful", Toast.LENGTH_SHORT).show();
-									Intent intent = new Intent(MainActivity.this,
-											AdminHomeActivity.class);
-									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-									startActivity(intent);
-								}
-								else
-								{
-									Toast.makeText(MainActivity.this, "Employee Sign In " +
-											"Succsesful", Toast.LENGTH_SHORT).show();
-									Intent intent = new Intent(MainActivity.this,
-											HomeActivity.class);
-									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-									startActivity(intent);
-								}
+								Toast.makeText(MainActivity.this, "Admin Sign In " +
+										"Succsesful", Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(MainActivity.this,
+										AdminHomeActivity.class);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent);
 							}
-						});
-				}
-				else
-				{
-					Toast.makeText(getApplicationContext(), task.getException().getMessage(),
-							Toast.LENGTH_SHORT).show();
-				}
+							else
+							{
+								Toast.makeText(MainActivity.this, "Employee Sign In " +
+										"Succsesful", Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(MainActivity.this,
+										HomeActivity.class);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent);
+							}
+						}
+					});
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), task.getException().getMessage(),
+						Toast.LENGTH_SHORT).show();
 			}
 		});
 

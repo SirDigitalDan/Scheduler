@@ -155,6 +155,17 @@ public class Employee
 		return db.collection(COLLECTION).document(this.id).update(data);
 	}
 
+	public Task<Void> create()
+	{
+		HashMap<String, Object> h = new HashMap<>();
+		h.put(EMAIL, this.email);
+		h.put(EMP_ID, this.empId);
+		h.put(STATUS, this.status);
+		h.put(NAME, this.name);
+
+		return db.collection(COLLECTION).document(this.email).set(h);
+	}
+
 	public static Task<Void> create(String id, HashMap<String, Object> data)
 	{
 		return db.collection(COLLECTION).document(id).set(data);
