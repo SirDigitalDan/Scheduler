@@ -8,7 +8,7 @@ public class Admin
 
 	private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-	static boolean isAdmin(String email)
+	public static boolean isAdmin(String email)
 	{
 		return db.collection(COLLECTION).document(email).get().getResult() == null;
 	}

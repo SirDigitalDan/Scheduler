@@ -15,6 +15,7 @@
 
         <activity android:name=".activities.ShiftActivity" />
         <activity android:name=".activities.profileActivity" />
+        <activity android:name=".activities.AdminHomeActivity" />
         <activity android:name=".Tester" />
         <activity
             android:name=".activities.MainActivity"
