@@ -10,20 +10,11 @@ import android.widget.Toast;
 import com.example.project362.R;
 import com.example.project362.models.Admin;
 import com.example.project362.models.Employee;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AdminStatusActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -50,7 +41,16 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 
 		Employee.delete(email).addOnCompleteListener((Task<Void> t) -> {
 			if (t.isSuccessful())
-				Toast.makeText(AdminStatusActivity.this, "Employee deleted", Toast.LENGTH_SHORT).show();
+			{
+				Admin.delete(email).addOnCompleteListener((Task<Void> dt) -> {
+					if (dt.isSuccessful())
+						Toast.makeText(AdminStatusActivity.this, "Deleted employee",
+								Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(AdminStatusActivity.this, "Failed to delete employee",
+								Toast.LENGTH_SHORT).show();
+				});
+			}
 			else
 				Toast.makeText(AdminStatusActivity.this, "Failed to delete employee",
 						Toast.LENGTH_SHORT).show();
@@ -87,7 +87,6 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 	@Override
 	public void onClick(View view)
 	{
-
 		switch (view.getId())
 		{
 			case R.id.deleteEmployee:
@@ -98,8 +97,6 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 				finish();
 				createAdmin();
 				break;
-
-
 		}
 
 

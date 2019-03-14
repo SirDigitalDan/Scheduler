@@ -16,6 +16,11 @@ public class Admin
 		HashMap<String, Object> data = new HashMap<>();
 		data.put(Employee.EMAIL, email);
 
-		return db.collection(Admin.COLLECTION).document(email).set(data);
+		return db.collection(COLLECTION).document(email).set(data);
+	}
+
+	public static Task<Void> delete(String email)
+	{
+		return db.collection(COLLECTION).document(email).delete();
 	}
 }
