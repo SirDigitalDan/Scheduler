@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,10 +13,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.models.Admin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
     FirebaseAuth mAuth;
@@ -80,10 +86,35 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {
             if(task.isSuccessful()){
-                Toast.makeText(MainActivity.this, "User Sign In Succsesful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                db.collection("Admins")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                boolean isAdmin = false;
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if(document.getId().equals(mAuth.getCurrentUser().getEmail())) {
+                                            isAdmin = true;
+                                        }
+                                    }
+
+                                    if(isAdmin) {
+                                        Toast.makeText(MainActivity.this, "Admin Sign In Succsesful", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Employee Sign In Succsesful", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        });
             }
             else{
                 Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
@@ -92,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     });
 
     }
-
         @Override
         public void onClick (View view ){
 
@@ -105,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
                 break;
 
-
            case R.id.buttonLogin:
                 userLogin();
                 break;
@@ -115,10 +144,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 startActivity(in);
                 break;
             }
-
-
-
-
-
     }
 }

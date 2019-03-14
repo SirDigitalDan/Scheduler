@@ -3,26 +3,19 @@ package com.example.project362.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
-
 import com.example.project362.models.Employee;
-import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
+
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
@@ -51,7 +44,6 @@ public class EditInfoActivity extends AppCompatActivity
 		editName = findViewById(R.id.editName);
 		editPassword = findViewById(R.id.editPass);
 		editVerifyPassword = findViewById(R.id.editPass2);
-		userEmail = findViewById(R.id.deleteUser);
 
 		findViewById(R.id.buttonSub).setOnClickListener((View view) -> {
 			updateUser();
@@ -66,25 +58,6 @@ public class EditInfoActivity extends AppCompatActivity
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 		});
-
-		findViewById(R.id.buttonDelete).setOnClickListener((View view) -> {
-			deleteUser();
-			Toast.makeText(EditInfoActivity.this, "Deleted account", Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-		});
-	}
-
-	private void deleteUser()
-	{
-		String em = userEmail.getText().toString().trim();
-
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-		final CollectionReference ref = db.collection("Employees");
-		DocumentReference em1 = ref.document(em);
-
-		em1.delete();
 	}
 
 	private void updateUser()
@@ -151,9 +124,9 @@ public class EditInfoActivity extends AppCompatActivity
 			{
 				Employee e = new Employee(t.getResult());
 				e.update(data).addOnFailureListener((Exception exception) -> {
-						Toast.makeText(EditInfoActivity.this, "edit user info failed",
-								Toast.LENGTH_SHORT).show();
-						Log.d(TAG, exception.toString());
+					Toast.makeText(EditInfoActivity.this, "edit user info failed",
+							Toast.LENGTH_SHORT).show();
+					Log.d(TAG, exception.toString());
 				});
 			}
 			else
