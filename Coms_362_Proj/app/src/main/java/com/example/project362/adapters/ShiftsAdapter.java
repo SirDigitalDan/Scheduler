@@ -50,7 +50,6 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
 
-
 		public ShiftsViewHolder(@NonNull View itemView)
 		{
 			super(itemView);
@@ -80,7 +79,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 	public ShiftsAdapter.ShiftsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 	{
 		View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_card,
-                viewGroup, false);
+				viewGroup, false);
 		ShiftsViewHolder svh = new ShiftsViewHolder(v);
 		return svh;
 	}
@@ -91,8 +90,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		Employee e;
 		final Shift currentShift = shiftList.get(i);
 		shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
-		shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
-				+ currentShift.getEndTime() + ". ");
+		shiftsViewHolder.info
+				.setText("Start Time: " + currentShift.getStartTime() + "\nEnd Time:" + currentShift.getEndTime());
 
 		shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 		shiftsViewHolder.note.setText(currentShift.getNote());
@@ -106,7 +105,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 				String n = shiftsViewHolder.note.getText().toString();
 				String note = n + "\n" + text;
 
-				currentShift.setNote(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+				currentShift.setNote(note).addOnCompleteListener(new OnCompleteListener<Void>()
+				{
 					@Override
 					public void onComplete(@NonNull Task<Void> task)
 					{
@@ -124,7 +124,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			@Override
 			public void onClick(final View v)
 			{
-				currentShift.removeEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+				currentShift.removeEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>()
+				{
 					@Override
 					public void onComplete(@NonNull Task<Void> task)
 					{
@@ -151,7 +152,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			@Override
 			public void onClick(final View v)
 			{
-				currentShift.addEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+				currentShift.addEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>()
+				{
 					@Override
 					public void onComplete(@NonNull Task<Void> task)
 					{
@@ -174,7 +176,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		});
 	}
 
-	public String formatEmployees(ArrayList<DocumentReference> employees)
+	private String formatEmployees(ArrayList<DocumentReference> employees)
 	{
 		StringBuilder employeesSb = new StringBuilder();
 		for (DocumentReference ref : employees)

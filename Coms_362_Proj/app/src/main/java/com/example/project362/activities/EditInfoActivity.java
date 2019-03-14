@@ -3,150 +3,134 @@ package com.example.project362.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.project362.models.Employee;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.HashMap;
 
 
-public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditInfoActivity extends AppCompatActivity
+{
 
-    //all of the variables
-    EditText editEmail, editPass, editName, editPass2,userEmail;
-    //button to submit the information
-    Button editSub;
-    private FirebaseAuth mAuth;
+	private static final String TAG = "com-s-362-project";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        //get content
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_info);
+	private FirebaseAuth mAuth;
 
-        //get the instances of the employee user authroization
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        //get all of the views
-        editName =  findViewById(R.id.editName);
-        editEmail =  findViewById(R.id.editEmail);
-        editPass =  findViewById(R.id.editPass);
-        editPass2 =  findViewById(R.id.editPass2);
+	EditText editPassword, editName, editVerifyPassword, userEmail;
 
 
-        //get button
-        findViewById(R.id.buttonSub).setOnClickListener(EditInfoActivity.this);
-        findViewById(R.id.buttonSignout).setOnClickListener(EditInfoActivity.this);
-        
-        ((EditText) findViewById(R.id.editEmail)).setText(mAuth.getCurrentUser().getEmail());
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		//get content
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_edit_info);
 
-    }
+		//get the instances of the employee user authroization
+		mAuth = FirebaseAuth.getInstance();
 
+		//get all of the views
+		editName = findViewById(R.id.editName);
+		editPassword = findViewById(R.id.editPass);
+		editVerifyPassword = findViewById(R.id.editPass2);
 
+		findViewById(R.id.buttonSub).setOnClickListener((View view) -> {
+			updateUser();
+			Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
+			startActivity(intent);
+		});
 
+		findViewById(R.id.buttonSignout).setOnClickListener((View view) -> {
+			FirebaseAuth.getInstance().signOut();
+			Toast.makeText(EditInfoActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		});
+	}
 
-    private void updateUser() {
-        //get the input of what the employee wants to edit
-        String name = editName.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
-        final String password = editPass.getText().toString().trim();
-        String password2 = editPass2.getText().toString().trim();
+	private void updateUser()
+	{
+		String name = editName.getText().toString().trim();
+		final String password = editPassword.getText().toString().trim();
+		String vPassword = editVerifyPassword.getText().toString().trim();
 
-        //checks to see if there are errors and then records the errors
-        if (name.isEmpty()) {
-            editName.setError("Name is required");
-            editName.requestFocus();
+		String id = mAuth.getCurrentUser().getEmail();
 
-            return;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editEmail.setError("Please enter a valid email");
-            editEmail.requestFocus();
-            return;
-        }
-        if (password.isEmpty()) {
-            editPass.setError("Password is required");
-            editPass.requestFocus();
-            return;
-        }
-        if (password.length() < 6) {
-            editPass.setError("Minimum length of password should be 6");
-            editPass.requestFocus();
-            return;
-        }
-        if (password2.isEmpty()) {
-            editPass2.setError("Please re-enter password");
-            editPass2.requestFocus();
-            return;
-        }
-        if (!password2.equals(password)) {
-            editPass2.setError("The passwords do not match");
-            editPass2.requestFocus();
-            return;
-        }
-        else
-        {
-            //authorizes if the email and password is correct
-            mAuth.getCurrentUser().updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()) {
-                        Toast.makeText(EditInfoActivity.this, "User Email Succsesful", Toast.LENGTH_SHORT).show();
-                        mAuth.getCurrentUser().updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()) {
-                                    Toast.makeText(EditInfoActivity.this, "User Pass Succsesful", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(EditInfoActivity.this, profileActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
-                                }
-                                else{
-                                    Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
+		boolean failure = false;
 
-                    //shows errors
-                    else{
-                        Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+		if (!password.isEmpty() || !vPassword.isEmpty())
+		{
+			if ((!password.isEmpty() && vPassword.isEmpty()))
+			{
+				editVerifyPassword.setError("Please confirm your password");
+				editVerifyPassword.requestFocus();
+				return;
+			}
+			if (password.isEmpty() && !vPassword.isEmpty())
+			{
+				editPassword.setError("This field is required");
+				editPassword.requestFocus();
+				return;
+			}
+			if (!vPassword.equals(password))
+			{
+				editVerifyPassword.setError("Your passwords do not match");
+				editVerifyPassword.requestFocus();
+				return;
+			}
+			if (password.length() < 6)
+			{
+				editPassword.setError("Password is too short");
+				editPassword.requestFocus();
+				return;
+			}
 
-        }
+			this.updateAuthPassword(password);
+		}
+
+		this.updateEmployee(id, name);
 
 
-    }
+	}
 
-    //button to submit and save edits
-    @Override
-    public void onClick(View view){
-        switch(view.getId()){
-            case R.id.buttonSub:
-                finish();
-                updateUser();
-                break;
-            case R.id.buttonSignout:
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(EditInfoActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
+	public Task<Void> updateAuthPassword(String password)
+	{
+		return mAuth.getCurrentUser().updatePassword(password).addOnFailureListener((Exception e) ->
+				Toast.makeText(EditInfoActivity.this, "edit password failed", Toast.LENGTH_SHORT).show());
+	}
 
+	public Task<DocumentSnapshot> updateEmployee(String id, String name)
+	{
+		Log.d(TAG, id);
+		final HashMap<String, Object> data = new HashMap<>();
 
+		if (name != null && !name.isEmpty())
+			data.put(Employee.NAME, name);
 
-        }
-    }
+		return Employee.getEmployeeByEmail(id).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+			if (t.isSuccessful())
+			{
+				Employee e = new Employee(t.getResult());
+				e.update(data).addOnFailureListener((Exception exception) -> {
+					Toast.makeText(EditInfoActivity.this, "edit user info failed",
+							Toast.LENGTH_SHORT).show();
+					Log.d(TAG, exception.toString());
+				});
+			}
+			else
+				Toast.makeText(EditInfoActivity.this, "edit user info failed", Toast.LENGTH_SHORT).show();
+		});
+	}
 }

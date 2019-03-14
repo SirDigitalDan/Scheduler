@@ -69,7 +69,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         Shift s = new Shift(shiftDoc);
 
                         shifts.add(s);
-
                     }
 
                     Toast.makeText(HomeActivity.this,
