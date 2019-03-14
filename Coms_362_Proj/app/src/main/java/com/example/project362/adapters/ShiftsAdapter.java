@@ -50,7 +50,6 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
 
-
 		public ShiftsViewHolder(@NonNull View itemView)
 		{
 			super(itemView);

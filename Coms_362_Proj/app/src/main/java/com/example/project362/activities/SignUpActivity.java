@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.models.Employee;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +38,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
-        // findViewById(R.id.button_send).setOnClickListener(this);
     }
 
         private void registerUser(){
@@ -73,28 +73,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference employeeRef = db.collection("Employees");
 
-                    Map<String, Object> newEmployeeData = new HashMap<>();
-                    newEmployeeData.put("Email", mAuth.getCurrentUser().getEmail());
-                    newEmployeeData.put("Status", "employee");
-                    newEmployeeData.put("EmpID", mAuth.getCurrentUser().getUid());
-                    newEmployeeData.put("Name", editTextName.getText().toString());
+                    HashMap<String, Object> newEmployeeData = new HashMap<>();
+                    newEmployeeData.put(Employee.EMAIL, mAuth.getCurrentUser().getEmail());
+                    newEmployeeData.put(Employee.STATUS, "employee");
+                    newEmployeeData.put(Employee.EMP_ID, mAuth.getCurrentUser().getUid());
+                    newEmployeeData.put(Employee.NAME, editTextName.getText().toString());
 
-                    employeeRef.document(email)
-                            .set(newEmployeeData)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    //Log.w(TAG, "Error writing document", e);
-                                }
-                            });
-
-
+                    Employee.create(mAuth.getCurrentUser().getEmail(), newEmployeeData);
 
                     Toast.makeText(SignUpActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
 

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,10 +19,10 @@ public class Employee
 
 	private static final String COLLECTION = "Employees";
 
-	private static final String EMP_ID = "empId";
-	private static final String EMAIL = "email";
-	private static final String NAME = "name";
-	private static final String STATUS = "status";
+	public static final String EMP_ID = "empId";
+	public static final String EMAIL = "email";
+	public static final String NAME = "name";
+	public static final String STATUS = "status";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -34,6 +35,15 @@ public class Employee
 	public Employee(DocumentSnapshot doc)
 	{
 		this.copyFromDocumentSnapshot(doc);
+	}
+
+	public Employee(String id, String empId, String email, String name, String status)
+	{
+		this.id = id;
+		this.empId = empId;
+		this.email = email;
+		this.name = name;
+		this.status = status;
 	}
 
 	public Task<Void> setEmpId(final String empId)
@@ -84,6 +94,18 @@ public class Employee
 		});
 	}
 
+	public Task<Void> insertIntoDatabase()
+	{
+		HashMap<String, Object> data = new HashMap<>();
+
+		data.put(Employee.EMAIL, this.email);
+		data.put(Employee.STATUS, this.status);
+		data.put(Employee.EMP_ID, this.empId);
+		data.put(Employee.NAME, this.name);
+
+		return db.collection(COLLECTION).document(this.email).set(data);
+	}
+
 	public String getEmpId()
 	{
 		return this.empId;
@@ -124,5 +146,15 @@ public class Employee
 		Map<String, Object> data = new HashMap<>();
 		data.put(field, datum);
 		return db.collection(COLLECTION).document(this.id).update(data);
+	}
+
+	public Task<Void> update(HashMap<String, Object> data)
+	{
+		return db.collection(COLLECTION).document(this.id).update(data);
+	}
+
+	public static Task<Void> create(String id, HashMap<String, Object> data)
+	{
+		return db.collection(COLLECTION).document(id).set(data);
 	}
 }

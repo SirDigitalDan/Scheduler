@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:orientation="vertical"
             android:paddingLeft="15dp"
@@ -22,24 +22,15 @@
 
 
             <EditText
-                android:id="@+id/editEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:hint="email"
-                android:inputType="textEmailAddress"
-                android:paddingBottom="15dp"
-                android:textColorHint="@color/colorAccent" />
-
-            <EditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:hint="Name"
+                android:hint="name"
+                android:inputType="text"
                 android:paddingBottom="15dp"
-                android:text="Name"
                 android:textColorHint="@color/colorAccent" />
+
             <EditText
                 android:id="@+id/editPass"
                 android:layout_width="match_parent"
@@ -49,6 +40,7 @@
                 android:inputType="textPassword"
                 android:paddingBottom="15dp"
                 android:textColorHint="@color/colorAccent" />
+
             <EditText
                 android:id="@+id/editPass2"
                 android:layout_width="match_parent"
@@ -58,6 +50,7 @@
                 android:inputType="textPassword"
                 android:paddingBottom="15dp"
                 android:textColorHint="@color/colorAccent" />
+
             <EditText
                 android:id="@+id/deleteUser"
                 android:layout_width="match_parent"
@@ -71,21 +64,20 @@
             <Button
                 android:id="@+id/buttonSub"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Update Profile"
-                />
+                android:layout_height="wrap_content"
+                android:text="Update Profile" />
+
             <Button
                 android:id="@+id/buttonSignout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Sign Out"
-                />
+                android:layout_height="wrap_content"
+                android:text="Sign Out" />
+
             <Button
                 android:id="@+id/buttonDelete"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Delete"
-                />
+                android:layout_height="wrap_content"
+                android:text="Delete" />
 
 
         </LinearLayout>
