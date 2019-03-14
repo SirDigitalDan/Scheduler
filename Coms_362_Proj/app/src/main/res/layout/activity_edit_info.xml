@@ -60,9 +60,8 @@
             <Button
                 android:id="@+id/buttonSignout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Sign Out"
-                />
+                android:layout_height="71dp"
+                android:text="Sign Out" />
 
         </LinearLayout>
 
