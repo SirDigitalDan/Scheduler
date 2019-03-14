@@ -159,4 +159,9 @@ public class Employee
 	{
 		return db.collection(COLLECTION).document(id).set(data);
 	}
+
+	public static Task<Void> delete(String id)
+	{
+		return db.collection(COLLECTION).document(id).delete();
+	}
 }

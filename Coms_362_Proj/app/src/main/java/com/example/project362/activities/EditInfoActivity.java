@@ -68,8 +68,6 @@ public class EditInfoActivity extends AppCompatActivity
 
 		String id = mAuth.getCurrentUser().getEmail();
 
-		boolean failure = false;
-
 		if (!password.isEmpty() || !vPassword.isEmpty())
 		{
 			if ((!password.isEmpty() && vPassword.isEmpty()))
@@ -101,8 +99,6 @@ public class EditInfoActivity extends AppCompatActivity
 		}
 
 		this.updateEmployee(id, name);
-
-
 	}
 
 	public Task<Void> updateAuthPassword(String password)
