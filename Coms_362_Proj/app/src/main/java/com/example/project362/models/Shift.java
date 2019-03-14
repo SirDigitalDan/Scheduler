@@ -174,18 +174,10 @@ public class Shift
 	public Task<Void> removeEmployee(String id)
 	{
 		for (int i = 0; i < this.employees.size(); i++)
-		{
-			final int j = i;
+			if (this.employees.get(i).getId().equals(id))
+				return this.removeEmployee(i);
 
-			this.employees.get(j).get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
-				if (t.isSuccessful())
-				{
-					Employee e = new Employee(t.getResult());
-					if (e.getId().equals(id))
-						this.employees.remove(j);
-				}
-			});
-		}
+		return Tasks.forException(new Exception("Employee not found"));
 	}
 
 	public Task<Void> setNote(final String note)
