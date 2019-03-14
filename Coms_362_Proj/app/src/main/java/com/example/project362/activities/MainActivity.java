@@ -115,20 +115,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                                 }
                             }
                         });
-
-                /*
-                if(Admin.isAdmin(mAuth.getCurrentUser().getEmail())) {
-                    Toast.makeText(MainActivity.this, "Admin Sign In Succsesful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(MainActivity.this, "Employee Sign In Succsesful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
-                */
             }
             else{
                 Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
@@ -149,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
                 break;
 
-
            case R.id.buttonLogin:
                 userLogin();
                 break;
@@ -159,10 +144,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 startActivity(in);
                 break;
             }
-
-
-
-
-
     }
 }
