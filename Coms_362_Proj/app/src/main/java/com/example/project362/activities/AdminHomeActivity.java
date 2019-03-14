@@ -1,5 +1,6 @@
 package com.example.project362.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
 
+        Button adminStatusButton = findViewById(R.id.adminStatusButton);
+
         recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
@@ -53,7 +56,6 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference ref = db.collection("Shifts");
-
 
         ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
@@ -79,6 +81,14 @@ public class AdminHomeActivity extends AppCompatActivity {
                 {
                     Toast.makeText(AdminHomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        adminStatusButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
+                startActivity(i);
             }
         });
     }
