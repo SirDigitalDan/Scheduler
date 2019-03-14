@@ -33,34 +33,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         promote.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String employeeEmail = ememail.getText().toString();
+                
 
-                try {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    DocumentReference employeeRef = db.collection("Employees").document(employeeEmail);
-
-                    employeeRef
-                            .update("Status", "admin")
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "Admin status successfully updated!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error updating admin status", e);
-                                }
-                            });
-
-                } catch (Exception e) {
-                    Toast.makeText(AdminHomeActivity.this,
-                            "Doesn't look like that employee exists, please try again.",
-                            Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
             }
         });
     }
