@@ -23,126 +23,147 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener{
-    FirebaseAuth mAuth;
-    EditText editTextEmail, editTextPassword;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mAuth= FirebaseAuth.getInstance();
-        findViewById(R.id.button_send).setOnClickListener(MainActivity.this);
-        findViewById(R.id.button_send1).setOnClickListener(MainActivity.this);
-        Button btnClickMe = (Button) findViewById(R.id.button_send);
-        btnClickMe.setOnClickListener(MainActivity.this);
-        findViewById(R.id.buttonLogin).setOnClickListener(this);
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword=  findViewById(R.id.editTextPassword);
-    }
+public class MainActivity extends AppCompatActivity implements OnClickListener
+{
+	FirebaseAuth mAuth;
+	EditText editTextEmail, editTextPassword;
 
-    @Override
-    protected void onStart(){
-        super.onStart();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		mAuth = FirebaseAuth.getInstance();
+		findViewById(R.id.button_send).setOnClickListener(MainActivity.this);
+		findViewById(R.id.button_send1).setOnClickListener(MainActivity.this);
+		Button btnClickMe = (Button) findViewById(R.id.button_send);
+		btnClickMe.setOnClickListener(MainActivity.this);
+		findViewById(R.id.buttonLogin).setOnClickListener(this);
+		editTextEmail = findViewById(R.id.editTextEmail);
+		editTextPassword = findViewById(R.id.editTextPassword);
+	}
 
-    private void userLogin(){
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+	}
 
-        String email= editTextEmail.getText().toString();
-        String password= editTextPassword.getText().toString();
-        if(email.isEmpty())
-        {
-            editTextEmail.setError("Email is required");
-            editTextEmail.requestFocus();
-            return;
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("please enter valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-        if (password.isEmpty())
-        {
-            editTextPassword.setError("password is required");
-            editTextPassword.requestFocus();
-            return;
-        }
-        if(password.length() < 6){
-            editTextPassword.setError("Enter password that is atleast 6 characters long");
-            editTextPassword.requestFocus();
-            return;
-        }
+	private void userLogin()
+	{
 
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+		String email = editTextEmail.getText().toString();
+		String password = editTextPassword.getText().toString();
+		if (email.isEmpty())
+		{
+			editTextEmail.setError("Email is required");
+			editTextEmail.requestFocus();
+			return;
+		}
+		if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+		{
+			editTextEmail.setError("please enter valid email");
+			editTextEmail.requestFocus();
+			return;
+		}
+		if (password.isEmpty())
+		{
+			editTextPassword.setError("password is required");
+			editTextPassword.requestFocus();
+			return;
+		}
+		if (password.length() < 6)
+		{
+			editTextPassword.setError("Enter password that is atleast 6 characters long");
+			editTextPassword.requestFocus();
+			return;
+		}
 
-                    Toast.makeText(MainActivity.this, "User Register Succsesful", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<AuthResult> task)
+			{
+				if (task.isSuccessful())
+				{
 
-    mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-        @Override
-        public void onComplete(@NonNull Task<AuthResult> task) {
-            if(task.isSuccessful()){
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
+					Toast.makeText(MainActivity.this, "User Register Succsesful",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 
-                db.collection("Admins")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                boolean isAdmin = false;
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if(document.getId().equals(mAuth.getCurrentUser().getEmail())) {
-                                            isAdmin = true;
-                                        }
-                                    }
+		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<AuthResult> task)
+			{
+				if (task.isSuccessful())
+				{
+					FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                                    if(isAdmin) {
-                                        Toast.makeText(MainActivity.this, "Admin Sign In Succsesful", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "Employee Sign In Succsesful", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                    }
-                                }
-                            }
-                        });
-            }
-            else{
-                Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        }
-    });
+					db.collection(Admin.COLLECTION).get()
+						.addOnCompleteListener((Task<QuerySnapshot> t) -> {
+							if (t.isSuccessful())
+							{
+								boolean isAdmin = false;
+								for (QueryDocumentSnapshot document : t.getResult())
+									if (document.getId().equals(mAuth.getCurrentUser().getEmail()))
+										isAdmin = true;
 
-    }
-        @Override
-        public void onClick (View view ){
+								if (isAdmin)
+								{
+									Toast.makeText(MainActivity.this, "Admin Sign In " +
+											"Succsesful", Toast.LENGTH_SHORT).show();
+									Intent intent = new Intent(MainActivity.this,
+											AdminHomeActivity.class);
+									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+									startActivity(intent);
+								}
+								else
+								{
+									Toast.makeText(MainActivity.this, "Employee Sign In " +
+											"Succsesful", Toast.LENGTH_SHORT).show();
+									Intent intent = new Intent(MainActivity.this,
+											HomeActivity.class);
+									intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+									startActivity(intent);
+								}
+							}
+						});
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext(), task.getException().getMessage(),
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 
-        switch(view.getId()){
-            case R.id.button_send:
-                finish();
+	}
 
-                Intent i = new Intent(MainActivity.this, SignUpActivity.class);
-                startActivity(i);
+	@Override
+	public void onClick(View view)
+	{
 
-                break;
+		switch (view.getId())
+		{
+			case R.id.button_send:
+				finish();
 
-           case R.id.buttonLogin:
-                userLogin();
-                break;
-            case R.id.button_send1:
-                finish();
-                Intent in = new Intent (MainActivity.this, EditInfoActivity.class);
-                startActivity(in);
-                break;
-            }
-    }
+				Intent i = new Intent(MainActivity.this, SignUpActivity.class);
+				startActivity(i);
+
+				break;
+
+			case R.id.buttonLogin:
+				userLogin();
+				break;
+			case R.id.button_send1:
+				finish();
+				Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
+				startActivity(in);
+				break;
+		}
+	}
 }

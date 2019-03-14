@@ -147,32 +147,23 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			}
 		});
 
-		shiftsViewHolder.pickUpShiftButton.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(final View v)
+		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) -> {
+			currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
-				currentShift.addEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>()
+				if (task.isSuccessful())
 				{
-					@Override
-					public void onComplete(@NonNull Task<Void> task)
-					{
-						if (task.isSuccessful())
-						{
-							shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
-							Toast.makeText(v.getContext(), "Shift pick up successful!",
-									Toast.LENGTH_SHORT).show();
-						}
-						else
-						{
-							if (task.getException() != null)
-								Log.e(TAG, task.getException().toString());
-							Toast.makeText(v.getContext(), "Something went wrong!",
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-			}
+					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
+					Toast.makeText(v.getContext(), "Shift pick up successful!",
+							Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					Toast.makeText(v.getContext(), "Something went wrong!",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		});
 	}
 

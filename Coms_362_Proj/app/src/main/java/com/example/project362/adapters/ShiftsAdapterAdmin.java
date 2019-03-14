@@ -167,34 +167,26 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             }
         });
 
-        shiftsViewHolder.addEmployee.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                String addingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
-                DocumentReference ref = db.collection(Employee.COLLECTION).document(addingEmployee);
+        shiftsViewHolder.addEmployee.setOnClickListener((final View v) -> {
+            String addingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
+            DocumentReference ref = db.collection(Employee.COLLECTION).document(addingEmployee);
 
-                currentShift.addEmployee(ref).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
-                            Toast.makeText(v.getContext(), "Shift pick up successful!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            if (task.getException() != null)
-                                Log.e(TAG, task.getException().toString());
-                            Toast.makeText(v.getContext(), "Something went wrong!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+            currentShift.addEmployee(ref).addOnCompleteListener((Task<Void> task) ->
+            {
+                if (task.isSuccessful())
+                {
+                    shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
+                    Toast.makeText(v.getContext(), "Shift pick up successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (task.getException() != null)
+                        Log.e(TAG, task.getException().toString());
+                    Toast.makeText(v.getContext(), "Something went wrong!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 

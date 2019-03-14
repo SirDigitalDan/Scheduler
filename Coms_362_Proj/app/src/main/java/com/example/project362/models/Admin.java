@@ -1,15 +1,26 @@
 package com.example.project362.models;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class Admin
 {
-	private static final String COLLECTION = "Admins";
+	public static final String COLLECTION = "Admins";
 
 	private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-	public static boolean isAdmin(String email)
+	public static Task<Void> create(String email)
 	{
-		return db.collection(COLLECTION).document(email).get().getResult() == null;
+		HashMap<String, Object> data = new HashMap<>();
+		data.put(Employee.EMAIL, email);
+
+		return db.collection(COLLECTION).document(email).set(data);
+	}
+
+	public static Task<Void> delete(String email)
+	{
+		return db.collection(COLLECTION).document(email).delete();
 	}
 }
