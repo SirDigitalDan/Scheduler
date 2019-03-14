@@ -58,15 +58,6 @@
                 android:inputType="textPassword"
                 android:paddingBottom="15dp"
                 android:textColorHint="@color/colorAccent" />
-            <EditText
-                android:id="@+id/deleteUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:hint="delete user"
-                android:inputType="text"
-                android:paddingBottom="15dp"
-                android:textColorHint="@color/colorAccent" />
 
             <Button
                 android:id="@+id/buttonSub"
@@ -80,18 +71,7 @@
                 android:layout_height="match_parent"
                 android:text="Sign Out"
                 />
-            <Button
-                android:id="@+id/buttonDelete"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Delete"
-                />
-            <Button
-                android:id="@+id/buttonAdd"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="add"
-                />
+
 
 
         </LinearLayout>
