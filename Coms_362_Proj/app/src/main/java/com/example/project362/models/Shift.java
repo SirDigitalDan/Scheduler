@@ -80,17 +80,13 @@ public class Shift
 
 	public Task<Void> setEmployees(final ArrayList<DocumentReference> employees)
 	{
-		return this.update(EMPLOYEES, employees).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(EMPLOYEES, employees).addOnCompleteListener((Task<Void> t) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (t.isSuccessful()) Shift.this.employees = employees;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.employees = employees;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-				}
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
 			}
 		});
 	}
@@ -116,17 +112,13 @@ public class Shift
 
 		temp.add(employee);
 
-		return this.update(EMPLOYEES, temp).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> t) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (t.isSuccessful()) Shift.this.employees = temp;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.employees = temp;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-				}
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
 			}
 		});
 	}
@@ -151,34 +143,60 @@ public class Shift
 					" " +
 					"shift"));
 
-		return this.update(EMPLOYEES, temp).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> task) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (task.isSuccessful()) Shift.this.employees = temp;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.employees = temp;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-				}
+				if (task.getException() != null)
+					Log.e(TAG, task.getException().toString());
 			}
 		});
 	}
 
+	public Task<Void> removeEmployee(int i)
+	{
+		if (i >= this.employees.size())
+			return Tasks.forException(new Exception("That employee does not exist"));
+
+		final ArrayList<DocumentReference> temp = new ArrayList<>(this.employees);
+
+		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> t) -> {
+			if (t.isSuccessful()) Shift.this.employees = temp;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
+	public Task<Void> removeEmployee(String id)
+	{
+		for (int i = 0; i < this.employees.size(); i++)
+		{
+			final int j = i;
+
+			this.employees.get(j).get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+				if (t.isSuccessful())
+				{
+					Employee e = new Employee(t.getResult());
+					if (e.getId().equals(id))
+						this.employees.remove(j);
+				}
+			});
+		}
+	}
+
 	public Task<Void> setNote(final String note)
 	{
-		return this.update(NOTE, note).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(NOTE, note).addOnCompleteListener((Task<Void> t) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (t.isSuccessful()) Shift.this.note = note;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.note = note;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-				}
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
 			}
 		});
 	}

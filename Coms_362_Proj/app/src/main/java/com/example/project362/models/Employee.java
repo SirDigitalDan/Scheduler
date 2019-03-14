@@ -126,6 +126,8 @@ public class Employee
 		return this.status;
 	}
 
+	public String getId() { return this.id; }
+
 	// DATABASE LOGIC
 	public static Task<DocumentSnapshot> getEmployeeByEmail(String email)
 	{
