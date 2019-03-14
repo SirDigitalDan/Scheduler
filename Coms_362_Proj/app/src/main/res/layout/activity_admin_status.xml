@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.AdminHomeActivity"
+    tools:context=".activities.AdminStatusActivity"
     android:background="@color/colorPrimary">
 
     <EditText
-        android:id="@+id/emailtopromote"
+        android:id="@+id/employeeEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,59 +28,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/promoteButton"
+        android:id="@+id/grantAdmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="PROMOTE"
+        android:text="Grant Admin Status"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailtopromote" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:text="Type the email of the employee you wish to promote below"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/emailtopromote"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.947" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/promoteButton"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/employeeEmail" />
 
     <Button
-        android:id="@+id/adminStatusButton"
+        android:id="@+id/deleteEmployee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="Admin Status"
+        android:text="Delete"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/grantAdmin" />
 
 </android.support.constraint.ConstraintLayout>
