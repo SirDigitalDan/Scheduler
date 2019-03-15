@@ -75,9 +75,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Task<AuthResult> task) -> {
 			if (task.isSuccessful())
 			{
-				FirebaseFirestore db = FirebaseFirestore.getInstance();
-				CollectionReference employeeRef = db.collection("Employees");
-
 				Employee e = new Employee(email, mAuth.getCurrentUser().getUid(), email,
 						editTextName.getText().toString(), "employee");
 
