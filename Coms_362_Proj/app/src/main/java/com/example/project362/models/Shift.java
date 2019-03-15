@@ -44,36 +44,28 @@ public class Shift
 
 	public Task<Void> setStartTime(final Date date)
 	{
-		return this.update(START_TIME, date).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(START_TIME, date).addOnCompleteListener((Task<Void> task) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (task.isSuccessful()) Shift.this.startTime = date;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.startTime = date;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
-				}
+				if (task.getException() != null)
+					Log.e(TAG, task.getException().toString());
+				throw new Error("Operation unsuccessful");
 			}
 		});
 	}
 
 	public Task<Void> setEndTime(final Date date)
 	{
-		return this.update(END_TIME, date).addOnCompleteListener(new OnCompleteListener<Void>()
+		return this.update(END_TIME, date).addOnCompleteListener((Task<Void> task) ->
 		{
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
+			if (task.isSuccessful()) Shift.this.endTime = date;
+			else
 			{
-				if (task.isSuccessful()) Shift.this.endTime = date;
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-					throw new Error("Operation unsuccessful");
-				}
+				if (task.getException() != null)
+					Log.e(TAG, task.getException().toString());
+				throw new Error("Operation unsuccessful");
 			}
 		});
 	}
@@ -254,5 +246,10 @@ public class Shift
 		Map<String, Object> data = new HashMap<>();
 		data.put(field, datum);
 		return db.collection(COLLECTION).document(this.id).update(data);
+	}
+
+	public static Task<Void> delete(String id)
+	{
+		return db.collection(COLLECTION).document(id).delete();
 	}
 }

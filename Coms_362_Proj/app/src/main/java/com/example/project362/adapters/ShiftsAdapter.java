@@ -1,7 +1,6 @@
 package com.example.project362.adapters;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.content.Context;
 import android.widget.Toast;
 
 import com.example.project362.R;
@@ -20,26 +18,20 @@ import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
 public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsViewHolder>
 {
-	private ArrayList<Shift> shiftList = new ArrayList<>();
+	private ArrayList<Shift> shiftList;
 	private DocumentReference currentUser;
 	private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 	private static final String TAG = "com-s-362-project";
 
-	public static class ShiftsViewHolder extends RecyclerView.ViewHolder
+	static class ShiftsViewHolder extends RecyclerView.ViewHolder
 	{
 		private final TextView title;
 		private final TextView info;
@@ -50,7 +42,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
 
-		public ShiftsViewHolder(@NonNull View itemView)
+		ShiftsViewHolder(@NonNull View itemView)
 		{
 			super(itemView);
 			title = itemView.findViewById(R.id.shiftTitle);
@@ -80,14 +72,12 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 	{
 		View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_card,
 				viewGroup, false);
-		ShiftsViewHolder svh = new ShiftsViewHolder(v);
-		return svh;
+		return new ShiftsViewHolder(v);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull final ShiftsViewHolder shiftsViewHolder, int i)
 	{
-		Employee e;
 		final Shift currentShift = shiftList.get(i);
 		shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
 		shiftsViewHolder.info
@@ -96,55 +86,40 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 		shiftsViewHolder.note.setText(currentShift.getNote());
 
-		shiftsViewHolder.noteButton.setOnClickListener(new View.OnClickListener()
+		shiftsViewHolder.noteButton.setOnClickListener((View v) ->
 		{
-			public void onClick(View v)
+			// Code here executes on main thread after user presses button
+			String text = shiftsViewHolder.noteAdd.getText().toString();
+			String n = shiftsViewHolder.note.getText().toString();
+			String note = n + "\n" + text;
+
+			currentShift.setNote(note).addOnCompleteListener((Task<Void> task) ->
 			{
-				// Code here executes on main thread after user presses button
-				String text = shiftsViewHolder.noteAdd.getText().toString();
-				String n = shiftsViewHolder.note.getText().toString();
-				String note = n + "\n" + text;
+				if (task.isSuccessful())
+					shiftsViewHolder.note.setText(currentShift.getNote());
+			});
 
-				currentShift.setNote(note).addOnCompleteListener(new OnCompleteListener<Void>()
-				{
-					@Override
-					public void onComplete(@NonNull Task<Void> task)
-					{
-						if (task.isSuccessful())
-							shiftsViewHolder.note.setText(currentShift.getNote());
-					}
-				});
-
-				shiftsViewHolder.noteAdd.setText("");
-			}
+			shiftsViewHolder.noteAdd.setText("");
 		});
 
-		shiftsViewHolder.dropShiftButton.setOnClickListener(new View.OnClickListener()
+		shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
 		{
-			@Override
-			public void onClick(final View v)
+			currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
-				currentShift.removeEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>()
+				if (task.isSuccessful())
 				{
-					@Override
-					public void onComplete(@NonNull Task<Void> task)
-					{
-						if (task.isSuccessful())
-						{
-							shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
-							Toast.makeText(v.getContext(), "Shift drop successful!",
-									Toast.LENGTH_SHORT).show();
-						}
-						else
-						{
-							if (task.getException() != null)
-								Log.e(TAG, task.getException().toString());
-							Toast.makeText(v.getContext(), "Something went wrong!",
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-			}
+					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
+					Toast.makeText(v.getContext(), "Shift drop successful!",
+							Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					Toast.makeText(v.getContext(), "Something went wrong!",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		});
 
 		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) -> {

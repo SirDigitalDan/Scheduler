@@ -24,13 +24,13 @@ import java.util.ArrayList;
 
 public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.ShiftsViewHolder> {
 
-    private ArrayList<Shift> shiftList = new ArrayList<>();
+    private ArrayList<Shift> shiftList;
     private DocumentReference currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String TAG = "ShiftsAdapterAdmin";
 
-    public static class ShiftsViewHolder extends RecyclerView.ViewHolder {
+    static class ShiftsViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView info;
         private final TextView note;
@@ -45,7 +45,7 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         private final TextView addEmployeeText;
 
 
-        public ShiftsViewHolder(@NonNull View itemView) {
+        ShiftsViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.shiftTitle);
             info = itemView.findViewById(R.id.shiftInfo);
@@ -67,7 +67,6 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
     public ShiftsAdapterAdmin(ArrayList<Shift> shifts)
     {
         shiftList = shifts;
-
         currentUser = db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
@@ -91,80 +90,60 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
         shiftsViewHolder.note.setText(currentShift.getNote());
 
-        shiftsViewHolder.noteButton.setOnClickListener(new View.OnClickListener()
+        shiftsViewHolder.noteButton.setOnClickListener((View v) ->
         {
-            public void onClick(View v)
+            // Code here executes on main thread after user presses button
+            String text = shiftsViewHolder.noteAdd.getText().toString();
+            String n = shiftsViewHolder.note.getText().toString();
+            String note = n + "\n" + text;
+
+            currentShift.setNote(note).addOnCompleteListener((Task<Void> task) ->
             {
-                // Code here executes on main thread after user presses button
-                String text = shiftsViewHolder.noteAdd.getText().toString();
-                String n = shiftsViewHolder.note.getText().toString();
-                String note = n + "\n" + text;
+                if (task.isSuccessful())
+                    shiftsViewHolder.note.setText(currentShift.getNote());
+            });
 
-                currentShift.setNote(note).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                            shiftsViewHolder.note.setText(currentShift.getNote());
-                    }
-                });
-
-                shiftsViewHolder.noteAdd.setText("");
-            }
+            shiftsViewHolder.noteAdd.setText("");
         });
 
-        shiftsViewHolder.dropShiftButton.setOnClickListener(new View.OnClickListener()
+        shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
         {
-            @Override
-            public void onClick(final View v)
+            currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
             {
-                currentShift.removeEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
-                            Toast.makeText(v.getContext(), "Shift drop successful!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            if (task.getException() != null)
-                                Log.e(TAG, task.getException().toString());
-                            Toast.makeText(v.getContext(), "Something went wrong!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+                if (task.isSuccessful())
+                {
+                    shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
+                    Toast.makeText(v.getContext(), "Shift drop successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (task.getException() != null)
+                        Log.e(TAG, task.getException().toString());
+                    Toast.makeText(v.getContext(), "Something went wrong!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
-        shiftsViewHolder.pickUpShiftButton.setOnClickListener(new View.OnClickListener()
+        shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->
         {
-            @Override
-            public void onClick(final View v)
+            currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
             {
-                currentShift.addEmployee(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
-                            Toast.makeText(v.getContext(), "Shift pick up successful!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            if (task.getException() != null)
-                                Log.e(TAG, task.getException().toString());
-                            Toast.makeText(v.getContext(), "Something went wrong!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+                if (task.isSuccessful())
+                {
+                    shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
+                    Toast.makeText(v.getContext(), "Shift pick up successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (task.getException() != null)
+                        Log.e(TAG, task.getException().toString());
+                    Toast.makeText(v.getContext(), "Something went wrong!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         shiftsViewHolder.addEmployee.setOnClickListener((final View v) -> {
@@ -188,9 +167,18 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
                 }
             });
         });
+
+        shiftsViewHolder.deleteShift.setOnClickListener((final View v) -> {
+            Shift.delete(currentShift.getId()).addOnCompleteListener((Task<Void> task) -> {
+                if (task.isSuccessful()) {
+                    ShiftsAdapterAdmin.this.shiftList.remove(currentShift);
+                    ShiftsAdapterAdmin.this.notifyDataSetChanged();
+                }
+            });
+        });
     }
 
-    public String formatEmployees(ArrayList<DocumentReference> employees)
+    String formatEmployees(ArrayList<DocumentReference> employees)
     {
         StringBuilder employeesSb = new StringBuilder();
         for (DocumentReference ref : employees)

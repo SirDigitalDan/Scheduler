@@ -27,15 +27,12 @@ public class ShiftActivity extends AppCompatActivity {
     {
         super.onStart();
         Task<DocumentSnapshot> getShift = Shift.getShiftByKey("xEYLlRf3GbYQDFHKwu8I");
-        getShift.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-	        @Override
-	        public void onComplete(@NonNull Task<DocumentSnapshot> task)
-	        {
-	        	if (task.isSuccessful() && task.getResult() != null)
-					testShift(new Shift(task.getResult()));
-	        	else
-			        Toast.makeText(ShiftActivity.this, "Error", Toast.LENGTH_SHORT).show();
-	        }
+        getShift.addOnCompleteListener((Task<DocumentSnapshot> task) ->
+        {
+            if (task.isSuccessful() && task.getResult() != null)
+				testShift(new Shift(task.getResult()));
+            else
+		        Toast.makeText(ShiftActivity.this, "Error", Toast.LENGTH_SHORT).show();
         });
     }
 

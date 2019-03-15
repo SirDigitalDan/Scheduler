@@ -79,20 +79,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 			return;
 		}
 
-		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
-		{
-			@Override
-			public void onComplete(@NonNull Task<AuthResult> task)
-			{
-				if (task.isSuccessful())
-				{
-
-					Toast.makeText(MainActivity.this, "User Register Succsesful",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-
 		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener((Task<AuthResult> task) ->
 		{
 			if (task.isSuccessful())
@@ -130,10 +116,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 					});
 			}
 			else
-			{
 				Toast.makeText(getApplicationContext(), task.getException().getMessage(),
 						Toast.LENGTH_SHORT).show();
-			}
 		});
 
 	}
@@ -141,15 +125,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 	@Override
 	public void onClick(View view)
 	{
-
 		switch (view.getId())
 		{
 			case R.id.button_send:
 				finish();
-
 				Intent i = new Intent(MainActivity.this, SignUpActivity.class);
 				startActivity(i);
-
 				break;
 
 			case R.id.buttonLogin:

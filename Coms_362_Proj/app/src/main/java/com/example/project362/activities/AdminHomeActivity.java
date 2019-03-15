@@ -54,42 +54,28 @@ public class AdminHomeActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference ref = db.collection("Shifts");
-
-        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task)
+        Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
+            if (task.isSuccessful())
             {
-                if (task.isSuccessful())
+                for (QueryDocumentSnapshot shiftDoc : task.getResult())
                 {
-                    Toast.makeText(AdminHomeActivity.this, "Firebase Query Success!",
-                            Toast.LENGTH_SHORT).show();
-                    for (QueryDocumentSnapshot shiftDoc : task.getResult())
-                    {
-                        Shift s = new Shift(shiftDoc);
-                        shifts.add(s);
-                    }
+                    Shift s = new Shift(shiftDoc);
+                    shifts.add(s);
+                }
 
-                    Toast.makeText(AdminHomeActivity.this,
-                            "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
-                    mAdapter = new ShiftsAdapterAdmin(shifts);
-                    recyclerView.setAdapter(mAdapter);
-                }
-                else
-                {
-                    Toast.makeText(AdminHomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(AdminHomeActivity.this,
+                        "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
+                mAdapter = new ShiftsAdapterAdmin(shifts);
+                recyclerView.setAdapter(mAdapter);
             }
+            else
+                Toast.makeText(AdminHomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
         });
 
-        adminStatusButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        adminStatusButton.setOnClickListener((View v) -> {
                 finish();
                 Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
                 startActivity(i);
-            }
         });
     }
 }

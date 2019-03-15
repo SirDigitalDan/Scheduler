@@ -1,7 +1,6 @@
 package com.example.project362.activities;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -60,10 +59,9 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 	private void createAdmin()
 	{
 		final String email = userEmail.getText().toString().trim();
-		final FirebaseFirestore db = FirebaseFirestore.getInstance().getInstance();
-		final CollectionReference ref = db.collection(Employee.COLLECTION);
+		final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-		db.collection(Employee.COLLECTION).document(email).get()
+		Employee.getEmployeeByEmail(email)
 				.addOnCompleteListener((Task<DocumentSnapshot> task) -> {
 					if (task.isSuccessful())
 					{
@@ -98,7 +96,5 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 				createAdmin();
 				break;
 		}
-
-
 	}
 }
