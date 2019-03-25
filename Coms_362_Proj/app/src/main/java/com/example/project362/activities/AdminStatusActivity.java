@@ -9,11 +9,16 @@ import android.widget.Toast;
 import com.example.project362.R;
 import com.example.project362.models.Admin;
 import com.example.project362.models.Employee;
+import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class AdminStatusActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -53,6 +58,28 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 			else
 				Toast.makeText(AdminStatusActivity.this, "Failed to delete employee",
 						Toast.LENGTH_SHORT).show();
+		});
+
+		Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
+			if (task.isSuccessful() && task.getResult() != null) {
+				for (QueryDocumentSnapshot document : task.getResult()) {
+					final Shift s = new Shift(document);
+					ArrayList<DocumentReference> employees = s.getEmployees();
+
+					for (final DocumentReference doc : employees)
+					{
+						doc.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+							if (task.isSuccessful())
+							{
+								Employee e = new Employee(t.getResult());
+								if (e.getEmail().equals(email))
+									s.removeEmployee(doc);
+							}
+						});
+					}
+				}
+			} else
+				Toast.makeText(AdminStatusActivity.this, "Employee not found in the Database", Toast.LENGTH_SHORT).show();
 		});
 	}
 
