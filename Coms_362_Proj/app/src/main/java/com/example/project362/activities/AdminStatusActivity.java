@@ -61,24 +61,10 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 		});
 
 		Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
-			if (task.isSuccessful() && task.getResult() != null) {
-				for (QueryDocumentSnapshot document : task.getResult()) {
-					final Shift s = new Shift(document);
-					ArrayList<DocumentReference> employees = s.getEmployees();
-
-					for (final DocumentReference doc : employees)
-					{
-						doc.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
-							if (task.isSuccessful())
-							{
-								Employee e = new Employee(t.getResult());
-								if (e.getEmail().equals(email))
-									s.removeEmployee(doc);
-							}
-						});
-					}
-				}
-			} else
+			if (task.isSuccessful() && task.getResult() != null)
+				for (QueryDocumentSnapshot document : task.getResult())
+					new Shift(document).removeEmployee(email);
+			else
 				Toast.makeText(AdminStatusActivity.this, "Employee not found in the Database", Toast.LENGTH_SHORT).show();
 		});
 	}
