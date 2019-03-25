@@ -2,26 +2,17 @@ package com.example.project362.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.adapters.ShiftsAdapterAdmin;
 import com.example.project362.models.Shift;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,7 +35,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         Button adminStatusButton = findViewById(R.id.adminStatusButton);
 
-        recyclerView = (RecyclerView) findViewById(R.id.shiftsList);
+        recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

@@ -11,28 +11,20 @@ import com.example.project362.models.Admin;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-
 public class AdminStatusActivity extends AppCompatActivity implements View.OnClickListener
 {
 	EditText userEmail;
-
-	private FirebaseAuth mAuth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_admin_status);
-		mAuth = FirebaseAuth.getInstance();
-		final FirebaseFirestore db1 = FirebaseFirestore.getInstance();
 		userEmail = findViewById(R.id.employeeEmail);
 
 		findViewById(R.id.grantAdmin).setOnClickListener(AdminStatusActivity.this);
@@ -72,7 +64,6 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 	private void createAdmin()
 	{
 		final String email = userEmail.getText().toString().trim();
-		final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 		Employee.getEmployeeByEmail(email)
 				.addOnCompleteListener((Task<DocumentSnapshot> task) -> {

@@ -13,8 +13,10 @@ import com.example.project362.R;
 import com.example.project362.models.Employee;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class EditInfoActivity extends AppCompatActivity
 
 	private FirebaseAuth mAuth;
 
-	EditText editPassword, editName, editVerifyPassword, userEmail;
+	EditText editPassword, editName, editVerifyPassword;
 
 
 	@Override
@@ -66,6 +68,11 @@ public class EditInfoActivity extends AppCompatActivity
 		final String password = editPassword.getText().toString().trim();
 		String vPassword = editVerifyPassword.getText().toString().trim();
 
+
+		FirebaseUser curUser = mAuth.getCurrentUser();
+		if (curUser == null)
+			return;
+
 		String id = mAuth.getCurrentUser().getEmail();
 
 		if (!password.isEmpty() || !vPassword.isEmpty())
@@ -76,7 +83,7 @@ public class EditInfoActivity extends AppCompatActivity
 				editVerifyPassword.requestFocus();
 				return;
 			}
-			if (password.isEmpty() && !vPassword.isEmpty())
+			if (password.isEmpty())
 			{
 				editPassword.setError("This field is required");
 				editPassword.requestFocus();
@@ -103,6 +110,9 @@ public class EditInfoActivity extends AppCompatActivity
 
 	public Task<Void> updateAuthPassword(String password)
 	{
+		FirebaseUser curUser = mAuth.getCurrentUser();
+		if (curUser == null) return Tasks.forException(new Exception("an error occurred"));
+
 		return mAuth.getCurrentUser().updatePassword(password).addOnFailureListener((Exception e) ->
 				Toast.makeText(EditInfoActivity.this, "edit password failed", Toast.LENGTH_SHORT).show());
 	}
