@@ -27,7 +27,7 @@ public class Shift
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
 
-	private static final String COLLECTION = "Shifts";
+	public static final String COLLECTION = "Shifts";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -233,7 +233,12 @@ public class Shift
 	// DATABASE LOGIC
 	public static Task<DocumentSnapshot> getShiftByKey(String key)
 	{
-		return db.collection(COLLECTION).document(key).get();
+		return Shift.getShiftReferenceByKey(key).get();
+	}
+
+	public static DocumentReference getShiftReferenceByKey(String key)
+	{
+		return db.collection(COLLECTION).document(key);
 	}
 
 	public static Task<QuerySnapshot> getShifts()

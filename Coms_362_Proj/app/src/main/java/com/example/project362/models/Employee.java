@@ -131,7 +131,7 @@ public class Employee
 	// DATABASE LOGIC
 	public static Task<DocumentSnapshot> getEmployeeByEmail(String email)
 	{
-		return db.collection(COLLECTION).document(email).get();
+		return Employee.getEmployeeReferenceByKey(email).get();
 	}
 
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
@@ -174,5 +174,10 @@ public class Employee
 	public static Task<Void> delete(String id)
 	{
 		return db.collection(COLLECTION).document(id).delete();
+	}
+
+	public static DocumentReference getEmployeeReferenceByKey(String key)
+	{
+		return db.collection(COLLECTION).document(key);
 	}
 }
