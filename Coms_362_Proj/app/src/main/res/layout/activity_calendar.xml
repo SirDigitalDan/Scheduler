@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.CalendarActivity">
+    
+    <TextView
+        android:id="@+id/myDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:paddingBottom="15dp"
+        android:text="Set Available Dates"
+        android:textColorHint="@color/colorAccent"
+        android:textSize="36sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="#FFF">
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        </CalendarView>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_avail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save my Availability" />
+</LinearLayout>
