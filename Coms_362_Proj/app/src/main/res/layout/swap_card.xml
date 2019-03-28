@@ -23,15 +23,25 @@
         android:id="@+id/acceptButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="8dp"
         android:text="Accept"
-        tools:layout_editor_absoluteX="46dp"
-        tools:layout_editor_absoluteY="107dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shiftDescription" />
 
     <Button
         android:id="@+id/rejectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="Reject"
-        tools:layout_editor_absoluteX="271dp"
-        tools:layout_editor_absoluteY="106dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.701"
+        app:layout_constraintStart_toEndOf="@+id/acceptButton"
+        app:layout_constraintTop_toBottomOf="@+id/shiftDescription" />
 </android.support.constraint.ConstraintLayout>

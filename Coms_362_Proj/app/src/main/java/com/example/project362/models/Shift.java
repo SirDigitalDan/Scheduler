@@ -126,23 +126,19 @@ public class Shift
 			{
 				temp.remove(i);
 				contained = true;
+				Log.d(TAG, "found");
 				break;
 			}
 		}
 
 		if (!contained)
-			return Tasks.forException(new Exception("That employee is not assigned to the selected" +
-					" " +
-					"shift"));
+			return Tasks.forException(new Exception("That employee is not assigned to the " +
+					"selected shift"));
 
 		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> task) ->
 		{
 			if (task.isSuccessful()) Shift.this.employees = temp;
-			else
-			{
-				if (task.getException() != null)
-					Log.e(TAG, task.getException().toString());
-			}
+			else if (task.getException() != null) Log.e(TAG, task.getException().toString());
 		});
 	}
 
@@ -155,11 +151,8 @@ public class Shift
 
 		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> t) -> {
 			if (t.isSuccessful()) Shift.this.employees = temp;
-			else
-			{
-				if (t.getException() != null)
-					Log.e(TAG, t.getException().toString());
-			}
+			else if (t.getException() != null)
+				Log.e(TAG, t.getException().toString());
 		});
 	}
 
@@ -271,8 +264,8 @@ public class Shift
 			if (t.isSuccessful() && t.getResult() != null)
 			{
 				Shift s = new Shift(t.getResult());
-				s.removeEmployee(empFromRef);
-				s.addEmployee(empToRef);
+				s.removeEmployee(empFromRef).addOnCompleteListener(
+						(Task<Void> task) -> s.addEmployee(empToRef));
 			}
 		});
 	}

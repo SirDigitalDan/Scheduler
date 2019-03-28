@@ -10,10 +10,12 @@
         android:id="@+id/shiftsList"
         android:layout_width="match_parent"
         android:layout_height="723dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="4dp"
         android:background="@android:color/darker_gray"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="64dp" />
 
     <android.support.design.widget.FloatingActionButton
