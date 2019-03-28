@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.project362.R;
-import com.example.project362.adapters.PendingShiftSwapsAdapter;
 
 public class HomeActivity extends AppCompatActivity
 {
 	private Button allShiftsButton;
 	private Button pendingReceivedSwapRequestsButton;
+	private Button attendance;
+
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceBundle)
@@ -20,6 +22,7 @@ public class HomeActivity extends AppCompatActivity
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.activity_home);
 
+		attendance = findViewById(R.id.adminAttendance);
 		allShiftsButton = findViewById(R.id.allShiftsButton);
 		pendingReceivedSwapRequestsButton = findViewById(R.id.pendingReceivedSwapRequestsButton);
 	}
@@ -34,6 +37,11 @@ public class HomeActivity extends AppCompatActivity
 
 		this.pendingReceivedSwapRequestsButton.setOnClickListener((View v) -> {
 			Intent i = new Intent(this, ViewPendingRequestsToUserActivity.class);
+			startActivity(i);
+		});
+
+		this.pendingReceivedSwapRequestsButton.setOnClickListener((View v) -> {
+			Intent i = new Intent(this, ViewAttendanceActivity.class);
 			startActivity(i);
 		});
 
