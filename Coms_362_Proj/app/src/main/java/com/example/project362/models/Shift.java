@@ -262,4 +262,18 @@ public class Shift
 	{
 		return db.collection(COLLECTION).document(id).delete();
 	}
+
+	public static Task<DocumentSnapshot> swapEmployees(DocumentReference shiftRef,
+	                                        DocumentReference empFromRef,
+	                                       DocumentReference empToRef)
+	{
+		return shiftRef.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+			if (t.isSuccessful() && t.getResult() != null)
+			{
+				Shift s = new Shift(t.getResult());
+				s.removeEmployee(empFromRef);
+				s.addEmployee(empToRef);
+			}
+		});
+	}
 }

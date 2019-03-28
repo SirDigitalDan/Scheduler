@@ -23,9 +23,8 @@ public class AdminHomeActivity extends AppCompatActivity {
     private static final String TAG = "AdminControls";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+    public ArrayList<Shift> shifts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +41,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {

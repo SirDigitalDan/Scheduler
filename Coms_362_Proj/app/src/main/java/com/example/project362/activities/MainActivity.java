@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 											Toast.makeText(MainActivity.this, "Employee Sign In " +
 													"Succsesful", Toast.LENGTH_SHORT).show();
 											Intent intent = new Intent(MainActivity.this,
-													AllShiftsActivity.class);
+													HomeActivity.class);
 											intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 											startActivity(intent);
 										}

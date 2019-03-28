@@ -1,16 +1,18 @@
 package com.example.project362.models;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SwapRequest
 {
-	private enum Status {
+	public enum Status {
 		PENDING("PENDING", 0), ACCEPTED("ACCEPTED", 1), REJECTED("REJECTED", 2);
 
 		private final int value;
@@ -58,6 +60,8 @@ public class SwapRequest
 
 	// the status of this swap request: 0 if pending, 1 if accepted, 2 if rejected
 	private int status;
+
+	private String key;
 
 	public SwapRequest(DocumentSnapshot docSnap)
 	{
@@ -109,27 +113,18 @@ public class SwapRequest
 		return this.shift;
 	}
 
-	public void accept()
+	public Task<DocumentSnapshot> accept()
 	{
-		this.shift.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
-			if (t.isSuccessful())
-			{
-				Shift s = new Shift(t.getResult());
-				s.removeEmployee(this.from);
-				s.addEmployee(this.to);
-				this.status = Status.ACCEPTED.getValue();
-			}
+		return Shift.swapEmployees(this.shift, this.from, this.to).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+			this.status = Status.ACCEPTED.getValue();
+			this.update(STATUS, this.status);
 		});
 	}
 
-	public void reject()
+	public Task<Void> reject()
 	{
 		this.status = Status.REJECTED.getValue();
-	}
-
-	public void cancel()
-	{
-		this.reject();
+		return this.update(STATUS, this.status);
 	}
 
 	/**
@@ -146,6 +141,7 @@ public class SwapRequest
 
 	private void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
+		this.key = src.getId();
 		this.shift = src.getDocumentReference(SHIFT);
 		this.from = src.getDocumentReference(FROM);
 		this.to = src.getDocumentReference(TO);
@@ -177,6 +173,14 @@ public class SwapRequest
 		h.put(SHIFT, this.shift);
 		h.put(FROM, this.from);
 		h.put(TO, this.to);
+		h.put(STATUS, this.status);
 		return db.collection(COLLECTION).add(h);
+	}
+
+	private Task<Void> update(String field, final Object datum)
+	{
+		Map<String, Object> data = new HashMap<>();
+		data.put(field, datum);
+		return db.collection(COLLECTION).document(this.key).update(data);
 	}
 }

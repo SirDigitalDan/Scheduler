@@ -14,14 +14,16 @@ import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 
 
-public class ShiftSwapsAdapter extends RecyclerView.Adapter<ShiftSwapsAdapter.SwapViewHolder>
+public class PendingShiftSwapsAdapter extends RecyclerView.Adapter<PendingShiftSwapsAdapter.SwapViewHolder>
 {
 	ArrayList<SwapRequest> swapList;
 
-	public ShiftSwapsAdapter(ArrayList<SwapRequest> swapList)
+	public PendingShiftSwapsAdapter(ArrayList<SwapRequest> swapList)
 	{
 		this.swapList = swapList;
 	}
@@ -47,6 +49,18 @@ public class ShiftSwapsAdapter extends RecyclerView.Adapter<ShiftSwapsAdapter.Sw
 				swapViewHolder.shiftDesc.setText("Shift ID: " + s.getId() + "\nTimes: " + s.getStartTime() + " - " + s.getEndTime());
 			}
 		});
+
+		swapViewHolder.acceptButton.setOnClickListener((View v) ->
+			swap.accept().addOnCompleteListener((Task<DocumentSnapshot> t) -> this.removeSwapRequest(swap)));
+
+		swapViewHolder.rejectButton.setOnClickListener((View v) ->
+			swap.reject().addOnCompleteListener((Task<Void> t) -> this.removeSwapRequest(swap)));
+	}
+
+	private void removeSwapRequest(SwapRequest req)
+	{
+		this.swapList.remove(req);
+		this.notifyDataSetChanged();
 	}
 
 	@Override

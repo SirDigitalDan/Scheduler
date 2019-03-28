@@ -25,9 +25,11 @@ public class HomeActivity extends AppCompatActivity
 	{
 		super.onStart();
 		this.allShiftsButton.setOnClickListener((View v) -> {
-			Intent i = new Intent(this, AllShiftsActivity.class);
+			Intent i = new Intent(this, ViewAllShiftsActivity.class);
 			startActivity(i);
 		});
+
+
 
 		// ADD LISTENERS HERE
 	}

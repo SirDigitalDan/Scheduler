@@ -171,8 +171,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         shiftsViewHolder.deleteShift.setOnClickListener((final View v) -> {
             Shift.delete(currentShift.getId()).addOnCompleteListener((Task<Void> task) -> {
                 if (task.isSuccessful()) {
-                    ShiftsAdapterAdmin.this.shiftList.remove(currentShift);
-                    ShiftsAdapterAdmin.this.notifyDataSetChanged();
+                    this.shiftList.remove(currentShift);
+                    this.notifyDataSetChanged();
                 }
             });
         });

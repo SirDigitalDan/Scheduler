@@ -68,7 +68,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		shiftList = shifts;
 
 		currentUser =
-				db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+				Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 	}
 
 	@NonNull
@@ -98,8 +98,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			String n = shiftsViewHolder.note.getText().toString();
 			String note = n + "\n" + text;
 
-			currentShift.setNote(note).addOnCompleteListener((Task<Void> task) ->
-			{
+			currentShift.setNote(note).addOnCompleteListener((Task<Void> task) -> {
 				if (task.isSuccessful())
 					shiftsViewHolder.note.setText(currentShift.getNote());
 			});
