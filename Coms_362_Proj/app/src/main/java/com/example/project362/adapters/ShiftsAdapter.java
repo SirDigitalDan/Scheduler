@@ -15,7 +15,7 @@ import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,11 +36,13 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final TextView title;
 		private final TextView info;
 		private final TextView note;
+		private final TextView swapWith;
 		private final EditText noteAdd;
 		private final Button noteButton;
 		private final TextView employees;
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
+		private final Button swapButton;
 
 		ShiftsViewHolder(@NonNull View itemView)
 		{
@@ -55,6 +57,9 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			noteAdd = itemView.findViewById(R.id.editTextShiftNote);
 			note = itemView.findViewById(R.id.shiftNote);
 			noteButton = itemView.findViewById(R.id.noteButton);
+
+			swapWith = itemView.findViewById(R.id.swapWith);
+			swapButton = itemView.findViewById(R.id.swapButton);
 		}
 	}
 
@@ -122,7 +127,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			});
 		});
 
-		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) -> {
+		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->
 			currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
 				if (task.isSuccessful())
@@ -138,7 +143,26 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 					Toast.makeText(v.getContext(), "Something went wrong!",
 							Toast.LENGTH_SHORT).show();
 				}
-			});
+			}));
+
+		shiftsViewHolder.swapButton.setOnClickListener((final View v) -> {
+			FirebaseAuth auth = FirebaseAuth.getInstance();
+
+			if (auth.getCurrentUser() == null) return;
+
+			DocumentReference from =
+					Employee.getEmployeeReferenceByKey(auth.getCurrentUser().getEmail());
+			DocumentReference to =
+					Employee.getEmployeeReferenceByKey(shiftsViewHolder.swapWith.getText().toString());
+
+			DocumentReference s = currentShift.getReference();
+
+			if (!SwapRequest.isValid(currentShift, from, to))
+				Toast.makeText(v.getContext(), "That swap request is invalid",
+						Toast.LENGTH_SHORT).show();
+
+			SwapRequest request = new SwapRequest(s, from, to);
+			request.create();
 		});
 	}
 

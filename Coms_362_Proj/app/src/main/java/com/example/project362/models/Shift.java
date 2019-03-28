@@ -215,6 +215,11 @@ public class Shift
 		return this.id;
 	}
 
+	public DocumentReference getReference()
+	{
+		return db.collection(COLLECTION).document(this.id);
+	}
+
 	/**
 	 * Performs a <strong>SHALLOW</strong> copy on the attributes of the given
 	 * Shift into the attributes of this shit
