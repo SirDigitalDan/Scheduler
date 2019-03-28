@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.project362.R;
-import com.example.project362.adapters.ShiftsAdapterAdmin;
+import com.example.project362.adapters.ShiftsAdapter;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,27 +18,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class AdminHomeActivity extends AppCompatActivity {
+public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "AdminControls";
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
 
-    public ArrayList<Shift> shifts = new ArrayList<>();
+    public ArrayList<Shift> shifts = new ArrayList<Shift>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_home);
-
-        Button adminStatusButton = findViewById(R.id.adminStatusButton);
-
+        setContentView(R.layout.activity_view_all_shifts);
         recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
+
+        // get onclick for floating action button
+        findViewById(R.id.floatingActionButtonEdit).setOnClickListener(ViewAllShiftsActivity.this);
 
         // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -48,24 +46,23 @@ public class AdminHomeActivity extends AppCompatActivity {
             if (task.isSuccessful())
             {
                 for (QueryDocumentSnapshot shiftDoc : task.getResult())
-                {
-                    Shift s = new Shift(shiftDoc);
-                    shifts.add(s);
-                }
-
-                Toast.makeText(AdminHomeActivity.this,
-                        "Query Size " + Integer.toString(shifts.size()), Toast.LENGTH_SHORT).show();
-                mAdapter = new ShiftsAdapterAdmin(shifts);
-                recyclerView.setAdapter(mAdapter);
+                    shifts.add(new Shift(shiftDoc));
+                recyclerView.setAdapter(new ShiftsAdapter(shifts));
             }
             else
-                Toast.makeText(AdminHomeActivity.this, "No Shifts At This Time!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ViewAllShiftsActivity.this, "No Shifts At This Time!",
+                        Toast.LENGTH_SHORT).show();
         });
+    }
 
-        adminStatusButton.setOnClickListener((View v) -> {
+    @Override
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.floatingActionButtonEdit:
                 finish();
-                Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
+                Intent i = new Intent(this, EditInfoActivity.class);
                 startActivity(i);
-        });
+                break;
+        }
     }
 }

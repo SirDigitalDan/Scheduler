@@ -27,7 +27,7 @@ public class Shift
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
 
-	private static final String COLLECTION = "Shifts";
+	public static final String COLLECTION = "Shifts";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -126,23 +126,19 @@ public class Shift
 			{
 				temp.remove(i);
 				contained = true;
+				Log.d(TAG, "found");
 				break;
 			}
 		}
 
 		if (!contained)
-			return Tasks.forException(new Exception("That employee is not assigned to the selected" +
-					" " +
-					"shift"));
+			return Tasks.forException(new Exception("That employee is not assigned to the " +
+					"selected shift"));
 
 		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> task) ->
 		{
 			if (task.isSuccessful()) Shift.this.employees = temp;
-			else
-			{
-				if (task.getException() != null)
-					Log.e(TAG, task.getException().toString());
-			}
+			else if (task.getException() != null) Log.e(TAG, task.getException().toString());
 		});
 	}
 
@@ -155,11 +151,8 @@ public class Shift
 
 		return this.update(EMPLOYEES, temp).addOnCompleteListener((Task<Void> t) -> {
 			if (t.isSuccessful()) Shift.this.employees = temp;
-			else
-			{
-				if (t.getException() != null)
-					Log.e(TAG, t.getException().toString());
-			}
+			else if (t.getException() != null)
+				Log.e(TAG, t.getException().toString());
 		});
 	}
 
@@ -215,6 +208,11 @@ public class Shift
 		return this.id;
 	}
 
+	public DocumentReference getReference()
+	{
+		return db.collection(COLLECTION).document(this.id);
+	}
+
 	/**
 	 * Performs a <strong>SHALLOW</strong> copy on the attributes of the given
 	 * Shift into the attributes of this shit
@@ -233,7 +231,12 @@ public class Shift
 	// DATABASE LOGIC
 	public static Task<DocumentSnapshot> getShiftByKey(String key)
 	{
-		return db.collection(COLLECTION).document(key).get();
+		return Shift.getShiftReferenceByKey(key).get();
+	}
+
+	public static DocumentReference getShiftReferenceByKey(String key)
+	{
+		return db.collection(COLLECTION).document(key);
 	}
 
 	public static Task<QuerySnapshot> getShifts()
@@ -251,5 +254,19 @@ public class Shift
 	public static Task<Void> delete(String id)
 	{
 		return db.collection(COLLECTION).document(id).delete();
+	}
+
+	public static Task<DocumentSnapshot> swapEmployees(DocumentReference shiftRef,
+	                                        DocumentReference empFromRef,
+	                                       DocumentReference empToRef)
+	{
+		return shiftRef.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+			if (t.isSuccessful() && t.getResult() != null)
+			{
+				Shift s = new Shift(t.getResult());
+				s.removeEmployee(empFromRef).addOnCompleteListener(
+						(Task<Void> task) -> s.addEmployee(empToRef));
+			}
+		});
 	}
 }
