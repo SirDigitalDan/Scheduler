@@ -44,6 +44,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         private final Button addEmployee;
         private final TextView addEmployeeText;
 
+        private final Button removeEmployee;
+
 
         ShiftsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +63,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             deleteShift = itemView.findViewById(R.id.deleteShift);
             addEmployee = itemView.findViewById(R.id.addEmployee);
             addEmployeeText = itemView.findViewById(R.id.addEmployeeText);
+
+            removeEmployee = itemView.findViewById(R.id.removeEmployee);
         }
     }
 
@@ -173,6 +177,28 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
                 if (task.isSuccessful()) {
                     this.shiftList.remove(currentShift);
                     this.notifyDataSetChanged();
+                }
+            });
+        });
+
+        shiftsViewHolder.removeEmployee.setOnClickListener((final View v) -> {
+            String removingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
+            DocumentReference ref = db.collection(Employee.COLLECTION).document(removingEmployee);
+
+            currentShift.removeEmployee(ref).addOnCompleteListener((Task<Void> task) ->
+            {
+                if (task.isSuccessful())
+                {
+                    shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
+                    Toast.makeText(v.getContext(), "Employee removal successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (task.getException() != null)
+                        Log.e(TAG, task.getException().toString());
+                    Toast.makeText(v.getContext(), "Something went wrong!",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         });
