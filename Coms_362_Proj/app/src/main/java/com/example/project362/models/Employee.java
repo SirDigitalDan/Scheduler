@@ -1,14 +1,14 @@
 package com.example.project362.models;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +23,7 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
+	public static final String AVAILABILITY= "availability";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -31,19 +32,20 @@ public class Employee
 	private String email;
 	private String name;
 	private String status;
-
+	private ArrayList<String> availability;
 	public Employee(DocumentSnapshot doc)
 	{
 		this.copyFromDocumentSnapshot(doc);
 	}
 
-	public Employee(String id, String empId, String email, String name, String status)
+	public Employee(String id, String empId, String email, String name, String status,ArrayList<String> availability)
 	{
 		this.id = id;
 		this.empId = empId;
 		this.email = email;
 		this.name = name;
 		this.status = status;
+		this.availability = availability;
 	}
 
 	public Task<Void> setEmpId(final String empId)
@@ -78,6 +80,22 @@ public class Employee
 			{
 				if (task.isSuccessful())
 					Employee.this.name = name;
+			}
+		});
+	}
+	public Task<Void> addAvailability(final String availability)
+	{
+	    //Creates an availability array which is composed of dates that the employee selects
+		final ArrayList<String> temp = new ArrayList<>(this.availability);
+		temp.add(availability);
+        //This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
+		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Employee.this.availability = temp;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
 			}
 		});
 	}
@@ -141,6 +159,7 @@ public class Employee
 		this.email = (String) src.get(EMAIL);
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
+		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
 	private Task<Void> update(String field, final Object datum)
@@ -162,7 +181,7 @@ public class Employee
 		h.put(EMP_ID, this.empId);
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
-
+		h.put(AVAILABILITY, this.availability);
 		return db.collection(COLLECTION).document(this.email).set(h);
 	}
 

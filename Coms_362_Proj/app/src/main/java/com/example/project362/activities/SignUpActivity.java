@@ -2,7 +2,6 @@ package com.example.project362.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
@@ -11,17 +10,9 @@ import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -76,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 			if (task.isSuccessful())
 			{
 				Employee e = new Employee(email, mAuth.getCurrentUser().getUid(), email,
-						editTextName.getText().toString(), "employee");
+						editTextName.getText().toString(), "employee",null);
 
 				e.create();
 

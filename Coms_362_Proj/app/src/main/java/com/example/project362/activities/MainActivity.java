@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 		mAuth = FirebaseAuth.getInstance();
 		findViewById(R.id.button_send).setOnClickListener(MainActivity.this);
 		findViewById(R.id.button_send1).setOnClickListener(MainActivity.this);
-        findViewById(R.id.button_send2).setOnClickListener(MainActivity.this);
+
 		Button btnClickMe = (Button) findViewById(R.id.button_send);
 		btnClickMe.setOnClickListener(MainActivity.this);
 		findViewById(R.id.buttonLogin).setOnClickListener(this);
@@ -151,11 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 				Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
 				startActivity(in);
 				break;
-			case R.id.button_send2:
-				finish();
-				Intent in1 = new Intent(MainActivity.this, CalendarActivity.class);
-				startActivity(in1);
-				break;
+
 		}
 	}
 }
