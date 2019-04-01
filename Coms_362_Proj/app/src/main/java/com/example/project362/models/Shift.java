@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -222,8 +223,8 @@ public class Shift
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
 		this.id = src.getId();
-		this.startTime = (Date) src.get(START_TIME);
-		this.endTime = (Date) src.get(END_TIME);
+		this.startTime = ((Timestamp) src.get(START_TIME)).toDate();
+		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();
 		this.note = (String) src.get(NOTE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
 	}
