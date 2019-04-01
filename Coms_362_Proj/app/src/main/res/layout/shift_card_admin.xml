@@ -74,13 +74,24 @@
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:background="@color/colorAccent"
             android:text="Add Employee"
             app:layout_constraintBottom_toTopOf="@+id/pickUpShiftButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.859"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/removeEmployee"
+            app:layout_constraintStart_toEndOf="@+id/addEmployeeText" />
+
+        <Button
+            android:id="@+id/removeEmployee"
+            android:layout_width="62dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/colorAccent"
+            android:text="Remove Employee"
+            app:layout_constraintBottom_toTopOf="@+id/pickUpShiftButton"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/deleteShift"
@@ -151,8 +162,6 @@
             android:id="@+id/editTextShiftNote"
             android:layout_width="215dp"
             android:layout_height="45dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="44dp"
@@ -168,17 +177,11 @@
             android:id="@+id/addEmployeeText"
             android:layout_width="215dp"
             android:layout_height="45dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="244dp"
             android:ems="10"
-            android:hint="Add Employee Email"
+            android:hint="Employee Email"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addEmployee"
-            app:layout_constraintHorizontal_bias="0.659"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
