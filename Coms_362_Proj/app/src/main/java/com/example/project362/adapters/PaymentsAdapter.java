@@ -26,6 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/*
+    The PaymentsAdapter Class creates a scrollable list of Payments for the Admin to see and interact with
+ */
 public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.PaymentsViewHolder>
 {
     private ArrayList<Payment> paymentsList;
@@ -69,10 +72,13 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
         return new PaymentsViewHolder(v);
     }
 
+
+    ///Iterate through all Payments and create a card for each pending Payment
+    /// The payment card includes the employee email, the amount of money generated for the payment
+    ///  and two buttons, one for accepting and one for rejecting the Payment
     @Override
     public void onBindViewHolder(@NonNull final PaymentsViewHolder paymentsViewHolder, int i)
     {
-
 
         Payment currentPayment = paymentsList.get(i);
 

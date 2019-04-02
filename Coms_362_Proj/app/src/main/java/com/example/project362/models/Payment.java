@@ -28,7 +28,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+    The Payment Class represents an amount of money owed to an employee for working their shifts
+
+    @param employee     The employee that is owed the payment amount
+    @param amount       The amount of money
+    @param status       The status of the Payment - Pending, Approved, Rejected
+
+ */
+
 public class Payment {
+
+    /*
+        the Status enum is an attribute of a Payment.  It always starts as Pending once it is created
+        and can be approved or rejected by an Admin account.
+     */
 
     public enum Status{
         PENDING("PENDING", 0), ACCEPTED("ACCEPTED", 1), REJECTED("REJECTED", 2);
@@ -58,8 +72,11 @@ public class Payment {
         }
     }
 
+    /*
+        Currently, all employees make 10 dollars per hour
+     */
     private static final int EMPLOYEEPAY = 10;
-    private static final int ADMINPAY = 20;
+
 
     private static final String EMPLOYEE = "employee";
     private static final String AMOUNT = "amount";
@@ -82,11 +99,13 @@ public class Payment {
 
     private String key;
 
+    //Create new Payment object from a Firebase snapshot
     public Payment(DocumentSnapshot docSnap)
     {
         this.copyFromDocumentSnapshot(docSnap);
     }
 
+    //Create new Payment Object
     public Payment(DocumentReference employee, int amount, int status)
     {
         this.employee = employee;
@@ -106,6 +125,7 @@ public class Payment {
         return this.status;
     }
 
+
     private void copyFromDocumentSnapshot(DocumentSnapshot src)
     {
         this.key = src.getId();
@@ -115,7 +135,7 @@ public class Payment {
         this.employee = src.getDocumentReference("employee");
 
     }
-
+    // Update Payment in Database
     private Task<Void> update(String field, final Object datum)
     {
         Map<String, Object> data = new HashMap<>();
@@ -123,6 +143,7 @@ public class Payment {
         return db.collection(COLLECTION).document(this.key).update(data);
     }
 
+    //Create new payment in the database
     public static Task<DocumentReference> addToFirestore(DocumentReference employee, int amount, int status)
     {
         HashMap<String, Object> h = new HashMap<>();
@@ -132,6 +153,7 @@ public class Payment {
         return db.collection(COLLECTION).add(h);
     }
 
+    ///Add current Employee in Database
     public Task<DocumentReference> create()
     {
         HashMap<String, Object> h = new HashMap<>();
@@ -141,11 +163,13 @@ public class Payment {
         return db.collection(COLLECTION).add(h);
     }
 
+
     public static Task<Void> delete(String key)
     {
         return db.collection(COLLECTION).document(key).delete();
     }
 
+    // return all payments in DB
     public static Task<QuerySnapshot> getPayments()
     {
         return db.collection(COLLECTION).get();
@@ -161,7 +185,7 @@ public class Payment {
         return db.collection(COLLECTION).document(key);
     }
 
-
+    //Changes the status from 0 to 1
     public Task<Void> accept()
     {
 
@@ -170,48 +194,66 @@ public class Payment {
 
     }
 
+    //Changes the status from 0 to 2
     public Task<Void> reject()
     {
         this.status = Status.REJECTED.getValue();
         return this.update(STATUS, this.status);
     }
 
+    /*
+        calculatePayments let an employee generate a Payment statement for the shifts that they have worked.
+
+        The method works by iterating through all of the shifts and find which shifts have (1) occured already and
+        (2) have included the current user as an employee
+
+        The method will calculate the hours that the employee has worked and multiply it by the hourly wage of
+        an employee ($10).  It will then add the Payment to the database.
+     */
     public static void calculatePayments(){
 
-        int pay = 0;
+
         db.collection("Shifts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for (DocumentSnapshot document : task.getResult()) {
-                    List<DocumentReference> products = (List<DocumentReference>) document.get("employees");
+
+                ////Iterate through all shifts
+                for (DocumentSnapshot shift : task.getResult()) {
+                    List<DocumentReference> emps = (List<DocumentReference>) shift.get("employees");
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     DocumentReference employee = db.collection("Employees").document(user.getEmail());
 
-                    if(products.contains(employee)){
-                        Timestamp start = document.getTimestamp("startTime");
-                        Timestamp end = document.getTimestamp("endTime");
+                    ///check if shift has occured yet
+                    Date today = new Date();
+                    Timestamp t = shift.getTimestamp("endTime");
+                    Date shiftEndDate = t.toDate();
+
+                    long dateCheck = today.getTime() - shiftEndDate.getTime();
+
+                    ///check if employee is included in the shift and it has occured
+                    if(emps.contains(employee) && dateCheck > 0){
+
+                        ////Calculate hours worked
+                        Timestamp start = shift.getTimestamp("startTime");
+                        Timestamp end = shift.getTimestamp("endTime");
 
                         Date startDate = start.toDate();
                         Date endDate = end.toDate();
 
-                        //HH converts hour in 24 hours format (0-23), day calculation
-                        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
                         long diff = endDate.getTime() - startDate.getTime();
-
 
                         long diffMinutes = diff / (60 * 1000) % 60;
                         long diffHours = diff / (60 * 60 * 1000) % 24;
                         long diffDays = diff / (24 * 60 * 60 * 1000);
 
 
-
                         int moneyEarned = (int) diffMinutes / 60;
                         moneyEarned += diffHours;
                         moneyEarned += diffDays * 24;
 
-                        moneyEarned = moneyEarned * 10;
+                        moneyEarned = moneyEarned * EMPLOYEEPAY;
 
+                        /// Add new payment to database
                         addToFirestore(employee, moneyEarned, 0);
 
 

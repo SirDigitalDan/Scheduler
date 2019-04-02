@@ -20,6 +20,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/*
+    This activity is a page where an Admin can check all of the Payment statements that are awaiting approval
+
+    It filters out all of the payments and shows only Payments that are pending.
+
+    It displays them in a scrollable list, and allows for approval or rejection
+ */
+
 public class PaymentReviewActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
@@ -42,6 +50,8 @@ public class PaymentReviewActivity extends AppCompatActivity implements View.OnC
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+
+        /// Get all Payments that are pending and add to an arraylist to pass to an adapter
         Payment.getPayments().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
@@ -51,6 +61,7 @@ public class PaymentReviewActivity extends AppCompatActivity implements View.OnC
                     }
                 }
 
+                ///Create scrollable list
                 recyclerView.setAdapter(new PaymentsAdapter(payments));
             }
             else

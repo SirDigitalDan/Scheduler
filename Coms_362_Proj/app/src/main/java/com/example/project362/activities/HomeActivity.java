@@ -63,6 +63,8 @@ public class HomeActivity extends AppCompatActivity
 			startActivity(i);
 		});
 
+
+		////Generate Payment for current user's worked shifts
 		this.paymentsButton.setOnClickListener((View v) -> {
 			FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 			DocumentReference employee = Employee.getEmployeeReferenceByKey(user.getEmail());
