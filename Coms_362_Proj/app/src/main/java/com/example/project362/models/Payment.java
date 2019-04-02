@@ -109,6 +109,9 @@ public class Payment {
     private void copyFromDocumentSnapshot(DocumentSnapshot src)
     {
         this.key = src.getId();
+        this.amount = (int) (long) src.getLong("amount");
+        this.status = (int) (long) src.getLong("status");
+
         this.employee = src.getDocumentReference("employee");
 
     }
