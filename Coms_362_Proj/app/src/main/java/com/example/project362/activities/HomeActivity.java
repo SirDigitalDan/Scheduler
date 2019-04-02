@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.project362.R;
 import com.example.project362.adapters.PendingShiftSwapsAdapter;
 import com.example.project362.models.Employee;
+import com.example.project362.models.Payment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -25,7 +26,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity
 {
@@ -33,6 +36,7 @@ public class HomeActivity extends AppCompatActivity
 	private Button allShiftsButton;
 	private Button pendingReceivedSwapRequestsButton;
 	private Button paymentsButton;
+	private Payment payment;
 
 
 	@Override
@@ -63,65 +67,16 @@ public class HomeActivity extends AppCompatActivity
 			FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 			DocumentReference employee = Employee.getEmployeeReferenceByKey(user.getEmail());
 
-			calculatePayments(employee);
+			Payment.calculatePayments();
+
+			Toast.makeText(HomeActivity.this, "Payment Created Successfully!", Toast.LENGTH_SHORT).show();
+
+
 		});
 
 
 		// ADD LISTENERS HERE
 	}
 
-	public void calculatePayments(DocumentReference employ){
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-		double pay = 0.0;
 
-		/*Query query = db.collection("shifts").whereArrayContains("employees", employee)
-				.whereLessThan("endTime", Timestamp.now());
-
-
-		query.get()
-				.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-					@Override
-					public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-							QuerySnapshot q = task.getResult();
-							Toast.makeText(HomeActivity.this,
-										"Query Size " + Integer.toString(q.size()), Toast.LENGTH_SHORT).show();
-
-
-					}
-
-
-				});*/
-		db.collection("Shifts")
-				.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-			@Override
-			public void onComplete(@NonNull Task<QuerySnapshot> task) {
-				for (DocumentSnapshot document : task.getResult()) {
-					List<DocumentReference> products = (List<DocumentReference>) document.get("employees");
-					FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-					DocumentReference employee = db.collection("Employees").document(user.getEmail());
-					if(products.contains(employee)){
-						Timestamp start = document.getTimestamp("startTime");
-						Timestamp end = document.getTimestamp("endTime");
-
-						int time = start.compareTo(end);
-
-						Toast.makeText(HomeActivity.this,
-								Integer.toString(time), Toast.LENGTH_SHORT).show();
-					}
-					else{
-						Toast.makeText(HomeActivity.this,
-								"IDK WHATS GOING ON", Toast.LENGTH_SHORT).show();
-					}
-
-
-				}
-			}
-		});
-
-
-
-
-
-	}
 }
