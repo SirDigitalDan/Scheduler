@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity
 			startActivity(i);
 		});
 
-		this.pendingReceivedSwapRequestsButton.setOnClickListener((View v) -> {
+		this.attendance.setOnClickListener((View v) -> {
 			Intent i = new Intent(this, ViewAttendanceActivity.class);
 			startActivity(i);
 		});

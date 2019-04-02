@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.project362.R;
@@ -19,24 +20,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendanceAdapter.ShiftsViewHolder> {
+public class ShiftsAdapterClockIn {
 
 
     private ArrayList<Shift> shiftList;
     private DocumentReference currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private static final String TAG = "ShiftAttendanceAdapter";
+    private static final String TAG = "ShiftAdapterClockIn";
 
     static class ShiftsViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView info;
-        private final TextView attendance;
-        private final EditText attendanceAdd;
-        private final Button attendanceButton;
         private final TextView employees;
-        private final TextView resource;
-        private final TextView current;
+        private final Switch clock;
+
 
 
 
@@ -49,17 +47,13 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
             employees = itemView.findViewById(R.id.shiftEmployees);
 
-            attendanceAdd = itemView.findViewById(R.id.editTextShiftAttendance);
-            resource = itemView.findViewById(R.id.resource);
-            attendance = itemView.findViewById(R.id.epmployeeAttendance);
-            attendanceButton = itemView.findViewById(R.id.attendanceButton);
-            current = itemView.findViewById(R.id.current);
+            clock = itemView.findViewById(R.id.clockinSwitch);
 
 
         }
     }
 
-    public ShiftAttendanceAdapter(ArrayList<Shift> shifts)
+    public ShiftsAdapterClockIn(ArrayList<Shift> shifts)
     {
         shiftList = shifts;
         currentUser = db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -67,15 +61,15 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
     @NonNull
     @Override
-    public ShiftAttendanceAdapter.ShiftsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ShiftsAdapterClockIn.ShiftsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_card_admin_checkin,
                 viewGroup, false);
-        ShiftAttendanceAdapter.ShiftsViewHolder svh = new ShiftAttendanceAdapter.ShiftsViewHolder(v);
+        ShiftsAdapterClockIn.ShiftsViewHolder svh = new ShiftsAdapterClockIn.ShiftsViewHolder(v);
         return svh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ShiftAttendanceAdapter.ShiftsViewHolder shiftsViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ShiftsAdapterClockIn.ShiftsViewHolder shiftsViewHolder, int i) {
         Employee e;
         final Shift currentShift = shiftList.get(i);
         shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
@@ -83,11 +77,8 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
                 + currentShift.getEndTime() + ". ");
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
-        shiftsViewHolder.attendance.setText(currentShift.getAttendance());
-        shiftsViewHolder.resource.setText("Type in all present employees sepereated by commas to check-in ");
 
-
-        shiftsViewHolder.attendanceButton.setOnClickListener((View v) ->
+        shiftsViewHolder.clock.setOnClickListener((View v) ->
         {
             // Code here executes on main thread after user presses button
             String text = shiftsViewHolder.attendanceAdd.getText().toString();
