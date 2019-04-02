@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 				break;
 			case R.id.button_send1:
 				finish();
-				Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
+				Intent in = new Intent(MainActivity.this, ProfileActivity.class);
 				startActivity(in);
 				break;
 
