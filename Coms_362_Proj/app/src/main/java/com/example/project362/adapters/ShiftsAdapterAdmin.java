@@ -45,7 +45,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         private final TextView addEmployeeText;
 
         private final Button removeEmployee;
-
+        private final Button lockShift;
+        private final TextView lockStatus;
 
         ShiftsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +66,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             addEmployeeText = itemView.findViewById(R.id.addEmployeeText);
 
             removeEmployee = itemView.findViewById(R.id.removeEmployee);
+            lockShift = itemView.findViewById(R.id.lockShift);
+            lockStatus = itemView.findViewById(R.id.lockStatus);
         }
     }
 
@@ -90,6 +93,12 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
         shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
         shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
                 + currentShift.getEndTime() + ". ");
+
+        if(currentShift.getStatus() == 1) {
+            shiftsViewHolder.lockStatus.setText("UNLOCKED");
+        } else if(currentShift.getStatus() == 0) {
+            shiftsViewHolder.lockStatus.setText("LOCKED");
+        }
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
         shiftsViewHolder.note.setText(currentShift.getNote());
@@ -192,6 +201,34 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
                     shiftsViewHolder.employees.setText(ShiftsAdapterAdmin.this.formatEmployees(currentShift.getEmployees()));
                     Toast.makeText(v.getContext(), "Employee removal successful!",
                             Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (task.getException() != null)
+                        Log.e(TAG, task.getException().toString());
+                    Toast.makeText(v.getContext(), "Something went wrong!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        shiftsViewHolder.lockShift.setOnClickListener((final View v) -> {
+            currentShift.toggleStatus().addOnCompleteListener((Task<Void> task) ->
+            {
+                if (task.isSuccessful())
+                {
+                    if(currentShift.getStatus() == 1) {
+                        shiftsViewHolder.lockStatus.setText("UNLOCKED");
+                        Toast.makeText(v.getContext(), "Toggle lock status successful!",
+                                Toast.LENGTH_SHORT).show();
+                    } else if(currentShift.getStatus() == 0) {
+                        shiftsViewHolder.lockStatus.setText("LOCKED");
+                        Toast.makeText(v.getContext(), "Toggle lock status successful!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(v.getContext(), "Something went wrong!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 {
