@@ -83,52 +83,37 @@ app:cardCornerRadius="12dp">
         app:layout_constraintTop_toBottomOf="@+id/shiftInfo" />
 
     <EditText
-        android:id="@+id/editTextShiftNote"
+        android:id="@+id/attendanceAdd"
         android:layout_width="215dp"
         android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="44dp"
         android:ems="10"
         android:hint="Check-in employees"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resource" />
-
-    <TextView
-        android:id="@+id/resource"
-        android:layout_width="300dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="84dp"
-        android:layout_marginRight="84dp"
-        android:layout_marginBottom="12dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextShiftNote"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/epmployeeAttendance"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Type in all present employees sepereated by commas to check-in" />
+        app:layout_constraintVertical_bias="0.21" />
 
     <Button
         android:id="@+id/attendanceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="53dp"
-        android:layout_marginRight="53dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginBottom="41dp"
         android:text="+"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextShiftNote"
-        app:layout_constraintTop_toBottomOf="@+id/resource" />
+        app:layout_constraintStart_toEndOf="@+id/attendanceAdd"
+        app:layout_constraintTop_toBottomOf="@+id/epmployeeAttendance"
+        app:layout_constraintVertical_bias="0.191" />
 
     <TextView
         android:id="@+id/current"

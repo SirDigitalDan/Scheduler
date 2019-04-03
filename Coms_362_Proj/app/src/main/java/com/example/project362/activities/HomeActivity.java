@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity
 
 
 	private Button paymentsButton;
-	private Payment payment;
+
 
 
 
@@ -77,10 +77,7 @@ public class HomeActivity extends AppCompatActivity
 		});
 
 
-		this.attendance.setOnClickListener((View v) -> {
-			Intent i = new Intent(this, ViewAttendanceActivity.class);
-			startActivity(i);
-		});
+
 
 		this.clock.setOnClickListener((View v) -> {
 			Intent i = new Intent(this, ViewClockIn.class);
