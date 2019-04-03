@@ -2,6 +2,7 @@ package com.example.project362.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.project362.R;
+import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -77,20 +79,24 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
         shiftsViewHolder.attendanceButton.setOnClickListener((View v) ->
         {
-            // Code here executes on main thread after user presses button
-            /*String text = shiftsViewHolder.attendanceAdd.getText().toString();
-            String n = shiftsViewHolder.attendance.getText().toString();
-            String attendance = n + "\n" + text;
 
-            currentShift.setAttendance(attendance).addOnCompleteListener((Task<Void> task) ->
+
+            String text = shiftsViewHolder.attendanceAdd.getText().toString();
+
+            DocumentReference ref = Employee.getEmployeeReferenceByKey(text);
+
+            currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
             {
-                if (task.isSuccessful())
-                    shiftsViewHolder.attendance.setText(currentShift.getAttendance());
-            });
+            if (task.isSuccessful()){
+                shiftsViewHolder.attendanceAdd.setText(" ");
+            }
+            else
+            {
+                if (task.getException() != null)
 
-            shiftsViewHolder.attendanceAdd.setText("");*/
-
-
+                throw new Error("Operation unsuccessful");
+            }
+        });
 
 
 
