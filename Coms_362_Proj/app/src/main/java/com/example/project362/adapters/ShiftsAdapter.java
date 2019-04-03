@@ -18,6 +18,7 @@ import com.example.project362.models.Shift;
 import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -45,6 +46,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
 		private final Button swapButton;
+		private final Button clockInButton;
 
 		private final TextView lockStatus2;
 
@@ -66,6 +68,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			swapButton = itemView.findViewById(R.id.swapButton);
 
 			lockStatus2 = itemView.findViewById(R.id.lockStatus2);
+
+			clockInButton = itemView.findViewById(R.id.clockInButton);
 		}
 	}
 
@@ -176,6 +180,32 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			SwapRequest request = new SwapRequest(s, from, to);
 			request.create();
 		});
+
+		shiftsViewHolder.clockInButton.setOnClickListener((View v) ->
+		{
+			FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+			String key = currentUser.getEmail();
+			//if(!text.equals("")){
+			DocumentReference ref = Employee.getEmployeeReferenceByKey(key);  //get employee reference
+
+			currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
+			{
+				if (task.isSuccessful()){
+
+				}
+				else
+				{
+					if (task.getException() != null)
+
+						throw new Error("Operation unsuccessful");
+				}
+			});
+			//}
+
+		});
+
+
 	}
 
 	private String formatEmployees(ArrayList<DocumentReference> employees)
