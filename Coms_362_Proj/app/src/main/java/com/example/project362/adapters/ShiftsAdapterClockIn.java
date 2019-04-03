@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.project362.R;
@@ -20,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class ShiftsAdapterClockIn {
+public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterClockIn.ShiftsViewHolder>{
 
 
     private ArrayList<Shift> shiftList;
@@ -33,8 +31,7 @@ public class ShiftsAdapterClockIn {
         private final TextView title;
         private final TextView info;
         private final TextView employees;
-        private final Switch clock;
-
+        private final Button clock;
 
 
 
@@ -47,7 +44,7 @@ public class ShiftsAdapterClockIn {
 
             employees = itemView.findViewById(R.id.shiftEmployees);
 
-            clock = itemView.findViewById(R.id.clockinSwitch);
+            clock =  itemView.findViewById(R.id.checkIn);
 
 
         }
@@ -62,13 +59,13 @@ public class ShiftsAdapterClockIn {
     @NonNull
     @Override
     public ShiftsAdapterClockIn.ShiftsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_card_admin_checkin,
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shift_card_clockin,
                 viewGroup, false);
         ShiftsAdapterClockIn.ShiftsViewHolder svh = new ShiftsAdapterClockIn.ShiftsViewHolder(v);
         return svh;
     }
 
-    @Override
+   @Override
     public void onBindViewHolder(@NonNull final ShiftsAdapterClockIn.ShiftsViewHolder shiftsViewHolder, int i) {
         Employee e;
         final Shift currentShift = shiftList.get(i);
@@ -78,22 +75,27 @@ public class ShiftsAdapterClockIn {
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 
-        shiftsViewHolder.clock.setOnClickListener((View v) ->
-        {
-            // Code here executes on main thread after user presses button
-            String text = shiftsViewHolder.attendanceAdd.getText().toString();
-            String n = shiftsViewHolder.attendance.getText().toString();
-            String attendance = n + "\n" + text;
 
-            currentShift.setAttendance(attendance).addOnCompleteListener((Task<Void> task) ->
-            {
-                if (task.isSuccessful())
-                    shiftsViewHolder.attendance.setText(currentShift.getAttendance());
-            });
 
-            shiftsViewHolder.attendanceAdd.setText("");
-        });
 
+
+       shiftsViewHolder.clock.setOnClickListener((View v) ->
+       {
+           // Code here executes on main thread after user presses button
+           String text = shiftsViewHolder.attendanceAdd.getText().toString();
+           String n = shiftsViewHolder.attendance.getText().toString();
+           String attendance = n + "\n" + text;
+
+           currentShift.setAttendance(attendance).addOnCompleteListener((Task<Void> task) ->
+           {
+               if (task.isSuccessful())
+                   shiftsViewHolder.attendance.setText(currentShift.getAttendance());
+           });
+
+           shiftsViewHolder.attendanceAdd.setText("");
+       });
+
+*/
 
     }
 

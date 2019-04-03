@@ -66,20 +66,14 @@ app:cardCornerRadius="12dp">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shiftInfo" />
 
-    <Switch
-        android:id="@+id/clockinSwitch"
+    <Button
+        android:id="@+id/checkIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="202dp"
-        android:layout_marginRight="202dp"
-        android:layout_marginBottom="349dp"
-        android:text="Clock-in:   "
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:text="clock-in"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shiftEmployees" />
 
