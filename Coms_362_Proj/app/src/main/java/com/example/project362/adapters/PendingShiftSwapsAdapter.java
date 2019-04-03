@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class PendingShiftSwapsAdapter extends RecyclerView.Adapter<PendingShiftSwapsAdapter.SwapViewHolder>
 {
+
 	ArrayList<SwapRequest> swapList;
 
 	public PendingShiftSwapsAdapter(ArrayList<SwapRequest> swapList)

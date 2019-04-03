@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
-
 import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,12 +53,13 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			pickUpShiftButton = itemView.findViewById(R.id.pickUpShiftButton);
 			dropShiftButton = itemView.findViewById(R.id.dropShiftButton);
 
-			noteAdd = itemView.findViewById(R.id.editTextShiftNote);
+			noteAdd = itemView.findViewById(R.id.editTextShiftAttendance);
 			note = itemView.findViewById(R.id.shiftNote);
 			noteButton = itemView.findViewById(R.id.noteButton);
 
 			swapWith = itemView.findViewById(R.id.swapWith);
 			swapButton = itemView.findViewById(R.id.swapButton);
+
 		}
 	}
 
@@ -67,8 +67,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 	{
 		shiftList = shifts;
 
-		currentUser =
-				Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+		currentUser = Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 	}
 
 	@NonNull

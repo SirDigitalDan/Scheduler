@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,7 +56,7 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             pickUpShiftButton = itemView.findViewById(R.id.pickUpShiftButton);
             dropShiftButton = itemView.findViewById(R.id.dropShiftButton);
 
-            noteAdd = itemView.findViewById(R.id.editTextShiftNote);
+            noteAdd = itemView.findViewById(R.id.editTextShiftAttendance);
             note = itemView.findViewById(R.id.shiftNote);
             noteButton = itemView.findViewById(R.id.noteButton);
 

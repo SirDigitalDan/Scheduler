@@ -1,9 +1,7 @@
 package com.example.project362.models;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
@@ -12,9 +10,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +24,8 @@ public class Shift
 	private static final String END_TIME = "endTime";
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
+	private static final String ATTENDANCE = "attendance";
+
 
 	public static final String COLLECTION = "Shifts";
 
@@ -84,6 +83,7 @@ public class Shift
 	private Date endTime;
 	private ArrayList<DocumentReference> employees;
 	private String note;
+	private String attendance;
 
 	public Shift(DocumentSnapshot docSnap)
 	{
@@ -226,6 +226,21 @@ public class Shift
 		});
 	}
 
+
+
+	public Task<Void> setAttendance(final String attendance)
+	{
+		return this.update(ATTENDANCE, attendance).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Shift.this.attendance = attendance;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
 	public String setId(String id)
 	{
 		return this.id = id;
@@ -251,6 +266,11 @@ public class Shift
 		return this.note;
 	}
 
+	public String getAttendance()
+	{
+		return this.attendance;
+	}
+
 	public String getId()
 	{
 		return this.id;
@@ -273,6 +293,7 @@ public class Shift
 		this.startTime = ((Timestamp) src.get(START_TIME)).toDate();
 		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();
 		this.note = (String) src.get(NOTE);
+		this.attendance = (String) src.get(ATTENDANCE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
 	}
 

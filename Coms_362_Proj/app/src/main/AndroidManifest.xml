@@ -13,6 +13,8 @@
         <activity android:name=".activities.AdminStatusActivity" />
         <activity android:name=".activities.EditInfoActivity" />
         <activity android:name=".activities.HomeActivity" />
+        <activity android:name=".activities.ViewAttendanceActivity" />
+        <activity android:name=".activities.ViewClockIn" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.ViewAllShiftsActivity" />
         <activity android:name=".activities.ViewPendingRequestsToUserActivity" />

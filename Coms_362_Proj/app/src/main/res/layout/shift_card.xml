@@ -111,7 +111,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextShiftNote"
+            app:layout_constraintBottom_toTopOf="@+id/editTextShiftAttendance"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.186"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +119,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <EditText
-            android:id="@+id/editTextShiftNote"
+            android:id="@+id/editTextShiftAttendance"
             android:layout_width="215dp"
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
@@ -132,7 +132,7 @@
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/noteButton"
-            app:layout_constraintHorizontal_bias="0.659"
+            app:layout_constraintHorizontal_bias="0.666"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
