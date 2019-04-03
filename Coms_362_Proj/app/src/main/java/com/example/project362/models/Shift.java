@@ -89,6 +89,7 @@ public class Shift
 	private String note;
 	private String attendance;
 
+
 	public Shift(DocumentSnapshot docSnap)
 	{
 		this.copyFromDocumentSnapshot(docSnap);

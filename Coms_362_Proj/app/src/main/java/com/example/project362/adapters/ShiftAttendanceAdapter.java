@@ -82,7 +82,7 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         shiftsViewHolder.attendanceButton.setOnClickListener((View v) ->
         {
             // Code here executes on main thread after user presses button
-            String text = shiftsViewHolder.attendanceAdd.getText().toString();
+            /*String text = shiftsViewHolder.attendanceAdd.getText().toString();
             String n = shiftsViewHolder.attendance.getText().toString();
             String attendance = n + "\n" + text;
 
@@ -92,7 +92,12 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
                     shiftsViewHolder.attendance.setText(currentShift.getAttendance());
             });
 
-            shiftsViewHolder.attendanceAdd.setText("");
+            shiftsViewHolder.attendanceAdd.setText("");*/
+
+
+
+
+
         });
 
 
