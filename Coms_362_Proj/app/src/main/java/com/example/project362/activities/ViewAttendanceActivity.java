@@ -41,6 +41,7 @@ public class ViewAttendanceActivity extends AppCompatActivity implements View.On
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        ///Display all shift cards
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
