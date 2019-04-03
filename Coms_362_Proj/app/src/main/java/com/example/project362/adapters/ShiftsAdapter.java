@@ -149,10 +149,11 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 				}
 				else
 				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-					Toast.makeText(v.getContext(), "Something went wrong!",
-							Toast.LENGTH_SHORT).show();
+					if (task.getException() != null) {
+						Toast.makeText(v.getContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(v.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}));
 

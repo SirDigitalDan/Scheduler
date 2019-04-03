@@ -33,10 +33,10 @@ public class Shift
 
 	public static final String COLLECTION = "Shifts";
 
-	private int status;
+	private int lock;
 
 	public enum LockStatus {
-		PENDING("LOCKED", 0), ACCEPTED("UNLOCKED", 1);
+		LOCKED("LOCKED", 0), UNLOCKED("UNLOCKED", 1);
 
 		private final int value;
 		private final String desc;
@@ -64,11 +64,11 @@ public class Shift
 	}
 
 	public Task<Void> toggleStatus() {
-		if(this.status == 1) {
-			this.status = 0;
+		if(this.lock == 1) {
+			this.lock = 0;
 			return this.update("lock" , 0);
-		} else if (this.status == 0) {
-			this.status = 1;
+		} else if (this.lock == 0) {
+			this.lock = 1;
 			return this.update("lock", 1);
 		} else {
 			return null;
@@ -77,7 +77,7 @@ public class Shift
 
 	public int getStatus()
 	{
-		return status;
+		return lock;
 	}
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -137,6 +137,7 @@ public class Shift
 
 	public Task<Void> addEmployee(final DocumentReference employee)
 	{
+		if (this.lock == LockStatus.LOCKED.getValue()) return Tasks.forException(new Exception("It's locked yo"));
 		final ArrayList<DocumentReference> temp = new ArrayList<>(employees);
 
 		boolean contained = false;

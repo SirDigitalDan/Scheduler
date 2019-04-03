@@ -56,7 +56,7 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             pickUpShiftButton = itemView.findViewById(R.id.pickUpShiftButton);
             dropShiftButton = itemView.findViewById(R.id.dropShiftButton);
 
-            noteAdd = itemView.findViewById(R.id.editTextShiftAttendance);
+            noteAdd = itemView.findViewById(R.id.editTextShiftNote);
             note = itemView.findViewById(R.id.shiftNote);
             noteButton = itemView.findViewById(R.id.noteButton);
 
