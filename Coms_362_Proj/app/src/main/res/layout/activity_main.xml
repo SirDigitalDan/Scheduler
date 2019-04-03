@@ -70,7 +70,7 @@
                 android:textColor="@color/colorAccent" />
 
             <Button
-                android:id="@+id/button_send"
+                android:id="@+id/buttonSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
@@ -78,8 +78,9 @@
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorAccent" />
+
             <Button
-                android:id="@+id/button_send1"
+                android:id="@+id/buttonEditAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"

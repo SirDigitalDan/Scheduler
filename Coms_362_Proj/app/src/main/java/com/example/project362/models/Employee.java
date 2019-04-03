@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,14 +41,14 @@ public class Employee
 		this.copyFromDocumentSnapshot(doc);
 	}
 
-	public Employee(String id, String empId, String email, String name, String status,ArrayList<String> availability)
+	public Employee(String id, String empId, String email, String name, String status)
 	{
 		this.id = id;
 		this.empId = empId;
 		this.email = email;
 		this.name = name;
 		this.status = status;
-		this.availability = availability;
+		this.availability = new ArrayList<>();
 	}
 
 	public Task<Void> setEmpId(final String empId)
@@ -85,16 +86,16 @@ public class Employee
 			}
 		});
 	}
-	public Task<Void> addAvailability(final ArrayList<String> avail)
+
+	public Task<Void> addAvailability(final String date)
 	{
+		if (this.availability.contains(date)) return Tasks.forException(new Exception("That date " +
+				"is already added"));
+
 	    //Creates an availability array which is composed of dates that the employee selects
 		final ArrayList<String> temp = new ArrayList<>(this.availability);
-		for (int i=0; i	 <	avail.size();	i++)
-		{
-			if(this.availability.contains(avail.get(i))!=true) {
-				temp.add(avail.get(i));
-			}
-		}
+		temp.add(date);
+
         //This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
 		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
 		{
@@ -174,11 +175,6 @@ public class Employee
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
-	public static CollectionReference getEmployees()
-	{
-		return db.collection(COLLECTION);
-	}
-
 	private Task<Void> update(String field, final Object datum)
 	{
 		Map<String, Object> data = new HashMap<>();
@@ -199,6 +195,7 @@ public class Employee
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
 		h.put(AVAILABILITY, this.availability);
+
 		return db.collection(COLLECTION).document(this.email).set(h);
 	}
 

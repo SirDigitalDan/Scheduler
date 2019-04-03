@@ -2,18 +2,16 @@ package com.example.project362.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 
 import java.util.ArrayList;
 
-public class ViewAvailability extends AppCompatActivity implements View.OnClickListener
+public class ViewAvailability extends AppCompatActivity
 {
     private String currentUser;
     private ListView lv;
@@ -23,18 +21,19 @@ public class ViewAvailability extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_availability);
-        findViewById(R.id.viewAvail).setOnClickListener(ViewAvailability.this);
+        findViewById(R.id.viewAvail).setOnClickListener(v -> {
+        	showAvailability();
+        });
 
         lv=findViewById(R.id.listAvails);
 
+        // get the current users email
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         availArr = new ArrayList<>();
     }
     private void showAvailability()
     {
-    	CollectionReference employees = Employee.getEmployees();
-
-    	// get the desired employee
+    	// get the desired employee by email
         Employee.getEmployeeByEmail(currentUser).addOnCompleteListener((task) -> {
             if(task.isSuccessful())
             {
@@ -49,22 +48,8 @@ public class ViewAvailability extends AppCompatActivity implements View.OnClickL
 
     public void lister()
     {
-        //This Method lists the upComingShifts array
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                availArr );
-
-        lv.setAdapter(arrayAdapter);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.viewAvail:
-                showAvailability();
-                break;
-        }
-
+        //This Method lists the availability array
+	    lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+			    availArr));
     }
 }
