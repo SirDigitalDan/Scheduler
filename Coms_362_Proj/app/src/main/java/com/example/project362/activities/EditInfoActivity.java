@@ -53,6 +53,10 @@ public class EditInfoActivity extends AppCompatActivity
 			startActivity(intent);
 		});
 
+		findViewById(R.id.profileActivity).setOnClickListener((View view) -> {
+			Intent intent = new Intent(EditInfoActivity.this, ProfileActivity.class);
+			startActivity(intent);
+		});
 		findViewById(R.id.buttonSignout).setOnClickListener((View view) -> {
 			FirebaseAuth.getInstance().signOut();
 			Toast.makeText(EditInfoActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();

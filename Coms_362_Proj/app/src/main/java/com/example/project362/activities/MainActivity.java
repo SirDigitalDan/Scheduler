@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener
+public class MainActivity extends AppCompatActivity
 {
 	FirebaseAuth mAuth;
 	EditText editTextEmail, editTextPassword;
@@ -32,11 +29,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mAuth = FirebaseAuth.getInstance();
-		findViewById(R.id.button_send).setOnClickListener(MainActivity.this);
-		findViewById(R.id.button_send1).setOnClickListener(MainActivity.this);
-		Button btnClickMe = (Button) findViewById(R.id.button_send);
-		btnClickMe.setOnClickListener(MainActivity.this);
-		findViewById(R.id.buttonLogin).setOnClickListener(this);
+		findViewById(R.id.buttonSignUp).setOnClickListener((v) -> {
+			finish();
+			Intent i = new Intent(MainActivity.this, SignUpActivity.class);
+			startActivity(i);
+		});
+
+		findViewById(R.id.buttonEditAccount).setOnClickListener((v) -> {
+			finish();
+			Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
+			startActivity(in);
+		});
+
+		findViewById(R.id.buttonLogin).setOnClickListener((v) -> userLogin());
+
 		editTextEmail = findViewById(R.id.editTextEmail);
 		editTextPassword = findViewById(R.id.editTextPassword);
 	}
@@ -128,28 +134,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener
 				Toast.makeText(getApplicationContext(), "something went wrong!",
 						Toast.LENGTH_SHORT).show();
 		});
-
-	}
-
-	@Override
-	public void onClick(View view)
-	{
-		switch (view.getId())
-		{
-			case R.id.button_send:
-				finish();
-				Intent i = new Intent(MainActivity.this, SignUpActivity.class);
-				startActivity(i);
-				break;
-
-			case R.id.buttonLogin:
-				userLogin();
-				break;
-			case R.id.button_send1:
-				finish();
-				Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
-				startActivity(in);
-				break;
-		}
 	}
 }

@@ -1,9 +1,7 @@
 package com.example.project362.models;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
@@ -12,9 +10,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +28,8 @@ public class Shift
 	private static final String LOCK = "lock";
 	private static final String ATTENDANCE = "attendance";
 
+	private static final String NAME="Name";
+	private static final String COLLECTION = "Shifts";
 
 	public static final String COLLECTION = "Shifts";
 
@@ -82,7 +81,7 @@ public class Shift
 	}
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+	private	String name;
 	private String id;
 	private Date startTime;
 	private Date endTime;
@@ -277,6 +276,12 @@ public class Shift
 			}
 		});
 	}
+	public Task<Void> viewSchedule()
+	{
+		Task<QuerySnapshot> s = getShifts();
+
+		return null;
+	}
 
 
 
@@ -338,6 +343,11 @@ public class Shift
 		return db.collection(COLLECTION).document(this.id);
 	}
 
+	public String getName()
+	{
+		return this.name;
+	}
+
 	/**
 	 * Performs a <strong>SHALLOW</strong> copy on the attributes of the given
 	 * Shift into the attributes of this shit
@@ -346,6 +356,7 @@ public class Shift
 	 */
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
+		this.name = (String) src.get(NAME);
 		this.id = src.getId();
 		this.startTime = ((Timestamp) src.get(START_TIME)).toDate();
 		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();

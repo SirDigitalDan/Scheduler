@@ -5,7 +5,8 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +29,7 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
+	public static final String AVAILABILITY = "availability";
 	public static final String CHECKED = "checked";
 
 
@@ -38,6 +40,7 @@ public class Employee
 	private String email;
 	private String name;
 	private String status;
+	private ArrayList<String> availability;
 	private String checked;
 
 	public Employee(DocumentSnapshot doc)
@@ -52,6 +55,7 @@ public class Employee
 		this.email = email;
 		this.name = name;
 		this.status = status;
+		this.availability = new ArrayList<>();
 		this.checked = checked;
 	}
 
@@ -87,6 +91,27 @@ public class Employee
 			{
 				if (task.isSuccessful())
 					Employee.this.name = name;
+			}
+		});
+	}
+
+	public Task<Void> addAvailability(final String date)
+	{
+		if (this.availability.contains(date)) return Tasks.forException(new Exception("That date " +
+				"is already added"));
+
+	    //Creates an availability array which is composed of dates that the employee selects
+		final ArrayList<String> temp = new ArrayList<>(this.availability);
+		temp.add(date);
+
+        //This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
+		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Employee.this.availability = temp;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
 			}
 		});
 	}
@@ -150,6 +175,11 @@ public class Employee
 		return this.status;
 	}
 
+	public ArrayList<String> getAvailability()
+	{
+		return this.availability;
+	}
+
 	public String getId() { return this.id; }
 
 	// DATABASE LOGIC
@@ -165,6 +195,7 @@ public class Employee
 		this.email = (String) src.get(EMAIL);
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
+		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
 	private Task<Void> update(String field, final Object datum)
@@ -186,6 +217,7 @@ public class Employee
 		h.put(EMP_ID, this.empId);
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
+		h.put(AVAILABILITY, this.availability);
 		h.put(CHECKED, this.checked);
 
 		return db.collection(COLLECTION).document(this.email).set(h);
