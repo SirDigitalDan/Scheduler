@@ -28,10 +28,12 @@ public class Shift
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
 	private static final String LOCK = "lock";
+	private static final String ATTENDANCE = "attendance";
+
 
 	public static final String COLLECTION = "Shifts";
 
-	private int lock;
+	private int status;
 
 	public enum LockStatus {
 		PENDING("LOCKED", 0), ACCEPTED("UNLOCKED", 1);
@@ -62,12 +64,12 @@ public class Shift
 	}
 
 	public Task<Void> toggleStatus() {
-		if(this.lock == 1) {
-			this.lock = 0;
-			return this.update(LOCK, 0);
-		} else if (this.lock == 0) {
-			this.lock = 1;
-			return this.update(LOCK, 1);
+		if(this.status == 1) {
+			this.status = 0;
+			return this.update("lock" , 0);
+		} else if (this.status == 0) {
+			this.status = 1;
+			return this.update("lock", 1);
 		} else {
 			return null;
 		}
@@ -75,7 +77,7 @@ public class Shift
 
 	public int getStatus()
 	{
-		return lock;
+		return status;
 	}
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -85,6 +87,7 @@ public class Shift
 	private Date endTime;
 	private ArrayList<DocumentReference> employees;
 	private String note;
+	private String attendance;
 
 	public Shift(DocumentSnapshot docSnap)
 	{
@@ -227,6 +230,21 @@ public class Shift
 		});
 	}
 
+
+
+	public Task<Void> setAttendance(final String attendance)
+	{
+		return this.update(ATTENDANCE, attendance).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Shift.this.attendance = attendance;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
 	public String setId(String id)
 	{
 		return this.id = id;
@@ -252,6 +270,11 @@ public class Shift
 		return this.note;
 	}
 
+	public String getAttendance()
+	{
+		return this.attendance;
+	}
+
 	public String getId()
 	{
 		return this.id;
@@ -274,6 +297,7 @@ public class Shift
 		this.startTime = ((Timestamp) src.get(START_TIME)).toDate();
 		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();
 		this.note = (String) src.get(NOTE);
+		this.attendance = (String) src.get(ATTENDANCE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
 		this.lock = (int) (long) src.get(LOCK);
 	}

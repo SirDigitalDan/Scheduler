@@ -120,25 +120,22 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 
 		shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
 		{
-
-            currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
-            {
-                if(shiftsViewHolder.lockStatus2.getText().equals("UNLOCKED")) {
-                    if (task.isSuccessful()) {
-                        shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
-                        Toast.makeText(v.getContext(), "Shift drop successful!",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (task.getException() != null)
-                            Log.e(TAG, task.getException().toString());
-                        Toast.makeText(v.getContext(), "Something went wrong!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(v.getContext(), "Surry! This shift is locked",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+			currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
+			{
+				if (task.isSuccessful())
+				{
+					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
+					Toast.makeText(v.getContext(), "Shift drop successful!",
+							Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					if (task.getException() != null)
+						Log.e(TAG, task.getException().toString());
+					Toast.makeText(v.getContext(), "Something went wrong!",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		});
 
 		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->

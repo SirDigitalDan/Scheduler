@@ -8,23 +8,23 @@
 
     <Button
         android:id="@+id/allShiftsButton"
-        android:layout_width="379dp"
-        android:layout_height="44dp"
+        android:layout_width="377dp"
+        android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="All Shifts"
+        android:text="View All Shifts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/pendingReceivedSwapRequestsButton"
-        android:layout_width="379dp"
-        android:layout_height="44dp"
+        android:layout_width="377dp"
+        android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -33,8 +33,41 @@
         android:background="@android:color/holo_red_light"
         android:text="Pending Received Swaps"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.437"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allShiftsButton" />
+
+    <Button
+
+        android:id="@+id/adminAttendance"
+        android:layout_width="377dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/holo_purple"
+        android:text="Admin Attendance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pendingReceivedSwapRequestsButton" />
+
+    <Button
+        android:id="@+id/clocker"
+        android:layout_width="377dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/holo_green_light"
+        android:text="clock in to shifts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adminAttendance" />
 
     <Button
         android:id="@+id/paymentsButton"
@@ -46,8 +79,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/holo_blue_light"
-        android:text="Calculate Payments"
+        android:text="calculate your payments"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pendingReceivedSwapRequestsButton" />
+        app:layout_constraintTop_toBottomOf="@+id/clocker" />
+
 </android.support.constraint.ConstraintLayout>

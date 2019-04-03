@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 
 import com.example.project362.R;
+
+
 import com.example.project362.adapters.PendingShiftSwapsAdapter;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Payment;
@@ -30,13 +32,21 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Date;
 
+
 public class HomeActivity extends AppCompatActivity
 {
 	public final String TAG = "HomeActivity";
 	private Button allShiftsButton;
 	private Button pendingReceivedSwapRequestsButton;
+
+	private Button attendance;
+	private Button clock;
+
+
+
 	private Button paymentsButton;
 	private Payment payment;
+
 
 
 	@Override
@@ -45,6 +55,9 @@ public class HomeActivity extends AppCompatActivity
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.activity_home);
 
+		clock = findViewById(R.id.clocker);
+
+		attendance = findViewById(R.id.adminAttendance);
 		allShiftsButton = findViewById(R.id.allShiftsButton);
 		pendingReceivedSwapRequestsButton = findViewById(R.id.pendingReceivedSwapRequestsButton);
 		paymentsButton = findViewById(R.id.paymentsButton);
@@ -64,6 +77,18 @@ public class HomeActivity extends AppCompatActivity
 		});
 
 
+		this.attendance.setOnClickListener((View v) -> {
+			Intent i = new Intent(this, ViewAttendanceActivity.class);
+			startActivity(i);
+		});
+
+		this.clock.setOnClickListener((View v) -> {
+			Intent i = new Intent(this, ViewClockIn.class);
+			startActivity(i);
+		});
+
+
+
 		////Generate Payment for current user's worked shifts
 		this.paymentsButton.setOnClickListener((View v) -> {
 			FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -75,6 +100,7 @@ public class HomeActivity extends AppCompatActivity
 
 
 		});
+
 
 
 		// ADD LISTENERS HERE

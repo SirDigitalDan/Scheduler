@@ -1,6 +1,7 @@
 package com.example.project362.models;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -8,8 +9,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
+
 import java.util.ArrayList;
 import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +28,8 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
+	public static final String CHECKED = "checked";
+
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -32,6 +38,7 @@ public class Employee
 	private String email;
 	private String name;
 	private String status;
+	private String checked;
 
 	public Employee(DocumentSnapshot doc)
 	{
@@ -45,6 +52,7 @@ public class Employee
 		this.email = email;
 		this.name = name;
 		this.status = status;
+		this.checked = checked;
 	}
 
 	public Task<Void> setEmpId(final String empId)
@@ -82,6 +90,21 @@ public class Employee
 			}
 		});
 	}
+
+
+	public Task<Void> setCheck(final String checked)
+	{
+		return this.update(CHECKED, checked).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Employee.this.checked = checked;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
 
 	public Task<Void> setStatus(final String status)
 	{
@@ -163,13 +186,9 @@ public class Employee
 		h.put(EMP_ID, this.empId);
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
+		h.put(CHECKED, this.checked);
 
 		return db.collection(COLLECTION).document(this.email).set(h);
-	}
-
-	public static Task<Void> create(String id, HashMap<String, Object> data)
-	{
-		return db.collection(COLLECTION).document(id).set(data);
 	}
 
 	public static Task<Void> delete(String id)
