@@ -34,6 +34,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         Button adminStatusButton = findViewById(R.id.adminStatusButton);
 
+        Button paymentButton = findViewById(R.id.reviewPaymentsButton);
+
         recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
@@ -66,6 +68,12 @@ public class AdminHomeActivity extends AppCompatActivity {
                 finish();
                 Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
                 startActivity(i);
+        });
+
+        paymentButton.setOnClickListener((View v) -> {
+            finish();
+            Intent i = new Intent(AdminHomeActivity.this, PaymentReviewActivity.class);
+            startActivity(i);
         });
     }
 }

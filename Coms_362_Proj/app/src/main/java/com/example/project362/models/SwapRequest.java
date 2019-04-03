@@ -1,7 +1,6 @@
 package com.example.project362.models;
 
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -182,5 +181,9 @@ public class SwapRequest
 		Map<String, Object> data = new HashMap<>();
 		data.put(field, datum);
 		return db.collection(COLLECTION).document(this.key).update(data);
+	}
+
+	public void temp()
+	{
 	}
 }

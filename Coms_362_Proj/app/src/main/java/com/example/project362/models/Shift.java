@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +28,53 @@ public class Shift
 
 
 	public static final String COLLECTION = "Shifts";
+
+	private int status;
+
+	public enum LockStatus {
+		PENDING("LOCKED", 0), ACCEPTED("UNLOCKED", 1);
+
+		private final int value;
+		private final String desc;
+
+		LockStatus(String desc, int value)
+		{
+			this.desc = desc;
+			this.value = value;
+		}
+
+		public int getValue()
+		{
+			return this.value;
+		}
+
+		public String toString()
+		{
+			return this.desc;
+		}
+
+		public static LockStatus getStatus(int i)
+		{
+			return LockStatus.values()[i];
+		}
+	}
+
+	public Task<Void> toggleStatus() {
+		if(this.status == 1) {
+			this.status = 0;
+			return this.update("lock" , 0);
+		} else if (this.status == 0) {
+			this.status = 1;
+			return this.update("lock", 1);
+		} else {
+			return null;
+		}
+	}
+
+	public int getStatus()
+	{
+		return status;
+	}
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -242,8 +290,8 @@ public class Shift
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
 		this.id = src.getId();
-		this.startTime = (Date) src.get(START_TIME);
-		this.endTime = (Date) src.get(END_TIME);
+		this.startTime = ((Timestamp) src.get(START_TIME)).toDate();
+		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();
 		this.note = (String) src.get(NOTE);
 		this.attendance = (String) src.get(ATTENDANCE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
