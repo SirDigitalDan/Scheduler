@@ -26,6 +26,7 @@ public class Shift
 	private static final String START_TIME = "startTime";
 	private static final String END_TIME = "endTime";
 	private static final String EMPLOYEES = "employees";
+	private static final String CHECKEDIN = "checkedIn";
 	private static final String NOTE = "note";
 	private static final String LOCK = "lock";
 	private static final String ATTENDANCE = "attendance";
@@ -86,8 +87,10 @@ public class Shift
 	private Date startTime;
 	private Date endTime;
 	private ArrayList<DocumentReference> employees;
+	private ArrayList<DocumentReference> checkedIn;
 	private String note;
 	private String attendance;
+
 
 	public Shift(DocumentSnapshot docSnap)
 	{
@@ -135,6 +138,19 @@ public class Shift
 		});
 	}
 
+	public Task<Void> setCheckedIn(final ArrayList<DocumentReference> people)
+	{
+		return this.update(CHECKEDIN, people).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Shift.this.checkedIn = people;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
 	public Task<Void> addEmployee(final DocumentReference employee)
 	{
 		if (this.lock == LockStatus.LOCKED.getValue()) return Tasks.forException(new Exception("It's locked yo"));
@@ -151,7 +167,7 @@ public class Shift
 		}
 
 		if (contained)
-			return Tasks.forException(new Exception("That employee is not assigned to the selected" +
+			return Tasks.forException(new Exception("This employee is already to the selected" +
 					" " +
 					"shift"));
 
@@ -166,6 +182,36 @@ public class Shift
 					Log.e(TAG, t.getException().toString());
 			}
 		});
+	}
+
+	public Task<Void> checkInEmployee(final DocumentReference employee)
+	{
+		if (this.lock == LockStatus.LOCKED.getValue()) return Tasks.forException(new Exception("It's locked yo"));
+		final ArrayList<DocumentReference> temp = new ArrayList<>(checkedIn);
+		final ArrayList<DocumentReference> emps = new ArrayList<>(employees);
+
+		boolean contained = false;
+		for (int i = 0; i < emps.size(); i++)
+		{
+			if (emps.get(i).getId().equals(employee.getId()))
+			{
+				contained = true;
+				break;
+			}
+		}
+
+		if (contained){
+			temp.add(employee);
+		}
+
+		return this.update(CHECKEDIN, temp).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Shift.this.checkedIn = temp;
+
+		});
+
+
+
 	}
 
 	public Task<Void> removeEmployee(DocumentReference employee)
@@ -267,6 +313,11 @@ public class Shift
 		return this.employees;
 	}
 
+	public ArrayList<DocumentReference> getCheckedIn()
+	{
+		return this.checkedIn;
+	}
+
 	public String getNote()
 	{
 		return this.note;
@@ -301,6 +352,7 @@ public class Shift
 		this.note = (String) src.get(NOTE);
 		this.attendance = (String) src.get(ATTENDANCE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
+		this.checkedIn = (ArrayList<DocumentReference>) src.get(CHECKEDIN);
 		this.lock = (int) (long) src.get(LOCK);
 	}
 
