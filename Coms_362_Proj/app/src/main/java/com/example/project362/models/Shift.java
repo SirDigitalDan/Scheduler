@@ -178,6 +178,8 @@ public class Shift
 		});
 	}
 
+
+
 	public Task<Void> setAttendance(final String attendance)
 	{
 		return this.update(ATTENDANCE, attendance).addOnCompleteListener((Task<Void> t) ->

@@ -14,13 +14,12 @@ import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import org.w3c.dom.Document;
-
 import java.util.ArrayList;
 
 
 public class PendingShiftSwapsAdapter extends RecyclerView.Adapter<PendingShiftSwapsAdapter.SwapViewHolder>
 {
+
 	ArrayList<SwapRequest> swapList;
 
 	public PendingShiftSwapsAdapter(ArrayList<SwapRequest> swapList)

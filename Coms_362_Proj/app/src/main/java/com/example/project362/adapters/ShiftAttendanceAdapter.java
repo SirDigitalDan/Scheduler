@@ -31,6 +31,10 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         private final EditText attendanceAdd;
         private final Button attendanceButton;
         private final TextView employees;
+        private final TextView resource;
+        private final TextView current;
+
+
 
         ShiftsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -40,8 +44,11 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
             employees = itemView.findViewById(R.id.shiftEmployees);
 
             attendanceAdd = itemView.findViewById(R.id.editTextShiftAttendance);
+            resource = itemView.findViewById(R.id.resource);
             attendance = itemView.findViewById(R.id.epmployeeAttendance);
             attendanceButton = itemView.findViewById(R.id.attendanceButton);
+            current = itemView.findViewById(R.id.current);
+
 
         }
     }
@@ -68,16 +75,18 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
                 + currentShift.getEndTime() + ". ");
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
-        shiftsViewHolder.attendance.setText(currentShift.getNote());
+        shiftsViewHolder.attendance.setText(currentShift.getAttendance());
+        shiftsViewHolder.resource.setText("Type in all present employees sepereated by commas to check-in ");
+
 
         shiftsViewHolder.attendanceButton.setOnClickListener((View v) ->
         {
             // Code here executes on main thread after user presses button
             String text = shiftsViewHolder.attendanceAdd.getText().toString();
             String n = shiftsViewHolder.attendance.getText().toString();
-            String note = n + "\n" + text;
+            String attendance = n + "\n" + text;
 
-            currentShift.setAttendance(note).addOnCompleteListener((Task<Void> task) ->
+            currentShift.setAttendance(attendance).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
                     shiftsViewHolder.attendance.setText(currentShift.getAttendance());

@@ -13,6 +13,8 @@ public class HomeActivity extends AppCompatActivity
 	private Button allShiftsButton;
 	private Button pendingReceivedSwapRequestsButton;
 	private Button attendance;
+	private Button clock;
+
 
 
 
@@ -21,6 +23,8 @@ public class HomeActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.activity_home);
+
+		clock = findViewById(R.id.clocker);
 
 		attendance = findViewById(R.id.adminAttendance);
 		allShiftsButton = findViewById(R.id.allShiftsButton);
@@ -40,8 +44,13 @@ public class HomeActivity extends AppCompatActivity
 			startActivity(i);
 		});
 
-		this.pendingReceivedSwapRequestsButton.setOnClickListener((View v) -> {
+		this.attendance.setOnClickListener((View v) -> {
 			Intent i = new Intent(this, ViewAttendanceActivity.class);
+			startActivity(i);
+		});
+
+		this.clock.setOnClickListener((View v) -> {
+			Intent i = new Intent(this, ViewClockIn.class);
 			startActivity(i);
 		});
 
