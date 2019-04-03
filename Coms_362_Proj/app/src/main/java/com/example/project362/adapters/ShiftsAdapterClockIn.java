@@ -82,6 +82,7 @@ public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterCloc
        shiftsViewHolder.clock.setOnClickListener((View v) ->
        {
            // Code here executes on main thread after user presses button
+
            String text = shiftsViewHolder.attendanceAdd.getText().toString();
            String n = shiftsViewHolder.attendance.getText().toString();
            String attendance = n + "\n" + text;
