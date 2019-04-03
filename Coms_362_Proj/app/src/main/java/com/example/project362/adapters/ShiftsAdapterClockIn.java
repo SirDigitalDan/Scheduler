@@ -11,12 +11,16 @@ import android.widget.TextView;
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterClockIn.ShiftsViewHolder>  implements View.OnClickListener {
 
@@ -84,6 +88,20 @@ public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterCloc
 
            //FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+           emp.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+           @Override
+           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+               if (task.isSuccessful()) {
+                   DocumentSnapshot document = task.getResult();
+                        Employee e = new Employee(document);
+                        Date date = new Date();
+                        String d = date.toString();
+                        e.setCheck(d);
+               } else {
+
+               }
+           }
+       });
 
 
        });
