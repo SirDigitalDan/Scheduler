@@ -170,6 +170,7 @@ public class Shift
 
 	public Task<Void> removeEmployee(DocumentReference employee)
 	{
+		if (this.lock == LockStatus.LOCKED.getValue()) return Tasks.forException(new Exception("It's locked yo"));
 		final ArrayList<DocumentReference> temp = new ArrayList<>(employees);
 
 		boolean contained = false;
