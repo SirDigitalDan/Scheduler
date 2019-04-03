@@ -161,7 +161,8 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
 
         shiftsViewHolder.addEmployee.setOnClickListener((final View v) -> {
             String addingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
-            DocumentReference ref = db.collection(Employee.COLLECTION).document(addingEmployee);
+            DocumentReference ref = Employee.getEmployeeReferenceByKey(addingEmployee);
+            // DocumentReference ref = db.collection(Employee.COLLECTION).document(addingEmployee);
 
             currentShift.addEmployee(ref).addOnCompleteListener((Task<Void> task) ->
             {

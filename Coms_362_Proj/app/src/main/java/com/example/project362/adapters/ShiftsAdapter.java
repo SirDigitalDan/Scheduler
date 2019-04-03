@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsViewHolder>
@@ -44,6 +46,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button dropShiftButton;
 		private final Button swapButton;
 
+		private final TextView lockStatus2;
+
 		ShiftsViewHolder(@NonNull View itemView)
 		{
 			super(itemView);
@@ -60,6 +64,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 
 			swapWith = itemView.findViewById(R.id.swapWith);
 			swapButton = itemView.findViewById(R.id.swapButton);
+
+			lockStatus2 = itemView.findViewById(R.id.lockStatus2);
 		}
 	}
 
@@ -91,6 +97,12 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 		shiftsViewHolder.note.setText(currentShift.getNote());
 
+		if(currentShift.getStatus() == 1) {
+			shiftsViewHolder.lockStatus2.setText("UNLOCKED");
+		} else if(currentShift.getStatus() == 0) {
+			shiftsViewHolder.lockStatus2.setText("LOCKED");
+		}
+
 		shiftsViewHolder.noteButton.setOnClickListener((View v) ->
 		{
 			// Code here executes on main thread after user presses button
@@ -108,22 +120,25 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 
 		shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
 		{
-			currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
-			{
-				if (task.isSuccessful())
-				{
-					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
-					Toast.makeText(v.getContext(), "Shift drop successful!",
-							Toast.LENGTH_SHORT).show();
-				}
-				else
-				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-					Toast.makeText(v.getContext(), "Something went wrong!",
-							Toast.LENGTH_SHORT).show();
-				}
-			});
+
+            currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
+            {
+                if(shiftsViewHolder.lockStatus2.getText().equals("UNLOCKED")) {
+                    if (task.isSuccessful()) {
+                        shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
+                        Toast.makeText(v.getContext(), "Shift drop successful!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (task.getException() != null)
+                            Log.e(TAG, task.getException().toString());
+                        Toast.makeText(v.getContext(), "Something went wrong!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(v.getContext(), "Surry! This shift is locked",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
 		});
 
 		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->

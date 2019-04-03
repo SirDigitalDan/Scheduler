@@ -144,6 +144,7 @@ public class SwapRequest
 		this.shift = src.getDocumentReference(SHIFT);
 		this.from = src.getDocumentReference(FROM);
 		this.to = src.getDocumentReference(TO);
+		this.status = (int) (long) src.get(STATUS);
 	}
 
 	public static Task<QuerySnapshot> getSwapRequests()

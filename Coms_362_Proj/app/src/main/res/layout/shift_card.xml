@@ -13,22 +13,35 @@
         android:layout_margin="10dp">
 
         <TextView
-            android:id="@+id/shiftTitle"
-            android:layout_width="302dp"
+            android:id="@+id/lockStatus2"
+            android:layout_width="157dp"
             android:layout_height="65dp"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
+            android:text="Lock status"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/shiftTitle"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/shiftTitle"
+            android:layout_width="168dp"
+            android:layout_height="65dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="16dp"
             android:text="Shift Title"
 
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.458"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

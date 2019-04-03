@@ -27,10 +27,11 @@ public class Shift
 	private static final String END_TIME = "endTime";
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
+	private static final String LOCK = "lock";
 
 	public static final String COLLECTION = "Shifts";
 
-	private int status;
+	private int lock;
 
 	public enum LockStatus {
 		PENDING("LOCKED", 0), ACCEPTED("UNLOCKED", 1);
@@ -61,12 +62,12 @@ public class Shift
 	}
 
 	public Task<Void> toggleStatus() {
-		if(this.status == 1) {
-			this.status = 0;
-			return this.update("lock" , 0);
-		} else if (this.status == 0) {
-			this.status = 1;
-			return this.update("lock", 1);
+		if(this.lock == 1) {
+			this.lock = 0;
+			return this.update(LOCK, 0);
+		} else if (this.lock == 0) {
+			this.lock = 1;
+			return this.update(LOCK, 1);
 		} else {
 			return null;
 		}
@@ -74,7 +75,7 @@ public class Shift
 
 	public int getStatus()
 	{
-		return status;
+		return lock;
 	}
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -274,6 +275,7 @@ public class Shift
 		this.endTime = ((Timestamp) src.get(END_TIME)).toDate();
 		this.note = (String) src.get(NOTE);
 		this.employees = (ArrayList<DocumentReference>) src.get(EMPLOYEES);
+		this.lock = (int) (long) src.get(LOCK);
 	}
 
 	// DATABASE LOGIC
