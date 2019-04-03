@@ -12,6 +12,7 @@ import com.example.project362.R;
 import com.example.project362.adapters.ShiftsAdapterClockIn;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -20,6 +21,10 @@ import java.util.ArrayList;
 public class ViewClockIn extends AppCompatActivity implements View.OnClickListener{
 
     private RecyclerView recyclerView;
+    private FirebaseAuth mAuth;
+    private String currentUser;
+
+
 
     public ArrayList<Shift> shifts = new ArrayList<Shift>();
 
@@ -41,6 +46,8 @@ public class ViewClockIn extends AppCompatActivity implements View.OnClickListen
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+
+
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
@@ -54,6 +61,8 @@ public class ViewClockIn extends AppCompatActivity implements View.OnClickListen
         });
     }
 
+
+
     @Override
     public void onClick(View view){
         switch(view.getId()){
@@ -62,6 +71,8 @@ public class ViewClockIn extends AppCompatActivity implements View.OnClickListen
                 Intent i = new Intent(this, EditInfoActivity.class);
                 startActivity(i);
                 break;
+
+
         }
     }
 

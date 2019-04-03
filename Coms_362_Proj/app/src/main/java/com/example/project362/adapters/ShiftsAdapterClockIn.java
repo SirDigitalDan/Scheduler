@@ -11,14 +11,14 @@ import android.widget.TextView;
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterClockIn.ShiftsViewHolder>{
+public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterClockIn.ShiftsViewHolder>  implements View.OnClickListener {
 
 
     private ArrayList<Shift> shiftList;
@@ -56,6 +56,8 @@ public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterCloc
         currentUser = db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
+
+
     @NonNull
     @Override
     public ShiftsAdapterClockIn.ShiftsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -75,30 +77,22 @@ public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterCloc
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 
-
-
-
-
        shiftsViewHolder.clock.setOnClickListener((View v) ->
        {
-           // Code here executes on main thread after user presses button
+           FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+           DocumentReference emp = Employee.getEmployeeReferenceByKey(user.getEmail());
 
-           String text = shiftsViewHolder.attendanceAdd.getText().toString();
-           String n = shiftsViewHolder.attendance.getText().toString();
-           String attendance = n + "\n" + text;
+           //FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-           currentShift.setAttendance(attendance).addOnCompleteListener((Task<Void> task) ->
-           {
-               if (task.isSuccessful())
-                   shiftsViewHolder.attendance.setText(currentShift.getAttendance());
-           });
 
-           shiftsViewHolder.attendanceAdd.setText("");
+
        });
 
-*/
 
-    }
+
+
+
+   }
 
     String formatEmployees(ArrayList<DocumentReference> employees)
     {
@@ -112,5 +106,16 @@ public class ShiftsAdapterClockIn extends RecyclerView.Adapter<ShiftsAdapterCloc
     public int getItemCount() {
         return shiftList.size();
     }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.checkIn:
+
+
+
+            }
+
+        }
 
 }
