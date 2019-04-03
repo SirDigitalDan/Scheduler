@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +24,7 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
-	public static final String AVAILABILITY= "availability";
+	public static final String AVAILABILITY = "availability";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -33,6 +34,7 @@ public class Employee
 	private String name;
 	private String status;
 	private ArrayList<String> availability;
+
 	public Employee(DocumentSnapshot doc)
 	{
 		this.copyFromDocumentSnapshot(doc);
@@ -148,6 +150,7 @@ public class Employee
 	{
 		return this.status;
 	}
+
 	public ArrayList<String> getAvailability()
 	{
 		return this.availability;
@@ -169,6 +172,11 @@ public class Employee
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
+	}
+
+	public static CollectionReference getEmployees()
+	{
+		return db.collection(COLLECTION);
 	}
 
 	private Task<Void> update(String field, final Object datum)
