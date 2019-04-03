@@ -10,13 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.project362.R;
-import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-
-import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
@@ -43,7 +39,7 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
             employees = itemView.findViewById(R.id.shiftEmployees);
 
-            attendanceAdd = itemView.findViewById(R.id.editTextShiftAttendance);
+            attendanceAdd = itemView.findViewById(R.id.editTextShiftNote);
             resource = itemView.findViewById(R.id.resource);
             attendance = itemView.findViewById(R.id.epmployeeAttendance);
             attendanceButton = itemView.findViewById(R.id.attendanceButton);
