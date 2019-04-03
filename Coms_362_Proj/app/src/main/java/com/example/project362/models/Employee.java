@@ -83,11 +83,16 @@ public class Employee
 			}
 		});
 	}
-	public Task<Void> addAvailability(final String availability)
+	public Task<Void> addAvailability(final ArrayList<String> avail)
 	{
 	    //Creates an availability array which is composed of dates that the employee selects
 		final ArrayList<String> temp = new ArrayList<>(this.availability);
-		temp.add(availability);
+		for (int i=0; i	 <	avail.size();	i++)
+		{
+			if(this.availability.contains(avail.get(i))!=true) {
+				temp.add(avail.get(i));
+			}
+		}
         //This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
 		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
 		{
