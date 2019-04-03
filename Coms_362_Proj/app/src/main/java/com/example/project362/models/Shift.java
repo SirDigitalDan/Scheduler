@@ -31,7 +31,6 @@ public class Shift
 	private static final String NAME="Name";
 	private static final String COLLECTION = "Shifts";
 
-	public static final String COLLECTION = "Shifts";
 
 	private int lock;
 

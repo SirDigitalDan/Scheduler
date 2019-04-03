@@ -6,15 +6,11 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
-
 import java.util.ArrayList;
-import java.util.Date;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +20,6 @@ public class Employee
 	private static final String TAG = "com-s-362-shift-project";
 
 	public static final String COLLECTION = "Employees";
-
 	public static final String EMP_ID = "empId";
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
