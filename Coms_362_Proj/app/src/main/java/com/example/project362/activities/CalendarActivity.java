@@ -1,5 +1,6 @@
 package com.example.project362.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,6 +25,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         findViewById(R.id.save_avail).setOnClickListener(CalendarActivity.this);
+        findViewById(R.id.view_avail).setOnClickListener(CalendarActivity.this);
         mAuth = FirebaseAuth.getInstance();
         calendarView =  findViewById(R.id.calendarView);
         myDate = findViewById(R.id.myDate);
@@ -63,7 +65,10 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                     addAvailabilities();
 
                 break;
-
+            case R.id.view_avail:
+                finish();
+                Intent in = new Intent(CalendarActivity.this, ViewAvailability.class);
+                startActivity(in);
         }
 
     }

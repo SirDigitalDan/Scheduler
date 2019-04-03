@@ -148,6 +148,10 @@ public class Employee
 	{
 		return this.status;
 	}
+	public ArrayList<String> getAvailability()
+	{
+		return this.availability;
+	}
 
 	public String getId() { return this.id; }
 

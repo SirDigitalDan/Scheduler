@@ -38,4 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save my Availability" />
+    <Button
+        android:id="@+id/view_avail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Availability" />
 </LinearLayout>
