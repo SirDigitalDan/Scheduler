@@ -29,7 +29,7 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         private final EditText attendanceAdd;
         private final Button attendanceButton;
         private final TextView employees;
-        private final TextView resource;
+        //private final TextView resource;
         private final TextView current;
 
 
@@ -41,8 +41,8 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
             employees = itemView.findViewById(R.id.shiftEmployees);
 
-            attendanceAdd = itemView.findViewById(R.id.editTextShiftNote);
-            resource = itemView.findViewById(R.id.resource);
+            attendanceAdd = itemView.findViewById(R.id.attendanceAdd);
+            //resource = itemView.findViewById(R.id.resource);
             attendance = itemView.findViewById(R.id.epmployeeAttendance);
             attendanceButton = itemView.findViewById(R.id.attendanceButton);
             current = itemView.findViewById(R.id.current);
@@ -72,38 +72,42 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
                 + currentShift.getEndTime() + ". ");
 
-        shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
-        shiftsViewHolder.attendance.setText(currentShift.getAttendance());
-        shiftsViewHolder.resource.setText("Type in all present employees sepereated by commas to check-in ");
+        shiftsViewHolder.employees.setText(formatEmployees(currentShift.getEmployees()));
+        shiftsViewHolder.attendance.setText(formatEmployees(currentShift.getCheckedIn()));
+        //shiftsViewHolder.resource.setText("Type in all present employees sepereated by commas to check-in ");
 
 
+        /*
+            This button will trigger the entered employee being checked into the specfic shift.
+            The employee must have picked up the shift in order to be checked in
+         */
         shiftsViewHolder.attendanceButton.setOnClickListener((View v) ->
         {
+            String text = shiftsViewHolder.attendanceAdd.getText().toString().trim(); //get employee email
 
+            //if(!text.equals("")){
+                DocumentReference ref = Employee.getEmployeeReferenceByKey(text);  //get employee reference
 
-            String text = shiftsViewHolder.attendanceAdd.getText().toString();
+                currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
+                {
+                    if (task.isSuccessful()){
+                        shiftsViewHolder.attendanceAdd.setText(""); ///reset text box
+                        shiftsViewHolder.attendance.setText(formatEmployees(currentShift.getCheckedIn()));
+                    }
+                    else
+                    {
+                        if (task.getException() != null)
 
-            DocumentReference ref = Employee.getEmployeeReferenceByKey(text);
-
-            currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
-            {
-            if (task.isSuccessful()){
-                shiftsViewHolder.attendanceAdd.setText(" ");
-            }
-            else
-            {
-                if (task.getException() != null)
-
-                throw new Error("Operation unsuccessful");
-            }
-        });
-
-
+                            throw new Error("Operation unsuccessful");
+                    }
+                });
+            //}
 
         });
 
 
     }
+
 
     String formatEmployees(ArrayList<DocumentReference> employees)
     {
