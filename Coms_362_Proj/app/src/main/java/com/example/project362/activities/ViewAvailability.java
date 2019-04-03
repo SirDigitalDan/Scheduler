@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
@@ -60,6 +61,10 @@ public class ViewAvailability extends AppCompatActivity implements View.OnClickL
 
             }
         });
+        if(availArr.size()==0)
+        {
+            Toast.makeText(getApplicationContext(),"You have no set availability please go in and set your availability",Toast.LENGTH_SHORT).show();
+        }
         lister1();
 
     }
