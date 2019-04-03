@@ -10,6 +10,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.PaymentReviewActivity"></activity>
         <activity android:name=".activities.AdminHomeActivity" />
+        <activity android:name=".activities.ViewAvailability" />
+        <activity android:name=".activities.CalendarActivity" />
         <activity android:name=".activities.AdminStatusActivity" />
         <activity android:name=".activities.EditInfoActivity" />
         <activity android:name=".activities.HomeActivity" />
