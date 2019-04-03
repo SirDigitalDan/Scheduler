@@ -3,9 +3,9 @@ package com.example.project362.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
@@ -15,62 +15,57 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class CalendarActivity extends AppCompatActivity implements View.OnClickListener{
+public class CalendarActivity extends AppCompatActivity
+{
     CalendarView calendarView;
-            TextView myDate;
-    private FirebaseAuth mAuth;
+    TextView myDate;
+
     private ArrayList<String> availability;
+    String currentEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        findViewById(R.id.save_avail).setOnClickListener(CalendarActivity.this);
-        findViewById(R.id.view_avail).setOnClickListener(CalendarActivity.this);
-        mAuth = FirebaseAuth.getInstance();
-        calendarView =  findViewById(R.id.calendarView);
-        myDate = findViewById(R.id.myDate);
-        String id = mAuth.getCurrentUser().getEmail();
-        availability= new ArrayList<>();
 
-        calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            String date = (i1 + 1) +"/" + i2 +"/"+ i;
+	    // the calendar view
+	    calendarView = findViewById(R.id.calendarView);
+
+	    // the date entered from the calendar
+	    myDate = findViewById(R.id.myDate);
+
+        findViewById(R.id.save_avail).setOnClickListener((v) -> addAvailability(myDate.getText().toString()));
+        findViewById(R.id.view_avail).setOnClickListener((v) -> {
+	        finish();
+	        Intent in = new Intent(CalendarActivity.this, ViewAvailability.class);
+	        startActivity(in);
+        });
+
+        currentEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        availability = new ArrayList<>();
+
+        calendarView.setOnDateChangeListener((calendarView, year, month, day) -> {
+            String date = (month + 1) +"/" + day + "/" + year;
             myDate.setText(date);
-           availability.add(date);
-
+            availability.add(date);
         });
     }
 
-    public void addAvailabilities (){
-        String id = mAuth.getCurrentUser().getEmail();
-        Employee.getEmployeeByEmail(id).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+    public void addAvailability(String date)
+    {
+    	if (date.isEmpty())
+    		Toast.makeText(CalendarActivity.this, "Date is empty",
+			    Toast.LENGTH_SHORT).show();
+
+    	// get the current user's employee object
+        Employee.getEmployeeByEmail(currentEmail).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
             if (t.isSuccessful() && t.getResult() != null)
             {
                 //creates new employee Object
                 Employee e = new Employee(t.getResult());
-                //Goes through and gets all of the dates in the Availability array
-                for(int i=0; i <availability.size();i++) {
-                    String curr = availability.get(i);
-                    //e.addAvailability(curr);
-                }
-                e.addAvailability(availability);
+                e.addAvailability(date);
             }
         });
-
     }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.save_avail:
-                    addAvailabilities();
-
-                break;
-            case R.id.view_avail:
-                finish();
-                Intent in = new Intent(CalendarActivity.this, ViewAvailability.class);
-                startActivity(in);
-        }
-
-    }
-
 }

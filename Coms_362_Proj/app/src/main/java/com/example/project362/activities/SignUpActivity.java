@@ -67,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 			if (task.isSuccessful())
 			{
 				Employee e = new Employee(email, mAuth.getCurrentUser().getUid(), email,
-						editTextName.getText().toString(), "employee",null);
+						editTextName.getText().toString(), "employee");
 
 				e.create();
 

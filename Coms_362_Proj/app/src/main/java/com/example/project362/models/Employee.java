@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +25,7 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
-	public static final String AVAILABILITY= "availability";
+	public static final String AVAILABILITY = "availability";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -33,19 +35,20 @@ public class Employee
 	private String name;
 	private String status;
 	private ArrayList<String> availability;
+
 	public Employee(DocumentSnapshot doc)
 	{
 		this.copyFromDocumentSnapshot(doc);
 	}
 
-	public Employee(String id, String empId, String email, String name, String status,ArrayList<String> availability)
+	public Employee(String id, String empId, String email, String name, String status)
 	{
 		this.id = id;
 		this.empId = empId;
 		this.email = email;
 		this.name = name;
 		this.status = status;
-		this.availability = availability;
+		this.availability = new ArrayList<>();
 	}
 
 	public Task<Void> setEmpId(final String empId)
@@ -83,16 +86,16 @@ public class Employee
 			}
 		});
 	}
-	public Task<Void> addAvailability(final ArrayList<String> avail)
+
+	public Task<Void> addAvailability(final String date)
 	{
+		if (this.availability.contains(date)) return Tasks.forException(new Exception("That date " +
+				"is already added"));
+
 	    //Creates an availability array which is composed of dates that the employee selects
 		final ArrayList<String> temp = new ArrayList<>(this.availability);
-		for (int i=0; i	 <	avail.size();	i++)
-		{
-			if(this.availability.contains(avail.get(i))!=true) {
-				temp.add(avail.get(i));
-			}
-		}
+		temp.add(date);
+
         //This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
 		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
 		{
@@ -148,6 +151,7 @@ public class Employee
 	{
 		return this.status;
 	}
+
 	public ArrayList<String> getAvailability()
 	{
 		return this.availability;
@@ -191,6 +195,7 @@ public class Employee
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
 		h.put(AVAILABILITY, this.availability);
+
 		return db.collection(COLLECTION).document(this.email).set(h);
 	}
 
