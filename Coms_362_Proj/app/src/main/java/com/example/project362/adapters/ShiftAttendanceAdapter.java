@@ -15,18 +15,14 @@ import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
 public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendanceAdapter.ShiftsViewHolder> {
 
-
     private ArrayList<Shift> shiftList;
-    private DocumentReference currentUser;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String TAG = "ShiftAttendanceAdapter";
 
     static class ShiftsViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
@@ -35,8 +31,6 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         private final EditText attendanceAdd;
         private final Button attendanceButton;
         private final TextView employees;
-
-
 
         ShiftsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,7 +49,6 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
     public ShiftAttendanceAdapter(ArrayList<Shift> shifts)
     {
         shiftList = shifts;
-        currentUser = db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @NonNull
@@ -69,7 +62,6 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
 
     @Override
     public void onBindViewHolder(@NonNull final ShiftAttendanceAdapter.ShiftsViewHolder shiftsViewHolder, int i) {
-        Employee e;
         final Shift currentShift = shiftList.get(i);
         shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
         shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
@@ -85,7 +77,7 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
             String n = shiftsViewHolder.attendance.getText().toString();
             String note = n + "\n" + text;
 
-            currentShift.setNote(note).addOnCompleteListener((Task<Void> task) ->
+            currentShift.setAttendance(note).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
                     shiftsViewHolder.attendance.setText(currentShift.getAttendance());
