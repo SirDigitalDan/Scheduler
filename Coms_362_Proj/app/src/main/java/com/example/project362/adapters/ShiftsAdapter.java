@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.activities.ViewAllShiftsActivity;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 
@@ -76,7 +77,6 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 	public ShiftsAdapter(ArrayList<Shift> shifts)
 	{
 		shiftList = shifts;
-
 		currentUser =
 				Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 	}
@@ -122,6 +122,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			shiftsViewHolder.noteAdd.setText("");
 		});
 
+
+		/// Allows the employee to drop the shift if they are included
 		shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
 		{
 			currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
@@ -142,6 +144,8 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			});
 		});
 
+
+		/// Allows the employee to pick up the shift if they have not already
 		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->
 			currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
@@ -161,6 +165,7 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 				}
 			}));
 
+		/// Allows the employee to request a swap of a shift
 		shiftsViewHolder.swapButton.setOnClickListener((final View v) -> {
 			FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -181,12 +186,14 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			request.create();
 		});
 
+		/*
+			By clicking the clock in button, the system checks to verfiy that the current user is
+			included in the shift, and then checks them in as "attended" to that shift
+		 */
 		shiftsViewHolder.clockInButton.setOnClickListener((View v) ->
 		{
-			FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
+			FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser(); //get current user
 			String key = currentUser.getEmail();
-			//if(!text.equals("")){
 			DocumentReference ref = Employee.getEmployeeReferenceByKey(key);  //get employee reference
 
 			currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
@@ -201,13 +208,11 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 						throw new Error("Operation unsuccessful");
 				}
 			});
-			//}
 
 		});
-
-
 	}
 
+	//This method will format the list specified so that it displays vertically
 	private String formatEmployees(ArrayList<DocumentReference> employees)
 	{
 		StringBuilder employeesSb = new StringBuilder();
