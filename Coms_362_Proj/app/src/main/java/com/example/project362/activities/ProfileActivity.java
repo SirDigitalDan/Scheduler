@@ -63,9 +63,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     for (QueryDocumentSnapshot document: task.getResult()){
                         //Creates Shift Document
                         Shift s= new Shift(document);
-                        //s.copyFromDocumentSnapshot(document);
-                        //Shift s = document.toObject(Shift.class);
-                        //Gets all of the Employees per Shift
                         ArrayList<DocumentReference> emps= s.getEmployees();
                         //Checks to see if the current signed in user matches any of the shifts
                         for (int i=0; i <emps.size(); i++)
@@ -73,20 +70,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             //If the User matches they get added to the upcomingShifts database
                             if(currentUser.equals(emps.get(i).getId()))
                             {
-                                String ids = s.getId();
+                                String ids = s.getName();
                                 upcomingShifts.add(ids);
 
                             }
 
                         }
-                        //String ids = s.getId();
-                        //testID.setText(ids);
-                        /*
-                        if(upcomingShifts.size()>0) {
-                            String lol = upcomingShifts.get(0);
-                            testID.setText(lol);
-                        }
-                        */
                     }
                 }
                 else

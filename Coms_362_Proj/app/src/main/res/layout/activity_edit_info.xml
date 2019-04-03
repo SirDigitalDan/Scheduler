@@ -62,6 +62,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="71dp"
                 android:text="Sign Out" />
+            <Button
+                android:id="@+id/profileActivity"
+                android:layout_width="match_parent"
+                android:layout_height="71dp"
+                android:text="Profile Activity" />
 
         </LinearLayout>
 

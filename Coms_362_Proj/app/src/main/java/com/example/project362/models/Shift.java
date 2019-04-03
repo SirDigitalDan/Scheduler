@@ -23,11 +23,11 @@ public class Shift
 	private static final String END_TIME = "endTime";
 	private static final String EMPLOYEES = "employees";
 	private static final String NOTE = "note";
-
+	private static final String NAME="Name";
 	private static final String COLLECTION = "Shifts";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+	private	String name;
 	private String id;
 	private Date startTime;
 	private Date endTime;
@@ -218,6 +218,11 @@ public class Shift
 		return this.id;
 	}
 
+	public String getName()
+	{
+		return this.name;
+	}
+
 	/**
 	 * Performs a <strong>SHALLOW</strong> copy on the attributes of the given
 	 * Shift into the attributes of this shit
@@ -226,6 +231,7 @@ public class Shift
 	 */
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
+		this.name = (String) src.get(NAME);
 		this.id = src.getId();
 		this.startTime = (Date) src.get(START_TIME);
 		this.endTime = (Date) src.get(END_TIME);

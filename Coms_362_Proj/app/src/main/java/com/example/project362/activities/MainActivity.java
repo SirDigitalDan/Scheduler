@@ -37,9 +37,10 @@ public class MainActivity extends AppCompatActivity
 
 		findViewById(R.id.buttonEditAccount).setOnClickListener((v) -> {
 			finish();
-			Intent in = new Intent(MainActivity.this, ProfileActivity.class);
+			Intent in = new Intent(MainActivity.this, EditInfoActivity.class);
 			startActivity(in);
 		});
+
 		findViewById(R.id.buttonLogin).setOnClickListener((v) -> userLogin());
 
 		editTextEmail = findViewById(R.id.editTextEmail);
