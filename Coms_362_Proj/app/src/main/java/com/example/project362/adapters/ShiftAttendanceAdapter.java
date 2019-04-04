@@ -36,9 +36,9 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
             attendanceAdd = itemView.findViewById(R.id.attendanceAdd);
             attendance = itemView.findViewById(R.id.epmployeeAttendance);
             attendanceButton = itemView.findViewById(R.id.attendanceButton);
-
         }
     }
+
     public ShiftAttendanceAdapter(ArrayList<Shift> shifts)
     {
         shiftList = shifts;
@@ -88,7 +88,7 @@ public class ShiftAttendanceAdapter extends RecyclerView.Adapter<ShiftAttendance
         });
     }
 
-    ///Oragnizes the List into a vertical view of objects
+    // Organizes the List into a vertical view of objects
     String formatEmployees(ArrayList<DocumentReference> employees)
     {
         StringBuilder employeesSb = new StringBuilder();

@@ -129,10 +129,10 @@ public class Payment {
     private void copyFromDocumentSnapshot(DocumentSnapshot src)
     {
         this.key = src.getId();
-        this.amount = (int) (long) src.getLong("amount");
-        this.status = (int) (long) src.getLong("status");
+        this.amount = (int) (long) src.getLong(AMOUNT);
+        this.status = (int) (long) src.getLong(STATUS);
 
-        this.employee = src.getDocumentReference("employee");
+        this.employee = src.getDocumentReference(EMPLOYEE);
 
     }
     // Update Payment in Database
@@ -210,66 +210,51 @@ public class Payment {
         The method will calculate the hours that the employee has worked and multiply it by the hourly wage of
         an employee ($10).  It will then add the Payment to the database.
      */
-    public static void calculatePayments(){
+    public static void calculatePayments()
+    {
+        Shift.getShifts().addOnCompleteListener((@NonNull Task<QuerySnapshot> task) ->
+        {
+            ////Iterate through all shifts
+            for (DocumentSnapshot shift : task.getResult())
+            {
+                List<DocumentReference> emps = (List<DocumentReference>) shift.get("employees");
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                DocumentReference employee = db.collection("Employees").document(user.getEmail());
+
+                ///check if shift has occured yet
+                Date today = new Date();
+                Timestamp t = shift.getTimestamp("endTime");
+                Date shiftEndDate = t.toDate();
+
+                long dateCheck = today.getTime() - shiftEndDate.getTime();
+
+                ///check if employee is included in the shift and it has occured
+                if(emps.contains(employee) && dateCheck > 0)
+                {
+                    ////Calculate hours worked
+                    Timestamp start = shift.getTimestamp("startTime");
+                    Timestamp end = shift.getTimestamp("endTime");
+
+                    Date startDate = start.toDate();
+                    Date endDate = end.toDate();
+
+                    long diff = endDate.getTime() - startDate.getTime();
+
+                    long diffMinutes = diff / (60 * 1000) % 60;
+                    long diffHours = diff / (60 * 60 * 1000) % 24;
+                    long diffDays = diff / (24 * 60 * 60 * 1000);
 
 
-        db.collection("Shifts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    int moneyEarned = (int) diffMinutes / 60;
+                    moneyEarned += diffHours;
+                    moneyEarned += diffDays * 24;
 
-                ////Iterate through all shifts
-                for (DocumentSnapshot shift : task.getResult()) {
-                    List<DocumentReference> emps = (List<DocumentReference>) shift.get("employees");
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    DocumentReference employee = db.collection("Employees").document(user.getEmail());
+                    moneyEarned = moneyEarned * EMPLOYEEPAY;
 
-                    ///check if shift has occured yet
-                    Date today = new Date();
-                    Timestamp t = shift.getTimestamp("endTime");
-                    Date shiftEndDate = t.toDate();
-
-                    long dateCheck = today.getTime() - shiftEndDate.getTime();
-
-                    ///check if employee is included in the shift and it has occured
-                    if(emps.contains(employee) && dateCheck > 0){
-
-                        ////Calculate hours worked
-                        Timestamp start = shift.getTimestamp("startTime");
-                        Timestamp end = shift.getTimestamp("endTime");
-
-                        Date startDate = start.toDate();
-                        Date endDate = end.toDate();
-
-                        long diff = endDate.getTime() - startDate.getTime();
-
-                        long diffMinutes = diff / (60 * 1000) % 60;
-                        long diffHours = diff / (60 * 60 * 1000) % 24;
-                        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-
-                        int moneyEarned = (int) diffMinutes / 60;
-                        moneyEarned += diffHours;
-                        moneyEarned += diffDays * 24;
-
-                        moneyEarned = moneyEarned * EMPLOYEEPAY;
-
-                        /// Add new payment to database
-                        addToFirestore(employee, moneyEarned, 0);
-
-
-
-                    }
-                    else{
-
-                    }
-
-
+                    /// Add new payment to database
+                    addToFirestore(employee, moneyEarned, 0);
                 }
             }
         });
-
-
-
     }
-
 }

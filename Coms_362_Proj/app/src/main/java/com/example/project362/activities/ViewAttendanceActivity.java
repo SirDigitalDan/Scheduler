@@ -17,11 +17,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ViewAttendanceActivity extends AppCompatActivity implements View.OnClickListener{
+public class ViewAttendanceActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+    public ArrayList<Shift> shifts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,6 +60,7 @@ public class ViewAttendanceActivity extends AppCompatActivity implements View.On
         switch(view.getId()){
             case R.id.floatingActionButtonEdit:
                 finish();
+                // go to edit info activity
                 Intent i = new Intent(this, EditInfoActivity.class);
                 startActivity(i);
                 break;

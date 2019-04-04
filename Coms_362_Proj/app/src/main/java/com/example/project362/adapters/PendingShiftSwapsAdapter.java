@@ -16,10 +16,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-
 public class PendingShiftSwapsAdapter extends RecyclerView.Adapter<PendingShiftSwapsAdapter.SwapViewHolder>
 {
-
 	ArrayList<SwapRequest> swapList;
 
 	public PendingShiftSwapsAdapter(ArrayList<SwapRequest> swapList)
@@ -41,23 +39,29 @@ public class PendingShiftSwapsAdapter extends RecyclerView.Adapter<PendingShiftS
 	{
 		final SwapRequest swap = this.swapList.get(i);
 
+		// get the shift related to the swap request
 		swap.getShift().get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
 			if (t.isSuccessful())
 			{
+				// create the shift
 				Shift s = new Shift(t.getResult());
+				// update the text to the shift information
 				swapViewHolder.shiftDesc.setText("Shift ID: " + s.getId() + "\nTimes: " + s.getStartTime() + " - " + s.getEndTime());
 			}
 		});
 
+		// accept the swap request and swap the employees
 		swapViewHolder.acceptButton.setOnClickListener((View v) ->
 			swap.accept().addOnCompleteListener((Task<DocumentSnapshot> t) -> this.removeSwapRequest(swap)));
 
+		// reject the swap request
 		swapViewHolder.rejectButton.setOnClickListener((View v) ->
 			swap.reject().addOnCompleteListener((Task<Void> t) -> this.removeSwapRequest(swap)));
 	}
 
 	private void removeSwapRequest(SwapRequest req)
 	{
+		// update the list and update the display
 		this.swapList.remove(req);
 		this.notifyDataSetChanged();
 	}

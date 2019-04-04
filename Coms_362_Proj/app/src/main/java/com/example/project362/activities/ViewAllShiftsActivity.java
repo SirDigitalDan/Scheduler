@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,11 +17,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnClickListener {
-
+public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnClickListener
+{
     private RecyclerView recyclerView;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+    public ArrayList<Shift> shifts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,11 +41,14 @@ public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnC
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        // get all of the shifts
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
+            	// add each shift to the shifts arraylist
                 for (QueryDocumentSnapshot shiftDoc : task.getResult())
                     shifts.add(new Shift(shiftDoc));
+                // update the display with the new shifts
                 recyclerView.setAdapter(new ShiftsAdapter(shifts));
             }
             else
@@ -60,6 +62,7 @@ public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnC
         switch(view.getId()){
             case R.id.floatingActionButtonEdit:
                 finish();
+                // go to edit profile info activity
                 Intent i = new Intent(this, EditInfoActivity.class);
                 startActivity(i);
                 break;

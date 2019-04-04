@@ -1,19 +1,14 @@
 package com.example.project362.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.adapters.PaymentsAdapter;
-import com.example.project362.adapters.ShiftsAdapter;
 import com.example.project362.models.Payment;
-import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,12 +22,11 @@ import java.util.ArrayList;
 
     It displays them in a scrollable list, and allows for approval or rejection
  */
-
-public class PaymentReviewActivity extends AppCompatActivity implements View.OnClickListener {
-
+public class PaymentReviewActivity extends AppCompatActivity
+{
     private RecyclerView recyclerView;
 
-    public ArrayList<Payment> payments = new ArrayList<Payment>();
+    public ArrayList<Payment> payments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,14 +45,15 @@ public class PaymentReviewActivity extends AppCompatActivity implements View.OnC
         recyclerView.setLayoutManager(layoutManager);
 
 
-        /// Get all Payments that are pending and add to an arraylist to pass to an adapter
+        // Get all Payments that are pending and add to an arraylist to pass to an adapter
         Payment.getPayments().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
-                for (QueryDocumentSnapshot paymentDoc : task.getResult()){
-                    if(paymentDoc.getLong("status") == 0){
-                        payments.add(new Payment(paymentDoc));
-                    }
+                for (QueryDocumentSnapshot paymentDoc : task.getResult())
+                {
+                	Payment p = new Payment(paymentDoc);
+                	if (p.getStatus() == 0)
+                        payments.add(p);
                 }
 
                 ///Create scrollable list
@@ -68,11 +63,5 @@ public class PaymentReviewActivity extends AppCompatActivity implements View.OnC
                 Toast.makeText(PaymentReviewActivity.this, "No Payments To Review!",
                         Toast.LENGTH_SHORT).show();
         });
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
     }
 }

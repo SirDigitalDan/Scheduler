@@ -2,25 +2,19 @@ package com.example.project362.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
 import com.example.project362.models.Payment;
-import com.example.project362.models.Shift;
 
-import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,10 +26,6 @@ import java.util.ArrayList;
 public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.PaymentsViewHolder>
 {
     private ArrayList<Payment> paymentsList;
-    private DocumentReference currentUser;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String TAG = "com-s-362-project";
 
     static class PaymentsViewHolder extends RecyclerView.ViewHolder
     {
@@ -59,8 +49,6 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
     public PaymentsAdapter(ArrayList<Payment> payments)
     {
         paymentsList = payments;
-
-        currentUser = Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @NonNull
@@ -73,60 +61,49 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
     }
 
 
-    ///Iterate through all Payments and create a card for each pending Payment
-    /// The payment card includes the employee email, the amount of money generated for the payment
-    ///  and two buttons, one for accepting and one for rejecting the Payment
+    // Iterate through all Payments and create a card for each pending Payment
+    // The payment card includes the employee email, the amount of money generated for the payment
+    // and two buttons, one for accepting and one for rejecting the Payment
     @Override
     public void onBindViewHolder(@NonNull final PaymentsViewHolder paymentsViewHolder, int i)
     {
-
+        // get the current payment
         Payment currentPayment = paymentsList.get(i);
 
-        currentPayment.getEmployee().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    paymentsViewHolder.email.setText("Employee: " + document.getString("email"));
-                }
+        // get the employee for the current payment
+        currentPayment.getEmployee().get().addOnCompleteListener((Task<DocumentSnapshot> task) -> {
+            if (task.isSuccessful()) {
+                Employee e = new Employee(task.getResult());
+                // set the email Text view to the email of the employee for the current payment
+                paymentsViewHolder.email.setText("Employee: " + e.getEmail());
             }
         });
 
+        // set the ammount
         paymentsViewHolder.amount.setText("Money Requested: " + currentPayment.getAmount());
 
-
+        // button to approve the payment
         paymentsViewHolder.acceptButton.setOnClickListener((View v) ->
         {
-
             currentPayment.accept().addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
                     Toast.makeText(v.getContext(), "Payment Approved!",
                             Toast.LENGTH_SHORT).show();
             });
-
-
         });
+
+        // button to reject the payment
         paymentsViewHolder.rejectButton.setOnClickListener((View v) ->
         {
-
             currentPayment.reject().addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
                     Toast.makeText(v.getContext(), "Payment Approved!",
                             Toast.LENGTH_SHORT).show();
             });
-
-
         });
-
-
-
-
-
     }
-
-
 
     @Override
     public int getItemCount()

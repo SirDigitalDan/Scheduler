@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class SwapRequest
 {
+	// status for a requesting, either pending accepted or rejected
 	public enum Status {
 		PENDING("PENDING", 0), ACCEPTED("ACCEPTED", 1), REJECTED("REJECTED", 2);
 
@@ -114,6 +115,7 @@ public class SwapRequest
 
 	public Task<DocumentSnapshot> accept()
 	{
+		// sets this request as accepted and swaps the employees on this requests shift
 		return Shift.swapEmployees(this.shift, this.from, this.to).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
 			this.status = Status.ACCEPTED.getValue();
 			this.update(STATUS, this.status);
@@ -164,11 +166,13 @@ public class SwapRequest
 
 	public static Task<Void> delete(String key)
 	{
+		// delete from db
 		return db.collection(COLLECTION).document(key).delete();
 	}
 
 	public Task<DocumentReference> create()
 	{
+		// create in the database
 		HashMap<String, Object> h = new HashMap<>();
 		h.put(SHIFT, this.shift);
 		h.put(FROM, this.from);
@@ -182,9 +186,5 @@ public class SwapRequest
 		Map<String, Object> data = new HashMap<>();
 		data.put(field, datum);
 		return db.collection(COLLECTION).document(this.key).update(data);
-	}
-
-	public void temp()
-	{
 	}
 }

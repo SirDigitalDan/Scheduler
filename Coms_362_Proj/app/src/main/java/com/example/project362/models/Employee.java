@@ -51,47 +51,46 @@ public class Employee
 		this.name = name;
 		this.status = status;
 		this.availability = new ArrayList<>();
-		this.checked = checked;
+		this.checked = "";
 	}
 
+	// set the employee id
 	public Task<Void> setEmpId(final String empId)
 	{
-		return this.update(EMP_ID, empId).addOnCompleteListener(new OnCompleteListener<Void>() {
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
-			{
-				if (task.isSuccessful())
-					Employee.this.empId = empId;
-			}
+		// update the employee id in the database
+		return this.update(EMP_ID, empId).addOnCompleteListener((Task<Void> task) ->
+		{
+			if (task.isSuccessful())
+				Employee.this.empId = empId;
 		});
 	}
 
+	// set the employees email
 	public Task<Void> setEmail(String email)
 	{
-		return this.update(EMAIL, email).addOnCompleteListener(new OnCompleteListener<Void>() {
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
-			{
-				if (task.isSuccessful())
-					Employee.this.email = empId;
-			}
+		// update the email in the database
+		return this.update(EMAIL, email).addOnCompleteListener((Task<Void> task) ->
+		{
+			if (task.isSuccessful())
+				Employee.this.email = empId;
 		});
 	}
 
+	// set the employees name
 	public Task<Void> setName(final String name)
 	{
-		return this.update(NAME, name).addOnCompleteListener(new OnCompleteListener<Void>() {
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
-			{
-				if (task.isSuccessful())
-					Employee.this.name = name;
-			}
+		// update the name in the database
+		return this.update(NAME, name).addOnCompleteListener((Task<Void> task) ->
+		{
+			if (task.isSuccessful())
+				Employee.this.name = name;
 		});
 	}
 
+	// add availability to this employee
 	public Task<Void> addAvailability(final String date)
 	{
+		// make sure the date is not already in the availability list
 		if (this.availability.contains(date)) return Tasks.forException(new Exception("That date " +
 				"is already added"));
 
@@ -111,43 +110,14 @@ public class Employee
 		});
 	}
 
-
-	public Task<Void> setCheck(final String checked)
-	{
-		return this.update(CHECKED, checked).addOnCompleteListener((Task<Void> t) ->
-		{
-			if (t.isSuccessful()) Employee.this.checked = checked;
-			else
-			{
-				if (t.getException() != null)
-					Log.e(TAG, t.getException().toString());
-			}
-		});
-	}
-
-
+	// set the status of the employee
 	public Task<Void> setStatus(final String status)
 	{
-		return this.update(STATUS, status).addOnCompleteListener(new OnCompleteListener<Void>() {
-			@Override
-			public void onComplete(@NonNull Task<Void> task)
-			{
-				if (task.isSuccessful())
-					Employee.this.status = status;
-			}
+		return this.update(STATUS, status).addOnCompleteListener((Task<Void> task) ->
+		{
+			if (task.isSuccessful())
+				Employee.this.status = status;
 		});
-	}
-
-	public Task<Void> insertIntoDatabase()
-	{
-		HashMap<String, Object> data = new HashMap<>();
-
-		data.put(Employee.EMAIL, this.email);
-		data.put(Employee.STATUS, this.status);
-		data.put(Employee.EMP_ID, this.empId);
-		data.put(Employee.NAME, this.name);
-
-		return db.collection(COLLECTION).document(this.email).set(data);
 	}
 
 	public String getEmpId()
@@ -180,9 +150,11 @@ public class Employee
 	// DATABASE LOGIC
 	public static Task<DocumentSnapshot> getEmployeeByEmail(String email)
 	{
+		// fetch the employee reference by an email, then turn into a task of document snapshot
 		return Employee.getEmployeeReferenceByKey(email).get();
 	}
 
+	// given a document snapshot, copies values into this employee object
 	public void copyFromDocumentSnapshot(DocumentSnapshot src)
 	{
 		this.id = src.getId();
@@ -193,6 +165,7 @@ public class Employee
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
+	// update this employees values in a database
 	private Task<Void> update(String field, final Object datum)
 	{
 		Map<String, Object> data = new HashMap<>();
@@ -200,11 +173,13 @@ public class Employee
 		return db.collection(COLLECTION).document(this.id).update(data);
 	}
 
+	// update in the database
 	public Task<Void> update(HashMap<String, Object> data)
 	{
 		return db.collection(COLLECTION).document(this.id).update(data);
 	}
 
+	// create this employee object in the database
 	public Task<Void> create()
 	{
 		HashMap<String, Object> h = new HashMap<>();
@@ -218,11 +193,13 @@ public class Employee
 		return db.collection(COLLECTION).document(this.email).set(h);
 	}
 
+	// delete this employee from the database
 	public static Task<Void> delete(String id)
 	{
 		return db.collection(COLLECTION).document(id).delete();
 	}
 
+	// get reference for employee
 	public static DocumentReference getEmployeeReferenceByKey(String key)
 	{
 		return db.collection(COLLECTION).document(key);

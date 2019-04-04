@@ -19,12 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.HashMap;
-
 
 public class EditInfoActivity extends AppCompatActivity
 {
-
 	private static final String TAG = "com-s-362-project";
 
 	private FirebaseAuth mAuth;
@@ -39,27 +36,32 @@ public class EditInfoActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_info);
 
-		//get the instances of the employee user authroization
+		// get the instances of the employee user authorization
 		mAuth = FirebaseAuth.getInstance();
 
-		//get all of the views
 		editName = findViewById(R.id.editName);
 		editPassword = findViewById(R.id.editPass);
 		editVerifyPassword = findViewById(R.id.editPass2);
 
 		findViewById(R.id.buttonSub).setOnClickListener((View view) -> {
 			updateUser();
+			finish();
+			// switch to main activity
 			Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
 			startActivity(intent);
 		});
 
 		findViewById(R.id.profileActivity).setOnClickListener((View view) -> {
+			finish();
+			// switch to edit profile activity
 			Intent intent = new Intent(EditInfoActivity.this, ProfileActivity.class);
 			startActivity(intent);
 		});
+
 		findViewById(R.id.buttonSignout).setOnClickListener((View view) -> {
 			FirebaseAuth.getInstance().signOut();
 			Toast.makeText(EditInfoActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
+			// switch to main activity
 			Intent intent = new Intent(EditInfoActivity.this, MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
@@ -70,8 +72,8 @@ public class EditInfoActivity extends AppCompatActivity
 	{
 		String name = editName.getText().toString().trim();
 		final String password = editPassword.getText().toString().trim();
+		// verification password (check if they match)
 		String vPassword = editVerifyPassword.getText().toString().trim();
-
 
 		FirebaseUser curUser = mAuth.getCurrentUser();
 		if (curUser == null)
@@ -79,8 +81,10 @@ public class EditInfoActivity extends AppCompatActivity
 
 		String id = mAuth.getCurrentUser().getEmail();
 
+		// if one of the password fields is not empty
 		if (!password.isEmpty() || !vPassword.isEmpty())
 		{
+			// if the other password field is empty, then ask user to enter
 			if ((!password.isEmpty() && vPassword.isEmpty()))
 			{
 				editVerifyPassword.setError("Please confirm your password");
@@ -93,12 +97,14 @@ public class EditInfoActivity extends AppCompatActivity
 				editPassword.requestFocus();
 				return;
 			}
+			// check if passwords are equal
 			if (!vPassword.equals(password))
 			{
 				editVerifyPassword.setError("Your passwords do not match");
 				editVerifyPassword.requestFocus();
 				return;
 			}
+			// password length must be >= 6
 			if (password.length() < 6)
 			{
 				editPassword.setError("Password is too short");
@@ -106,9 +112,11 @@ public class EditInfoActivity extends AppCompatActivity
 				return;
 			}
 
+			// update in the auth database
 			this.updateAuthPassword(password);
 		}
 
+		// update the employee's name
 		this.updateEmployee(id, name);
 	}
 
@@ -117,23 +125,21 @@ public class EditInfoActivity extends AppCompatActivity
 		FirebaseUser curUser = mAuth.getCurrentUser();
 		if (curUser == null) return Tasks.forException(new Exception("an error occurred"));
 
+		// update the password in the auth database
 		return mAuth.getCurrentUser().updatePassword(password).addOnFailureListener((Exception e) ->
 				Toast.makeText(EditInfoActivity.this, "edit password failed", Toast.LENGTH_SHORT).show());
 	}
 
 	public Task<DocumentSnapshot> updateEmployee(String id, String name)
 	{
-		Log.d(TAG, id);
-		final HashMap<String, Object> data = new HashMap<>();
-
-		if (name != null && !name.isEmpty())
-			data.put(Employee.NAME, name);
-
+		// get current employee reference
 		return Employee.getEmployeeByEmail(id).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
 			if (t.isSuccessful())
 			{
+				// get the current employee
 				Employee e = new Employee(t.getResult());
-				e.update(data).addOnFailureListener((Exception exception) -> {
+				// update name in the database
+				e.setName(name).addOnFailureListener((Exception exception) -> {
 					Toast.makeText(EditInfoActivity.this, "edit user info failed",
 							Toast.LENGTH_SHORT).show();
 					Log.d(TAG, exception.toString());

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.project362.R;
 import com.example.project362.models.Employee;
@@ -22,11 +21,9 @@ public class ViewAvailability extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_availability);
-        findViewById(R.id.viewAvail).setOnClickListener(v -> {
-        	showAvailability();
-        });
+        findViewById(R.id.viewAvail).setOnClickListener(v -> showAvailability());
 
-        lv=findViewById(R.id.listAvails);
+        lv = findViewById(R.id.listAvails);
 
         // get the current users email
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -50,7 +47,7 @@ public class ViewAvailability extends AppCompatActivity
     public void lister()
     {
         //This Method lists the availability array
-	    lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+	    lv.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
 			    availArr));
     }
 }

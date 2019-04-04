@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.project362.R;
@@ -29,7 +28,6 @@ public class ViewPendingRequestsToUserActivity extends AppCompatActivity
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.activity_view_pending_requests_to_user);
 
-
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 		final String currentEmail;
 
@@ -49,12 +47,17 @@ public class ViewPendingRequestsToUserActivity extends AppCompatActivity
 		layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 
+		// get the swap requests
 		SwapRequest.getSwapRequests().addOnCompleteListener((Task<QuerySnapshot> t) -> {
 			if (t.isSuccessful() && t.getResult() != null)
 			{
+				// add all pending swap requests to the list of swap requests for the current user
 				for (DocumentSnapshot ds : t.getResult().getDocuments())
 				{
+					// convert DocumentSnapshot to swap request
 					SwapRequest request = new SwapRequest(ds);
+					// if the swap request is to the current user and hasn't been accepted or
+					// rejected, add to the list
 					if (request.getTo().getId().equals(currentEmail) && request.getStatus() ==
 							(SwapRequest.Status.PENDING.getValue()))
 						swapRequests.add(request);

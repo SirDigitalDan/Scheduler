@@ -34,6 +34,7 @@ public class Shift
 
 	private int lock;
 
+	// used for locking shifts
 	public enum LockStatus {
 		LOCKED("LOCKED", 0), UNLOCKED("UNLOCKED", 1);
 
@@ -62,16 +63,10 @@ public class Shift
 		}
 	}
 
+	// toggles this shifts status
 	public Task<Void> toggleStatus() {
-		if(this.lock == 1) {
-			this.lock = 0;
-			return this.update("lock" , 0);
-		} else if (this.lock == 0) {
-			this.lock = 1;
-			return this.update("lock", 1);
-		} else {
-			return null;
-		}
+		this.lock = (this.lock == 1) ? 0 : 1;
+		return this.update(LOCK, this.lock);
 	}
 
 	public int getStatus()
@@ -90,11 +85,13 @@ public class Shift
 	private String attendance;
 
 
+	// make from a document snapshot from the db
 	public Shift(DocumentSnapshot docSnap)
 	{
 		this.copyFromDocumentSnapshot(docSnap);
 	}
 
+	// set the start time and update in db
 	public Task<Void> setStartTime(final Date date)
 	{
 		return this.update(START_TIME, date).addOnCompleteListener((Task<Void> task) ->
@@ -275,14 +272,6 @@ public class Shift
 			}
 		});
 	}
-	public Task<Void> viewSchedule()
-	{
-		Task<QuerySnapshot> s = getShifts();
-
-		return null;
-	}
-
-
 
 	public Task<Void> setAttendance(final String attendance)
 	{
@@ -402,6 +391,7 @@ public class Shift
 			if (t.isSuccessful() && t.getResult() != null)
 			{
 				Shift s = new Shift(t.getResult());
+				// add the to employee and remove the from employee
 				s.removeEmployee(empFromRef).addOnCompleteListener(
 						(Task<Void> task) -> s.addEmployee(empToRef));
 			}

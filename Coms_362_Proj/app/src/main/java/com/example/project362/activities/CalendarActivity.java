@@ -38,6 +38,7 @@ public class CalendarActivity extends AppCompatActivity
         findViewById(R.id.save_avail).setOnClickListener((v) -> addAvailability(myDate.getText().toString()));
         findViewById(R.id.view_avail).setOnClickListener((v) -> {
 	        finish();
+	        // go to page to view the availability
 	        Intent in = new Intent(CalendarActivity.this, ViewAvailability.class);
 	        startActivity(in);
         });
@@ -46,8 +47,10 @@ public class CalendarActivity extends AppCompatActivity
         availability = new ArrayList<>();
 
         calendarView.setOnDateChangeListener((calendarView, year, month, day) -> {
+        	// when user changes date, get the date as a String
             String date = (month + 1) +"/" + day + "/" + year;
             myDate.setText(date);
+            // add the availability to list to be displayed
             availability.add(date);
         });
     }
@@ -64,6 +67,7 @@ public class CalendarActivity extends AppCompatActivity
             {
                 //creates new employee Object
                 Employee e = new Employee(t.getResult());
+                // add date to the availability
                 e.addAvailability(date);
             }
         });

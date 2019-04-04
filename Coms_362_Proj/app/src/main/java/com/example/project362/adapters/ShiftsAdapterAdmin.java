@@ -25,8 +25,6 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
 
     private ArrayList<Shift> shiftList;
     private DocumentReference currentUser;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private static final String TAG = "ShiftsAdapterAdmin";
 
     static class ShiftsViewHolder extends RecyclerView.ViewHolder {
@@ -73,7 +71,7 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
     public ShiftsAdapterAdmin(ArrayList<Shift> shifts)
     {
         shiftList = shifts;
-        currentUser = db.collection("Employees").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        currentUser = Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @NonNull
@@ -86,22 +84,19 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ShiftsAdapterAdmin.ShiftsViewHolder shiftsViewHolder, int i) {
-        Employee e;
+    public void onBindViewHolder(@NonNull final ShiftsAdapterAdmin.ShiftsViewHolder shiftsViewHolder, int i)
+    {
         final Shift currentShift = shiftList.get(i);
         shiftsViewHolder.title.setText("Shift ID: " + currentShift.getId());
         shiftsViewHolder.info.setText("Description: This shift starts on " + currentShift.getStartTime() + " and ends on "
                 + currentShift.getEndTime() + ". ");
 
-        if(currentShift.getStatus() == 1) {
-            shiftsViewHolder.lockStatus.setText("UNLOCKED");
-        } else if(currentShift.getStatus() == 0) {
-            shiftsViewHolder.lockStatus.setText("LOCKED");
-        }
+	    shiftsViewHolder.lockStatus.setText(Shift.LockStatus.getStatus(currentShift.getStatus()).toString());
 
         shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
         shiftsViewHolder.note.setText(currentShift.getNote());
 
+        // update the note
         shiftsViewHolder.noteButton.setOnClickListener((View v) ->
         {
             // Code here executes on main thread after user presses button
@@ -109,17 +104,21 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             String n = shiftsViewHolder.note.getText().toString();
             String note = n + "\n" + text;
 
+            // set the note in the database
             currentShift.setNote(note).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
+                	// update the display
                     shiftsViewHolder.note.setText(currentShift.getNote());
             });
 
             shiftsViewHolder.noteAdd.setText("");
         });
 
+        // drop the shift
         shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
         {
+        	// remove the employee by the currentShift
             currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
@@ -138,8 +137,10 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             });
         });
 
+        // pick up shift
         shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->
         {
+        	// add the employee to the shift
             currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
@@ -158,11 +159,12 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             });
         });
 
+        // add an entered employee to the shift
         shiftsViewHolder.addEmployee.setOnClickListener((final View v) -> {
             String addingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
             DocumentReference ref = Employee.getEmployeeReferenceByKey(addingEmployee);
-            // DocumentReference ref = db.collection(Employee.COLLECTION).document(addingEmployee);
 
+            // add employee to the current shift
             currentShift.addEmployee(ref).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
@@ -181,7 +183,10 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             });
         });
 
-        shiftsViewHolder.deleteShift.setOnClickListener((final View v) -> {
+        // delete a shift from the database
+        shiftsViewHolder.deleteShift.setOnClickListener((final View v) ->
+        {
+        	// delete shift by id
             Shift.delete(currentShift.getId()).addOnCompleteListener((Task<Void> task) -> {
                 if (task.isSuccessful()) {
                     this.shiftList.remove(currentShift);
@@ -190,10 +195,12 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             });
         });
 
+        // remove an employee
         shiftsViewHolder.removeEmployee.setOnClickListener((final View v) -> {
             String removingEmployee = shiftsViewHolder.addEmployeeText.getText().toString();
-            DocumentReference ref = db.collection(Employee.COLLECTION).document(removingEmployee);
+            DocumentReference ref = Employee.getEmployeeReferenceByKey(removingEmployee);
 
+            // remove the employee from the current shift
             currentShift.removeEmployee(ref).addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
@@ -212,23 +219,16 @@ public class ShiftsAdapterAdmin extends RecyclerView.Adapter<ShiftsAdapterAdmin.
             });
         });
 
-        shiftsViewHolder.lockShift.setOnClickListener((final View v) -> {
+        // toggle the lock on the shift
+        shiftsViewHolder.lockShift.setOnClickListener((final View v) ->
+        {
             currentShift.toggleStatus().addOnCompleteListener((Task<Void> task) ->
             {
                 if (task.isSuccessful())
                 {
-                    if(currentShift.getStatus() == 1) {
-                        shiftsViewHolder.lockStatus.setText("UNLOCKED");
-                        Toast.makeText(v.getContext(), "Toggle lock status successful!",
-                                Toast.LENGTH_SHORT).show();
-                    } else if(currentShift.getStatus() == 0) {
-                        shiftsViewHolder.lockStatus.setText("LOCKED");
-                        Toast.makeText(v.getContext(), "Toggle lock status successful!",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(v.getContext(), "Something went wrong!",
-                                Toast.LENGTH_SHORT).show();
-                    }
+	                shiftsViewHolder.lockStatus.setText(Shift.LockStatus.getStatus(currentShift.getStatus()).toString());
+                    Toast.makeText(v.getContext(), "Toggle lock status successful!",
+                            Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
