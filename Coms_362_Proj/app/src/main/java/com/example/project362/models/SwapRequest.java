@@ -92,7 +92,6 @@ public class SwapRequest
 		this.to = Employee.getEmployeeReferenceByKey(toId);
 	}
 
-
 	public DocumentReference getFrom()
 	{
 		return this.from;

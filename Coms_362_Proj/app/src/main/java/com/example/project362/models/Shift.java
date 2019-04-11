@@ -133,19 +133,6 @@ public class Shift
 		});
 	}
 
-	public Task<Void> setCheckedIn(final ArrayList<DocumentReference> people)
-	{
-		return this.update(CHECKEDIN, people).addOnCompleteListener((Task<Void> t) ->
-		{
-			if (t.isSuccessful()) Shift.this.checkedIn = people;
-			else
-			{
-				if (t.getException() != null)
-					Log.e(TAG, t.getException().toString());
-			}
-		});
-	}
-
 	public Task<Void> addEmployee(final DocumentReference employee)
 	{
 		if (this.lock == LockStatus.LOCKED.getValue()) return Tasks.forException(new Exception("It's locked yo"));
