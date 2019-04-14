@@ -40,6 +40,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         // button to navigate to page to show attendance for each shift
         Button adminAttendanceButton = findViewById(R.id.adminAttendance);
 
+        // button to navigate to the page for shift creation
+        Button createShift = findViewById(R.id.createShift);
+
         recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
@@ -89,6 +92,13 @@ public class AdminHomeActivity extends AppCompatActivity {
         	finish();
         	// go to attendance page
             Intent i = new Intent(this, ViewAttendanceActivity.class);
+            startActivity(i);
+        });
+
+        createShift.setOnClickListener((View v) -> {
+            finish();
+            // go to the create shift page
+            Intent i = new Intent(this, CreateShiftActivity.class);
             startActivity(i);
         });
     }
