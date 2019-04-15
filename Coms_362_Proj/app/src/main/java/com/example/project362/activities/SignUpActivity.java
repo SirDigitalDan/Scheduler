@@ -71,9 +71,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 		mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Task<AuthResult> task) -> {
 			if (task.isSuccessful())
 			{
+				String name = editTextName.getText().toString();
 				// make an employee for the new user
-				Employee e = new Employee(email, mAuth.getCurrentUser().getUid(), email,
-						editTextName.getText().toString(), "employee");
+				Employee e = new Employee(mAuth.getUid(), email, name, "employee");
 				// create employee in database
 				e.create();
 

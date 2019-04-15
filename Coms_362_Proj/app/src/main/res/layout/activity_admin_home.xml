@@ -71,10 +71,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adminAttendance" />
 
+    <Button
+        android:id="@+id/view_employees_nav_btn"
+        android:layout_width="394dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="View Employees"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createShift" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/shiftsList"
-        android:layout_width="match_parent"
-        android:layout_height="588dp"
+        android:layout_width="411dp"
+        android:layout_height="539dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:scrollbars="vertical"
@@ -82,7 +94,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createShift"
+        app:layout_constraintTop_toBottomOf="@+id/view_employees_nav_btn"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
