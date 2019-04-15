@@ -23,12 +23,17 @@ public class CreateShiftActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_create_shift);
 		shiftNameInput = findViewById(R.id.shift_name_input);
 		shiftStartInput = findViewById(R.id.shift_start_input);
 		shiftEndInput = findViewById(R.id.shift_end_input);
 
 		makeShiftBtn = findViewById(R.id.make_shift_btn);
+	}
 
+	protected void onStart()
+	{
+		super.onStart();
 		makeShiftBtn.setOnClickListener(v -> {
 			String name = shiftNameInput.getText().toString();
 			Date start = new Date(shiftStartInput.getText().toString());
