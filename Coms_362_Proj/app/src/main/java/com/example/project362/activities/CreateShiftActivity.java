@@ -39,7 +39,9 @@ public class CreateShiftActivity extends AppCompatActivity
 			Date start = new Date(shiftStartInput.getText().toString());
 			Date end = new Date(shiftEndInput.getText().toString());
 
+			// make the instance of the shift
 			Shift s = new Shift(name, start, end);
+			// add the newly created shift to the database
 			s.create().addOnCompleteListener(t -> {
 				if (t.isSuccessful())
 				{

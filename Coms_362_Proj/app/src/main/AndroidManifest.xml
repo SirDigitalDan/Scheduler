@@ -19,6 +19,7 @@
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.ViewAllShiftsActivity" />
         <activity android:name=".activities.ViewPendingRequestsToUserActivity" />
+        <activity android:name=".activities.AdminViewEmployeesActivity" />
         <activity android:name=".Tester" />
         <activity
             android:name=".activities.MainActivity"

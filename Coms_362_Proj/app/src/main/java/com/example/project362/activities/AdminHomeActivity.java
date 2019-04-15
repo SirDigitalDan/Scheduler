@@ -43,6 +43,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         // button to navigate to the page for shift creation
         Button createShift = findViewById(R.id.createShift);
 
+        Button viewEmployees = findViewById(R.id.view_employees_nav_btn);
+
         recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
@@ -100,6 +102,13 @@ public class AdminHomeActivity extends AppCompatActivity {
             // go to the create shift page
             Intent i = new Intent(this, CreateShiftActivity.class);
             startActivity(i);
+        });
+
+        viewEmployees.setOnClickListener(v -> {
+        	finish();
+        	// go to the view employees page
+	        Intent i = new Intent(this, AdminViewEmployeesActivity.class);
+	        startActivity(i);
         });
     }
 }

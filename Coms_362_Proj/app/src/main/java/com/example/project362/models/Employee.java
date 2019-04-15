@@ -1,33 +1,37 @@
 package com.example.project362.models;
 
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@SuppressWarnings({"WeakerAccess", "unused", "UnusedReturnValue", "unchecked"})
 public class Employee
 {
+	private static final double DEFAULT_WAGE = 10.00;
 	private static final String TAG = "com-s-362-shift-project";
 
-	public static final String COLLECTION = "Employees";
-	public static final String EMP_ID = "empId";
-	public static final String EMAIL = "email";
-	public static final String NAME = "name";
-	public static final String STATUS = "status";
-	public static final String AVAILABILITY = "availability";
-	public static final String CHECKED = "checked";
+
+	static final String COLLECTION = "Employees";
+	static final String EMP_ID = "empId";
+	static final String EMAIL = "email";
+	static final String NAME = "name";
+	static final String STATUS = "status";
+	static final String AVAILABILITY = "availability";
+	static final String WAGE = "wage";
 
 
+	@SuppressLint("StaticFieldLeak")
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 	private String id;
@@ -36,22 +40,36 @@ public class Employee
 	private String name;
 	private String status;
 	private ArrayList<String> availability;
-	private String checked;
+	private double wage;
 
 	public Employee(DocumentSnapshot doc)
 	{
 		this.copyFromDocumentSnapshot(doc);
 	}
 
-	public Employee(String id, String empId, String email, String name, String status)
+	public Employee(String empId, String email, String name, String status)
 	{
-		this.id = id;
 		this.empId = empId;
 		this.email = email;
 		this.name = name;
 		this.status = status;
 		this.availability = new ArrayList<>();
-		this.checked = "";
+		this.wage = DEFAULT_WAGE;
+	}
+
+	public Employee(String empId, String email, String name, String status, double wage)
+	{
+		this.empId = empId;
+		this.email = email;
+		this.name = name;
+		this.status = status;
+		this.availability = new ArrayList<>();
+		this.wage = wage;
+	}
+
+	public static Task<QuerySnapshot> getEmployees()
+	{
+		return db.collection(COLLECTION).get();
 	}
 
 	// set the employee id
@@ -84,6 +102,20 @@ public class Employee
 		{
 			if (task.isSuccessful())
 				Employee.this.name = name;
+		});
+	}
+
+	public double getWage()
+	{
+		return this.wage;
+	}
+
+	public Task<Void> setWage(final double wage)
+	{
+		// update the wage in the database
+		return this.update(WAGE, wage).addOnCompleteListener(t -> {
+			if (t.isSuccessful())
+				Employee.this.wage = wage;
 		});
 	}
 
@@ -162,6 +194,7 @@ public class Employee
 		this.email = (String) src.get(EMAIL);
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
+		this.wage = (double) (long) src.get(WAGE);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
@@ -188,9 +221,12 @@ public class Employee
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
 		h.put(AVAILABILITY, this.availability);
-		h.put(CHECKED, this.checked);
+		h.put(WAGE, this.wage);
 
-		return db.collection(COLLECTION).document(this.email).set(h);
+		return db.collection(COLLECTION).document(this.email).set(h).addOnCompleteListener(t -> {
+			if (t.isSuccessful())
+				this.id = this.email;
+		});
 	}
 
 	// delete this employee from the database
