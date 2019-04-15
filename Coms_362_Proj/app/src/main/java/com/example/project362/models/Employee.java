@@ -113,7 +113,7 @@ public class Employee
 	public Task<Void> setWage(final double wage)
 	{
 		// update the wage in the database
-		return this.update(WAGE, name).addOnCompleteListener(t -> {
+		return this.update(WAGE, wage).addOnCompleteListener(t -> {
 			if (t.isSuccessful())
 				Employee.this.wage = wage;
 		});

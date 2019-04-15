@@ -26,11 +26,13 @@ public class AdminViewEmployeesActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_employees);
 
+		employees = new ArrayList<>();
 		recycler = findViewById(R.id.employees_list);
 		recycler.setHasFixedSize(true);
 
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recycler.setLayoutManager(layoutManager);
+
 
 		Employee.getEmployees().addOnCompleteListener(t -> {
 			if (t.isSuccessful() && t.getResult() != null)
