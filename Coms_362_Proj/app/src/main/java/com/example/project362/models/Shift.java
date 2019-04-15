@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Shift
 {
 	private static final String TAG = "com-s-362-shift-project";
@@ -82,13 +81,24 @@ public class Shift
 	private ArrayList<DocumentReference> employees;
 	private ArrayList<DocumentReference> checkedIn;
 	private String note;
-	private String attendance;
+	private String attendance; //TODO do we still use this?
 
 
 	// make from a document snapshot from the db
 	public Shift(DocumentSnapshot docSnap)
 	{
 		this.copyFromDocumentSnapshot(docSnap);
+	}
+
+	public Shift(String name, Date startTime, Date endTime)
+	{
+		this.name = name;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.employees = new ArrayList<>();
+		this.checkedIn = new ArrayList<>();
+		this.note = "";
+		this.attendance = "";
 	}
 
 	// set the start time and update in db
@@ -383,5 +393,24 @@ public class Shift
 						(Task<Void> task) -> s.addEmployee(empToRef));
 			}
 		});
+	}
+
+	public Task<DocumentReference> create()
+	{
+		HashMap<String, Object> h = new HashMap<>();
+		h.put(NAME, this.name);
+		h.put(START_TIME, this.startTime);
+		h.put(END_TIME, this.endTime);
+		h.put(NOTE, this.note);
+		h.put(ATTENDANCE, this.attendance);
+		h.put(EMPLOYEES, this.employees);
+		h.put(CHECKEDIN, this.checkedIn);
+		h.put(LOCK, this.lock);
+
+		return db.collection(COLLECTION).add(h)
+				.addOnCompleteListener(t -> {
+					if (t.isSuccessful() && t.getResult() != null)
+						this.id = t.getResult().getId();
+				});
 	}
 }
