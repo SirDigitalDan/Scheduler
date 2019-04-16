@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.project362.R;
-import com.example.project362.adapters.EmployeeWageAdapter;
-import com.example.project362.adapters.ShiftsAdapter;
+import com.example.project362.adapters.EmployeeAdapter;
 import com.example.project362.models.Employee;
-import com.example.project362.models.Shift;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -44,7 +41,7 @@ public class AdminViewEmployeesActivity extends AppCompatActivity
 					employees.add(e);
 				}
 				// update the display with the new shifts
-				recycler.setAdapter(new EmployeeWageAdapter(employees));
+				recycler.setAdapter(new EmployeeAdapter(employees));
 			}
 			else
 				Toast.makeText(AdminViewEmployeesActivity.this, "No Employees At This Time!",

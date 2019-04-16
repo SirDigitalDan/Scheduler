@@ -21,17 +21,17 @@ public class Employee
 	private static final double DEFAULT_EVAL = 1.5;
 	private static final String TAG = "com-s-362-shift-project";
 
+	public static final String EMP_ID = "empId";
+	public static final String EMAIL = "email";
+	public static final String NAME = "name";
+	public static final String STATUS = "status";
+	public static final String COLLECTION = "Employees";
+	public static final String AVAILABILITY = "availability";
+	public static final String WAGE = "wage";
+	public static final String DEPARTMENT = "department";
+	public static final String MESSAGE = "message";
 
-	static final String COLLECTION = "Employees";
-	static final String EMP_ID = "empId";
-	static final String EMAIL = "email";
-	static final String NAME = "name";
-	static final String STATUS = "status";
-	static final String AVAILABILITY = "availability";
-	static final String MESSAGE = "message";
-	static final String WAGE = "wage";
-	static final String EVALUATION="evaluation";
-
+    public static final String EVALUATION = "evaluation";
 
 	@SuppressLint("StaticFieldLeak")
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -44,6 +44,7 @@ public class Employee
 	private ArrayList<String> availability;
 	private ArrayList<String> message;
 	private double wage;
+	private DocumentReference department;
 	private double evaluation;
 
 	public Employee(DocumentSnapshot doc)
@@ -60,10 +61,12 @@ public class Employee
 		this.availability = new ArrayList<>();
 		this.message = new ArrayList<>();
 		this.wage = DEFAULT_WAGE;
-		this.evaluation=DEFAULT_EVAL;
+		department = null;
+        this.evaluation = DEFAULT_EVAL;
 	}
 
-	public Employee(String empId, String email, String name, String status, double wage,double evaluation)
+	public Employee(String empId, String email, String name, String status, double wage,
+	                DocumentReference department, double evaluation)
 	{
 		this.empId = empId;
 		this.email = email;
@@ -72,12 +75,26 @@ public class Employee
 		this.availability = new ArrayList<>();
 		this.message = new ArrayList<>();
 		this.wage = wage;
-		this.evaluation=evaluation;
+		this.department = department;
+		this.evaluation = evaluation;
 	}
 
 	public static Task<QuerySnapshot> getEmployees()
 	{
 		return db.collection(COLLECTION).get();
+	}
+
+	public DocumentReference getDepartment()
+	{
+		return this.department;
+	}
+
+	public Task<Void> setDepartment(DocumentReference department)
+	{
+		return this.update(DEPARTMENT, department).addOnCompleteListener(t -> {
+			if (t.isSuccessful())
+				this.department = department;
+		});
 	}
 
 	// set the employee id
@@ -235,7 +252,8 @@ public class Employee
 		this.email = (String) src.get(EMAIL);
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
-		this.wage = (double) (long) src.get(WAGE);
+		this.wage = (double) (src.getLong(WAGE));
+		this.department = src.getDocumentReference(DEPARTMENT);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 		this.message = (ArrayList<String>) src.get(MESSAGE);
 		this.evaluation= (double) src.get(EVALUATION);
@@ -266,6 +284,7 @@ public class Employee
 		h.put(AVAILABILITY, this.availability);
 		h.put(MESSAGE, this.message);
 		h.put(WAGE, this.wage);
+		h.put(DEPARTMENT, this.department);
 		h.put(EVALUATION, this.evaluation);
 
 		return db.collection(COLLECTION).document(this.email).set(h).addOnCompleteListener(t -> {
@@ -284,5 +303,10 @@ public class Employee
 	public static DocumentReference getEmployeeReferenceByKey(String key)
 	{
 		return db.collection(COLLECTION).document(key);
+	}
+
+	public static Task<QuerySnapshot> getEmployeesByDepartment(DocumentReference dep)
+	{
+		return db.collection(COLLECTION).whereEqualTo(DEPARTMENT, dep).get();
 	}
 }
