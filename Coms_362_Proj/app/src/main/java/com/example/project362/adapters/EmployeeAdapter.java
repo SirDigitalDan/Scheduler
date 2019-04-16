@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.models.Department;
 import com.example.project362.models.Employee;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -42,6 +44,20 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 		employeeViewHolder.status.setText(e.getStatus());
 		employeeViewHolder.updateWageInput.setText(String.format(Locale.getDefault(), "%.2f",
 				e.getWage()));
+		employeeViewHolder.departmentInput.setText("Loading...");
+
+		if (e.getDepartment() != null)
+		{
+			e.getDepartment().get().addOnCompleteListener(t -> {
+				if (t.isSuccessful() && t.getResult() != null)
+				{
+					Department d = new Department(t.getResult());
+					employeeViewHolder.departmentInput.setText(d.getName());
+				}
+			});
+		}
+		else
+			employeeViewHolder.departmentInput.setText("Unassigned");
 
 		employeeViewHolder.updateWageBtn.setOnClickListener(v ->
 			e.setWage(Double.parseDouble(employeeViewHolder.updateWageInput.getText().toString()))
@@ -50,6 +66,26 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 						Toast.makeText(v.getContext(), "Successfully updated wage",
 								Toast.LENGTH_SHORT).show();
 				}));
+
+		employeeViewHolder.updateDepartmentBtn.setOnClickListener(v -> {
+			String depName = employeeViewHolder.departmentInput.getText().toString();
+			Department.getDepartmentsByName(depName).addOnCompleteListener(t -> {
+				if (t.isSuccessful() && t.getResult() != null && t.getResult().size() >= 1)
+				{
+					DocumentSnapshot ds = t.getResult().getDocuments().get(0);
+					e.setDepartment(ds.getReference())
+						.addOnCompleteListener(update -> {
+							if (update.isSuccessful())
+								Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+							else
+								Toast.makeText(v.getContext(), "Failed!", Toast.LENGTH_SHORT).show();
+						});
+				}
+				else
+					Toast.makeText(v.getContext(), "That department could not be found",
+							Toast.LENGTH_SHORT).show();
+			});
+		});
 	}
 
 	@Override
@@ -62,9 +98,10 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 	{
 		TextView name;
 		TextView status;
-		TextView department;
+		TextView departmentInput;
 		TextView updateWageInput;
 		Button updateWageBtn;
+		Button updateDepartmentBtn;
 
 		public EmployeeViewHolder(@NonNull View itemView)
 		{
@@ -74,7 +111,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 			this.status = itemView.findViewById(R.id.employee_status);
 			this.updateWageInput = itemView.findViewById(R.id.update_wage_input);
 			this.updateWageBtn = itemView.findViewById(R.id.update_wage_btn);
-			this.department = itemView.findViewById(R.id.department_name_input);
+			this.departmentInput = itemView.findViewById(R.id.employee_department_input);
+			this.updateDepartmentBtn = itemView.findViewById(R.id.update_department_btn);
 		}
 	}
 }

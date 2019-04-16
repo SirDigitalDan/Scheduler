@@ -20,15 +20,14 @@ public class Employee
 	private static final double DEFAULT_WAGE = 10.00;
 	private static final String TAG = "com-s-362-shift-project";
 
-
 	public static final String EMP_ID = "empId";
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
-	public static final String DEP_ID = "depId";
-	static final String COLLECTION = "Employees";
-	static final String AVAILABILITY = "availability";
-	static final String WAGE = "wage";
+	public static final String COLLECTION = "Employees";
+	public static final String AVAILABILITY = "availability";
+	public static final String WAGE = "wage";
+	public static final String DEPARTMENT = "department";
 
 	@SuppressLint("StaticFieldLeak")
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -40,6 +39,7 @@ public class Employee
 	private String status;
 	private ArrayList<String> availability;
 	private double wage;
+	private DocumentReference department;
 
 	public Employee(DocumentSnapshot doc)
 	{
@@ -54,9 +54,11 @@ public class Employee
 		this.status = status;
 		this.availability = new ArrayList<>();
 		this.wage = DEFAULT_WAGE;
+		department = null;
 	}
 
-	public Employee(String empId, String email, String name, String status, double wage)
+	public Employee(String empId, String email, String name, String status, double wage,
+	                DocumentReference department)
 	{
 		this.empId = empId;
 		this.email = email;
@@ -64,11 +66,25 @@ public class Employee
 		this.status = status;
 		this.availability = new ArrayList<>();
 		this.wage = wage;
+		this.department = department;
 	}
 
 	public static Task<QuerySnapshot> getEmployees()
 	{
 		return db.collection(COLLECTION).get();
+	}
+
+	public DocumentReference getDepartment()
+	{
+		return this.department;
+	}
+
+	public Task<Void> setDepartment(DocumentReference department)
+	{
+		return this.update(DEPARTMENT, department).addOnCompleteListener(t -> {
+			if (t.isSuccessful())
+				this.department = department;
+		});
 	}
 
 	// set the employee id
@@ -193,7 +209,8 @@ public class Employee
 		this.email = (String) src.get(EMAIL);
 		this.name = (String) src.get(NAME);
 		this.status = (String) src.get(STATUS);
-		this.wage = (double) (long) src.get(WAGE);
+		this.wage = (double) (src.getLong(WAGE));
+		this.department = src.getDocumentReference(DEPARTMENT);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 	}
 
@@ -221,6 +238,7 @@ public class Employee
 		h.put(NAME, this.name);
 		h.put(AVAILABILITY, this.availability);
 		h.put(WAGE, this.wage);
+		h.put(DEPARTMENT, this.department);
 
 		return db.collection(COLLECTION).document(this.email).set(h).addOnCompleteListener(t -> {
 			if (t.isSuccessful())
@@ -240,8 +258,8 @@ public class Employee
 		return db.collection(COLLECTION).document(key);
 	}
 
-	public static Task<QuerySnapshot> getEmployeesByDepartment(String depId)
+	public static Task<QuerySnapshot> getEmployeesByDepartment(DocumentReference dep)
 	{
-		return db.collection(COLLECTION).whereEqualTo(DEP_ID, depId).get();
+		return db.collection(COLLECTION).whereEqualTo(DEPARTMENT, dep).get();
 	}
 }

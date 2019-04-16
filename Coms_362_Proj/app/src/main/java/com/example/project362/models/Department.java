@@ -45,7 +45,8 @@ public class Department
 
 	public Task<QuerySnapshot> getEmployees()
 	{
-		return Employee.getEmployeesByDepartment(this.id);
+		DocumentReference self = db.collection(COLLECTION).document(this.id);
+		return Employee.getEmployeesByDepartment(self);
 	}
 
 	public Task<DocumentReference> create()
@@ -63,5 +64,10 @@ public class Department
 	public static Task<QuerySnapshot> getDepartments()
 	{
 		return db.collection(COLLECTION).get();
+	}
+
+	public static Task<QuerySnapshot> getDepartmentsByName(String name)
+	{
+		return db.collection(COLLECTION).whereEqualTo(NAME, name).get();
 	}
 }
