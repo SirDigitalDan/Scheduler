@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.project362.R;
-import com.example.project362.adapters.ShiftsAdapter;
+import com.example.project362.adapters.ShiftAttendanceAdapter;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -17,8 +17,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class ViewAttendanceActivity extends AppCompatActivity implements View.OnClickListener {
+
     private RecyclerView recyclerView;
 
     public ArrayList<Shift> shifts = new ArrayList<>();
@@ -35,24 +35,22 @@ public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnC
         recyclerView.setHasFixedSize(true);
 
         // get onclick for floating action button
-        findViewById(R.id.floatingActionButtonEdit).setOnClickListener(ViewAllShiftsActivity.this);
+        findViewById(R.id.floatingActionButtonEdit).setOnClickListener(ViewAttendanceActivity.this);
 
         // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // get all of the shifts
+        ///Display all shift cards
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
-            	// add each shift to the shifts arraylist
                 for (QueryDocumentSnapshot shiftDoc : task.getResult())
                     shifts.add(new Shift(shiftDoc));
-                // update the display with the new shifts
-                recyclerView.setAdapter(new ShiftsAdapter(shifts));
+                recyclerView.setAdapter(new ShiftAttendanceAdapter(shifts));
             }
             else
-                Toast.makeText(ViewAllShiftsActivity.this, "No Shifts At This Time!",
+                Toast.makeText(ViewAttendanceActivity.this, "No Shifts At This Time!",
                         Toast.LENGTH_SHORT).show();
         });
     }
@@ -62,10 +60,13 @@ public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnC
         switch(view.getId()){
             case R.id.floatingActionButtonEdit:
                 finish();
-                // go to edit profile info activity
+                // go to edit info activity
                 Intent i = new Intent(this, EditInfoActivity.class);
                 startActivity(i);
                 break;
         }
     }
+
 }
+
+

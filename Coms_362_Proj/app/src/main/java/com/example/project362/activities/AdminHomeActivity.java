@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 public class AdminHomeActivity extends AppCompatActivity {
 
-    private static final String TAG = "AdminControls";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -32,7 +31,19 @@ public class AdminHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
 
+        // button to navigate to page to grant employee to admin status
         Button adminStatusButton = findViewById(R.id.adminStatusButton);
+
+        // button to navigate to page to review pending payments
+        Button paymentButton = findViewById(R.id.reviewPaymentsButton);
+
+        // button to navigate to page to show attendance for each shift
+        Button adminAttendanceButton = findViewById(R.id.adminAttendance);
+
+        // button to navigate to the page for shift creation
+        Button createShift = findViewById(R.id.createShift);
+
+        Button viewEmployees = findViewById(R.id.view_employees_nav_btn);
 
         recyclerView = findViewById(R.id.shiftsList);
 
@@ -44,12 +55,15 @@ public class AdminHomeActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        // get all shifts to display
         Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
                 for (QueryDocumentSnapshot shiftDoc : task.getResult())
                 {
+                	// convert the snapshots to Shift objects
                     Shift s = new Shift(shiftDoc);
+                    // add to shifts to display
                     shifts.add(s);
                 }
 
@@ -63,9 +77,38 @@ public class AdminHomeActivity extends AppCompatActivity {
         });
 
         adminStatusButton.setOnClickListener((View v) -> {
-                finish();
-                Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
-                startActivity(i);
+            finish();
+            // go to admin status page
+            Intent i = new Intent(AdminHomeActivity.this, AdminStatusActivity.class);
+            startActivity(i);
+        });
+
+        paymentButton.setOnClickListener((View v) -> {
+            finish();
+            // go to payment review page
+            Intent i = new Intent(AdminHomeActivity.this, PaymentReviewActivity.class);
+            startActivity(i);
+        });
+
+        adminAttendanceButton.setOnClickListener((View v) -> {
+        	finish();
+        	// go to attendance page
+            Intent i = new Intent(this, ViewAttendanceActivity.class);
+            startActivity(i);
+        });
+
+        createShift.setOnClickListener((View v) -> {
+            finish();
+            // go to the create shift page
+            Intent i = new Intent(this, CreateShiftActivity.class);
+            startActivity(i);
+        });
+
+        viewEmployees.setOnClickListener(v -> {
+        	finish();
+        	// go to the view employees page
+	        Intent i = new Intent(this, AdminViewEmployeesActivity.class);
+	        startActivity(i);
         });
     }
 }

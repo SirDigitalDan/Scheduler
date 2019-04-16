@@ -1,7 +1,6 @@
 package com.example.project362.models;
 
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 public class SwapRequest
 {
+	// status for a requesting, either pending accepted or rejected
 	public enum Status {
 		PENDING("PENDING", 0), ACCEPTED("ACCEPTED", 1), REJECTED("REJECTED", 2);
 
@@ -92,7 +92,6 @@ public class SwapRequest
 		this.to = Employee.getEmployeeReferenceByKey(toId);
 	}
 
-
 	public DocumentReference getFrom()
 	{
 		return this.from;
@@ -115,6 +114,7 @@ public class SwapRequest
 
 	public Task<DocumentSnapshot> accept()
 	{
+		// sets this request as accepted and swaps the employees on this requests shift
 		return Shift.swapEmployees(this.shift, this.from, this.to).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
 			this.status = Status.ACCEPTED.getValue();
 			this.update(STATUS, this.status);
@@ -145,6 +145,7 @@ public class SwapRequest
 		this.shift = src.getDocumentReference(SHIFT);
 		this.from = src.getDocumentReference(FROM);
 		this.to = src.getDocumentReference(TO);
+		this.status = (int) (long) src.get(STATUS);
 	}
 
 	public static Task<QuerySnapshot> getSwapRequests()
@@ -164,11 +165,13 @@ public class SwapRequest
 
 	public static Task<Void> delete(String key)
 	{
+		// delete from db
 		return db.collection(COLLECTION).document(key).delete();
 	}
 
 	public Task<DocumentReference> create()
 	{
+		// create in the database
 		HashMap<String, Object> h = new HashMap<>();
 		h.put(SHIFT, this.shift);
 		h.put(FROM, this.from);

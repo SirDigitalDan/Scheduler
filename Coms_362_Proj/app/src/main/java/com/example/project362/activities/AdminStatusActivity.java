@@ -33,11 +33,14 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 
 	private void deleteUser()
 	{
+		// get the email
 		String email = userEmail.getText().toString().trim();
 
+		// delete the employee with the desired email from the database
 		Employee.delete(email).addOnCompleteListener((Task<Void> t) -> {
 			if (t.isSuccessful())
 			{
+				// delete the employee from the admin list (won't do anything if not admin)
 				Admin.delete(email).addOnCompleteListener((Task<Void> dt) -> {
 					if (dt.isSuccessful())
 						Toast.makeText(AdminStatusActivity.this, "Deleted employee",
@@ -52,8 +55,11 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 						Toast.LENGTH_SHORT).show();
 		});
 
+		// get all the shifts
 		Shift.getShifts().addOnCompleteListener((Task<QuerySnapshot> task) -> {
 			if (task.isSuccessful() && task.getResult() != null)
+				// create shift object from the document and remove the employee with the
+				// specified email from the shift
 				for (QueryDocumentSnapshot document : task.getResult())
 					new Shift(document).removeEmployee(email);
 			else
@@ -65,10 +71,12 @@ public class AdminStatusActivity extends AppCompatActivity implements View.OnCli
 	{
 		final String email = userEmail.getText().toString().trim();
 
+		// get the employee with the specified email (make sure they are an employee
 		Employee.getEmployeeByEmail(email)
 				.addOnCompleteListener((Task<DocumentSnapshot> task) -> {
 					if (task.isSuccessful())
 					{
+						// Add the employee to the admin table
 						Admin.create(email)
 								.addOnCompleteListener((Task<Void> t) -> {
 									if (t.isSuccessful())

@@ -5,30 +5,49 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     app:cardCornerRadius="12dp">
 
+
     <android.support.constraint.ConstraintLayout
-        android:layout_width="392dp"
-        android:layout_height="700dp"
-        android:layout_margin="10dp">
+        android:layout_width="364dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:paddingBottom="10dp"
+        tools:layout_editor_absoluteY="10dp">
 
         <TextView
-            android:id="@+id/shiftTitle"
-            android:layout_width="302dp"
+            android:id="@+id/lockStatus2"
+            android:layout_width="157dp"
             android:layout_height="65dp"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Lock status"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/shiftInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/shiftTitle"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/shiftTitle"
+            android:layout_width="168dp"
+            android:layout_height="65dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
             android:text="Shift Title"
 
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.458"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +66,7 @@
             android:textColor="@android:color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.469"
+            app:layout_constraintHorizontal_bias="0.266"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shiftTitle" />
 
@@ -63,132 +82,126 @@
             android:layout_marginRight="8dp"
             android:text="Employees"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.313"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shiftInfo" />
 
         <Button
             android:id="@+id/pickUpShiftButton"
-            android:layout_width="62dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/colorAccent"
+            android:layout_width="108dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/design_default_color_primary"
             android:text="Pick Up"
-            app:layout_constraintBottom_toTopOf="@+id/dropShiftButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shiftEmployees"
-            app:layout_constraintVertical_bias="0.653" />
+            app:layout_constraintStart_toEndOf="@+id/shiftNote"
+            app:layout_constraintTop_toBottomOf="@+id/shiftEmployees" />
 
         <Button
             android:id="@+id/dropShiftButton"
-            android:layout_width="62dp"
-            android:layout_height="46dp"
+            android:layout_width="111dp"
+            android:layout_height="29dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
-            android:layout_marginBottom="184dp"
-            android:background="@color/colorAccent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@android:color/holo_red_light"
             android:text="Drop"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/shiftNote"
+            app:layout_constraintTop_toBottomOf="@+id/pickUpShiftButton" />
+
+        <Button
+            android:id="@+id/clockInButton"
+            android:layout_width="323dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/holo_blue_bright"
+
+            android:text="Clock In!"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swapWith" />
 
         <TextView
             android:id="@+id/shiftNote"
             android:layout_width="194dp"
             android:layout_height="94dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextShiftNote"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.186"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shiftInfo"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/shiftEmployees" />
 
         <EditText
             android:id="@+id/editTextShiftNote"
-            android:layout_width="215dp"
-            android:layout_height="45dp"
+            android:layout_width="184dp"
+            android:layout_height="37dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="116dp"
             android:ems="10"
             android:hint="Leave a Note"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/noteButton"
-            app:layout_constraintHorizontal_bias="0.659"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shiftNote" />
 
         <EditText
             android:id="@+id/swapWith"
-            android:layout_width="215dp"
-            android:layout_height="45dp"
+            android:layout_width="184dp"
+            android:layout_height="37dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="52dp"
             android:ems="10"
             android:hint="swap with (name)"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/noteButton"
-            app:layout_constraintHorizontal_bias="0.659"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextShiftNote" />
 
         <Button
             android:id="@+id/noteButton"
-            android:layout_width="62dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
-            android:layout_marginBottom="44dp"
+            android:layout_width="112dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
             android:background="@color/colorAccent"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Add note"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dropShiftButton"
-            app:layout_constraintVertical_bias="0.085" />
+            app:layout_constraintTop_toBottomOf="@+id/dropShiftButton" />
 
         <Button
             android:id="@+id/swapButton"
-            android:layout_width="62dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
-            android:layout_marginBottom="44dp"
+            android:layout_width="124dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/colorAccent"
             android:text="Request Swap"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/clockInButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dropShiftButton"
-            app:layout_constraintVertical_bias="0.939" />
+            app:layout_constraintTop_toBottomOf="@+id/noteButton"
+            app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

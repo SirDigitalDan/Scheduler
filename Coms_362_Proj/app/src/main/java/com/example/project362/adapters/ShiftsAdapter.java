@@ -18,6 +18,7 @@ import com.example.project362.models.Shift;
 import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		private final Button pickUpShiftButton;
 		private final Button dropShiftButton;
 		private final Button swapButton;
+		private final Button clockInButton;
+
+		private final TextView lockStatus2;
 
 		ShiftsViewHolder(@NonNull View itemView)
 		{
@@ -58,13 +62,16 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 
 			swapWith = itemView.findViewById(R.id.swapWith);
 			swapButton = itemView.findViewById(R.id.swapButton);
+
+			lockStatus2 = itemView.findViewById(R.id.lockStatus2);
+
+			clockInButton = itemView.findViewById(R.id.clockInButton);
 		}
 	}
 
 	public ShiftsAdapter(ArrayList<Shift> shifts)
 	{
 		shiftList = shifts;
-
 		currentUser =
 				Employee.getEmployeeReferenceByKey(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 	}
@@ -89,14 +96,21 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 		shiftsViewHolder.employees.setText(this.formatEmployees(currentShift.getEmployees()));
 		shiftsViewHolder.note.setText(currentShift.getNote());
 
+		// set lockstatus text
+		shiftsViewHolder.lockStatus2.setText(Shift.LockStatus.getStatus(currentShift.getStatus()).toString());
+
+		// update the notes
 		shiftsViewHolder.noteButton.setOnClickListener((View v) ->
 		{
 			// Code here executes on main thread after user presses button
 			String text = shiftsViewHolder.noteAdd.getText().toString();
+			// get current note
 			String n = shiftsViewHolder.note.getText().toString();
 			String note = n + "\n" + text;
 
+			// update note in the shift and database
 			currentShift.setNote(note).addOnCompleteListener((Task<Void> task) -> {
+				// if success, update view
 				if (task.isSuccessful())
 					shiftsViewHolder.note.setText(currentShift.getNote());
 			});
@@ -104,12 +118,16 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			shiftsViewHolder.noteAdd.setText("");
 		});
 
+
+		/// Allows the employee to drop the shift if they are included
 		shiftsViewHolder.dropShiftButton.setOnClickListener((final View v) ->
 		{
+			// remove employee from the shift
 			currentShift.removeEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
 				if (task.isSuccessful())
 				{
+					// update employees list display
 					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
 					Toast.makeText(v.getContext(), "Shift drop successful!",
 							Toast.LENGTH_SHORT).show();
@@ -124,45 +142,82 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 			});
 		});
 
+
+		/// Allows the employee to pick up the shift if they have not already
 		shiftsViewHolder.pickUpShiftButton.setOnClickListener((final View v) ->
 			currentShift.addEmployee(currentUser).addOnCompleteListener((Task<Void> task) ->
 			{
 				if (task.isSuccessful())
 				{
+					// print out the employees with the added employee
 					shiftsViewHolder.employees.setText(ShiftsAdapter.this.formatEmployees(currentShift.getEmployees()));
 					Toast.makeText(v.getContext(), "Shift pick up successful!",
 							Toast.LENGTH_SHORT).show();
 				}
 				else
 				{
-					if (task.getException() != null)
-						Log.e(TAG, task.getException().toString());
-					Toast.makeText(v.getContext(), "Something went wrong!",
-							Toast.LENGTH_SHORT).show();
+					if (task.getException() != null) {
+						Toast.makeText(v.getContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(v.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}));
 
+		/// Allows the employee to request a swap of a shift
 		shiftsViewHolder.swapButton.setOnClickListener((final View v) -> {
 			FirebaseAuth auth = FirebaseAuth.getInstance();
 
 			if (auth.getCurrentUser() == null) return;
 
+			// employee requesting swap
 			DocumentReference from =
 					Employee.getEmployeeReferenceByKey(auth.getCurrentUser().getEmail());
+			// employee to swap with
 			DocumentReference to =
 					Employee.getEmployeeReferenceByKey(shiftsViewHolder.swapWith.getText().toString());
 
+			// shift in question
 			DocumentReference s = currentShift.getReference();
 
+			// if the shift is not valid (to employee is on the shift already or if the from
+			// employee is not on the shift)
 			if (!SwapRequest.isValid(currentShift, from, to))
 				Toast.makeText(v.getContext(), "That swap request is invalid",
 						Toast.LENGTH_SHORT).show();
 
+			// make the new swap request in the database
 			SwapRequest request = new SwapRequest(s, from, to);
 			request.create();
 		});
+
+		/*
+			By clicking the clock in button, the system checks to verfiy that the current user is
+			included in the shift, and then checks them in as "attended" to that shift
+		 */
+		shiftsViewHolder.clockInButton.setOnClickListener((View v) ->
+		{
+			FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser(); //get current user
+			String key = currentUser.getEmail();
+			DocumentReference ref = Employee.getEmployeeReferenceByKey(key);  //get employee reference
+
+			currentShift.checkInEmployee(ref).addOnCompleteListener((Task<Void> task) ->
+			{
+				if (task.isSuccessful()){
+
+				}
+				else
+				{
+					if (task.getException() != null)
+
+						throw new Error("Operation unsuccessful");
+				}
+			});
+
+		});
 	}
 
+	//This method will format the list specified so that it displays vertically
 	private String formatEmployees(ArrayList<DocumentReference> employees)
 	{
 		StringBuilder employeesSb = new StringBuilder();
