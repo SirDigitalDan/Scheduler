@@ -29,7 +29,9 @@ public class Employee
 	public static final String AVAILABILITY = "availability";
 	public static final String WAGE = "wage";
 	public static final String DEPARTMENT = "department";
-  public static final String EVALUATION = "evaluation";
+	public static final String MESSAGE = "message";
+
+    public static final String EVALUATION = "evaluation";
 
 	@SuppressLint("StaticFieldLeak")
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,7 +62,7 @@ public class Employee
 		this.message = new ArrayList<>();
 		this.wage = DEFAULT_WAGE;
 		department = null;
-    this.evaultion = DEFAULT_EVAL;
+        this.evaluation = DEFAULT_EVAL;
 	}
 
 	public Employee(String empId, String email, String name, String status, double wage,
