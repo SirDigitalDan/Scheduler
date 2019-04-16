@@ -6,15 +6,18 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.project362.R;
+import com.example.project362.models.Employee;
 import com.example.project362.models.Shift;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,8 +27,10 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     private String currentUser;
     private ListView lv;
+    private ListView listEval;
+    private EditText getEvals;
     FirebaseAuth mAuth;
-    ArrayList<String> upcomingShifts;
+    ArrayList<String> upcomingShifts,evaluations;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +38,35 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
         mAuth = FirebaseAuth.getInstance();
         lv=findViewById(R.id.listShifts);
+        listEval= findViewById(R.id.listEval);
         //Goes to the page which will let the Employee set their availability
         findViewById(R.id.button_send2).setOnClickListener(ProfileActivity.this);
         findViewById(R.id.button_send3).setOnClickListener(ProfileActivity.this);
+        findViewById(R.id.button_Eval).setOnClickListener(ProfileActivity.this);
+        getEvals= findViewById(R.id.editTextEval);
         upcomingShifts = new ArrayList<>();
+        evaluations = new ArrayList<>();
         currentUser = mAuth.getCurrentUser().getEmail();
+
+    }
+    private Task<DocumentSnapshot>  getEval(){
+
+        // get current employee reference
+        return Employee.getEmployeeByEmail(currentUser).addOnCompleteListener((Task<DocumentSnapshot> t) -> {
+            if (t.isSuccessful())
+            {
+                // get the current employee
+                Employee e = new Employee(t.getResult());
+                // update name in the database
+                double evals = e.getEval();
+                evaluations.add(evals+" ");
+                String str = evals + " ";
+                getEvals.setText(str);
+            }
+            else {
+                Toast.makeText(ProfileActivity.this, "edit user info failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -85,6 +114,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         lv.setAdapter(arrayAdapter);
     }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()){
@@ -95,6 +125,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.button_send3:
                 getAllUsers();
+                break;
+            case R.id.button_Eval:
+                getEval();
                 break;
         }
     }

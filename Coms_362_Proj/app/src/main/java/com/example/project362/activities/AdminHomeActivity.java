@@ -43,6 +43,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         // button to navigate to the page for shift creation
         Button createShift = findViewById(R.id.createShift);
 
+        //button to navigate to employee performance
+        Button employeePerformance = findViewById(R.id.calculatePerformance);
+
         Button viewEmployees = findViewById(R.id.view_employees_nav_btn);
 
         recyclerView = findViewById(R.id.shiftsList);
@@ -89,7 +92,12 @@ public class AdminHomeActivity extends AppCompatActivity {
             Intent i = new Intent(AdminHomeActivity.this, PaymentReviewActivity.class);
             startActivity(i);
         });
-
+        employeePerformance.setOnClickListener((View v) -> {
+            finish();
+            // go to payment review page
+            Intent i = new Intent(AdminHomeActivity.this, EmployeePerformance.class);
+            startActivity(i);
+        });
         adminAttendanceButton.setOnClickListener((View v) -> {
         	finish();
         	// go to attendance page

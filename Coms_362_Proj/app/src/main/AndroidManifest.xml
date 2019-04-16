@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.PaymentReviewActivity"></activity>
+        <activity android:name=".activities.EmployeePerformance"></activity>
+        <activity android:name=".activities.PaymentReviewActivity" />
         <activity android:name=".activities.AdminHomeActivity" />
         <activity android:name=".activities.ViewAvailability" />
         <activity android:name=".activities.CalendarActivity" />
