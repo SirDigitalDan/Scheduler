@@ -8,7 +8,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import java.util.Map;
 public class Employee
 {
 	private static final double DEFAULT_WAGE = 10.00;
+	private static final double DEFAULT_EVAL = 1.5;
 	private static final String TAG = "com-s-362-shift-project";
 
 
@@ -28,7 +28,9 @@ public class Employee
 	static final String NAME = "name";
 	static final String STATUS = "status";
 	static final String AVAILABILITY = "availability";
+	static final String MESSAGE = "message";
 	static final String WAGE = "wage";
+	static final String EVALUATION="evaluation";
 
 
 	@SuppressLint("StaticFieldLeak")
@@ -40,7 +42,9 @@ public class Employee
 	private String name;
 	private String status;
 	private ArrayList<String> availability;
+	private ArrayList<String> message;
 	private double wage;
+	private double evaluation;
 
 	public Employee(DocumentSnapshot doc)
 	{
@@ -54,17 +58,21 @@ public class Employee
 		this.name = name;
 		this.status = status;
 		this.availability = new ArrayList<>();
+		this.message = new ArrayList<>();
 		this.wage = DEFAULT_WAGE;
+		this.evaluation=DEFAULT_EVAL;
 	}
 
-	public Employee(String empId, String email, String name, String status, double wage)
+	public Employee(String empId, String email, String name, String status, double wage,double evaluation)
 	{
 		this.empId = empId;
 		this.email = email;
 		this.name = name;
 		this.status = status;
 		this.availability = new ArrayList<>();
+		this.message = new ArrayList<>();
 		this.wage = wage;
+		this.evaluation=evaluation;
 	}
 
 	public static Task<QuerySnapshot> getEmployees()
@@ -109,7 +117,16 @@ public class Employee
 	{
 		return this.wage;
 	}
-
+	public double getEval() {return this.evaluation;}
+	//set the evaluation for the employee
+	public Task<Void> setEval(final double evaluation)
+	{
+		// update the wage in the database
+		return this.update(EVALUATION, evaluation).addOnCompleteListener(t -> {
+			if (t.isSuccessful())
+				Employee.this.evaluation = evaluation;
+		});
+	}
 	public Task<Void> setWage(final double wage)
 	{
 		// update the wage in the database
@@ -134,6 +151,26 @@ public class Employee
 		return this.update(AVAILABILITY, temp).addOnCompleteListener((Task<Void> t) ->
 		{
 			if (t.isSuccessful()) Employee.this.availability = temp;
+			else
+			{
+				if (t.getException() != null)
+					Log.e(TAG, t.getException().toString());
+			}
+		});
+	}
+
+	// add availability to this employee
+	public Task<Void> addMessage(final String message)
+	{
+
+		//Creates an availability array which is composed of dates that the employee selects
+		final ArrayList<String> temp = new ArrayList<>(this.message);
+		temp.add(message);
+
+		//This function will be called within a different class and lets the user add a date in the format mm/dd/yyyy to our database
+		return this.update(MESSAGE, temp).addOnCompleteListener((Task<Void> t) ->
+		{
+			if (t.isSuccessful()) Employee.this.message = temp;
 			else
 			{
 				if (t.getException() != null)
@@ -176,6 +213,10 @@ public class Employee
 	{
 		return this.availability;
 	}
+	public ArrayList<String> getMessage()
+	{
+		return this.message;
+	}
 
 	public String getId() { return this.id; }
 
@@ -196,6 +237,8 @@ public class Employee
 		this.status = (String) src.get(STATUS);
 		this.wage = (double) (long) src.get(WAGE);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
+		this.message = (ArrayList<String>) src.get(MESSAGE);
+		this.evaluation= (double) src.get(EVALUATION);
 	}
 
 	// update this employees values in a database
@@ -221,7 +264,9 @@ public class Employee
 		h.put(STATUS, this.status);
 		h.put(NAME, this.name);
 		h.put(AVAILABILITY, this.availability);
+		h.put(MESSAGE, this.message);
 		h.put(WAGE, this.wage);
+		h.put(EVALUATION, this.evaluation);
 
 		return db.collection(COLLECTION).document(this.email).set(h).addOnCompleteListener(t -> {
 			if (t.isSuccessful())

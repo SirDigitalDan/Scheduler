@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EmployeePerformance">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/preamble"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:text="Please Enter the Emplooyes email. Then enter their evaluation in numerial values between 0-10. Please reference the manual to see the categories and explanations " />
+
+        <EditText
+            android:id="@+id/enterEmployee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:hint="Enter Employees Email"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorAccent" />
+        <EditText
+            android:id="@+id/CriteriaAttendance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:hint="Enter Attendance Evaluation"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorAccent" />
+
+
+        <EditText
+            android:id="@+id/CriteriaTechnology"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif"
+            android:hint="Enter Use Of Technology Evaluation"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorAccent" />
+
+        <EditText
+            android:id="@+id/CriteriaLeadership"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif"
+            android:hint="Enter Leadership Evaluation"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorAccent" />
+
+        <EditText
+            android:id="@+id/CriteriaTeamwork"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:hint="Enter Teamwork Evaluation"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorAccent" />
+
+
+        <Button
+            android:id="@+id/button_calculateEvaluation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Send Evaluation"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
