@@ -45,6 +45,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         Button viewEmployees = findViewById(R.id.view_employees_nav_btn);
 
+        Button viewDepartments = findViewById(R.id.view_departments);
+
         recyclerView = findViewById(R.id.shiftsList);
 
         // use this setting to improve performance if you know that changes
@@ -108,6 +110,13 @@ public class AdminHomeActivity extends AppCompatActivity {
         	finish();
         	// go to the view employees page
 	        Intent i = new Intent(this, AdminViewEmployeesActivity.class);
+	        startActivity(i);
+        });
+
+        viewDepartments.setOnClickListener(v -> {
+        	finish();
+        	// go to the departments list
+	        Intent i = new Intent(this, ViewDepartmentsActivity.class);
 	        startActivity(i);
         });
     }

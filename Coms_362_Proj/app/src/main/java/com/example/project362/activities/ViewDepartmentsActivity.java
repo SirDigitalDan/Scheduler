@@ -34,6 +34,7 @@ public class ViewDepartmentsActivity extends AppCompatActivity
 
 		departmentNameInput = findViewById(R.id.department_name_input);
 		createDepartmentButton = findViewById(R.id.create_department_btn);
+		recycler = findViewById(R.id.departments_list);
 
 		recycler.setHasFixedSize(true);
 

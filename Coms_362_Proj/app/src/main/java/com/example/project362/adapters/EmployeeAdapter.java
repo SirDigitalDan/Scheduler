@@ -15,11 +15,11 @@ import com.example.project362.models.Employee;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class EmployeeWageAdapter extends RecyclerView.Adapter<EmployeeWageAdapter.EmployeeViewHolder>
+public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>
 {
 	ArrayList<Employee> employees;
 
-	public EmployeeWageAdapter(ArrayList<Employee> employees)
+	public EmployeeAdapter(ArrayList<Employee> employees)
 	{
 		this.employees = employees;
 	}
@@ -30,7 +30,7 @@ public class EmployeeWageAdapter extends RecyclerView.Adapter<EmployeeWageAdapte
 	{
 		View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.employee_card,
 				viewGroup, false);
-		return new EmployeeWageAdapter.EmployeeViewHolder(v);
+		return new EmployeeAdapter.EmployeeViewHolder(v);
 	}
 
 	@Override
@@ -62,6 +62,7 @@ public class EmployeeWageAdapter extends RecyclerView.Adapter<EmployeeWageAdapte
 	{
 		TextView name;
 		TextView status;
+		TextView department;
 		TextView updateWageInput;
 		Button updateWageBtn;
 
@@ -73,6 +74,7 @@ public class EmployeeWageAdapter extends RecyclerView.Adapter<EmployeeWageAdapte
 			this.status = itemView.findViewById(R.id.employee_status);
 			this.updateWageInput = itemView.findViewById(R.id.update_wage_input);
 			this.updateWageBtn = itemView.findViewById(R.id.update_wage_btn);
+			this.department = itemView.findViewById(R.id.department_name_input);
 		}
 	}
 }
