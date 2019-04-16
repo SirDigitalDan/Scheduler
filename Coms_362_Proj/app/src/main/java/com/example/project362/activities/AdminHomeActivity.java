@@ -39,7 +39,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         // button to navigate to page to show attendance for each shift
         Button adminAttendanceButton = findViewById(R.id.adminAttendance);
-
+        //button to navigate to page to send a message to employee
+        Button sendMessage = findViewById(R.id.goToMessage);
         // button to navigate to the page for shift creation
         Button createShift = findViewById(R.id.createShift);
 
@@ -117,6 +118,12 @@ public class AdminHomeActivity extends AppCompatActivity {
         	// go to the view employees page
 	        Intent i = new Intent(this, AdminViewEmployeesActivity.class);
 	        startActivity(i);
+        });
+        sendMessage.setOnClickListener(v -> {
+            finish();
+            // go to the view employees page
+            Intent i = new Intent(this, ChatActivity.class);
+            startActivity(i);
         });
     }
 }

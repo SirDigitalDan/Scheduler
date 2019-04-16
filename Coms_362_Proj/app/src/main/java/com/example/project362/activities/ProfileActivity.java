@@ -38,11 +38,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
         mAuth = FirebaseAuth.getInstance();
         lv=findViewById(R.id.listShifts);
-        listEval= findViewById(R.id.listEval);
+
         //Goes to the page which will let the Employee set their availability
         findViewById(R.id.button_send2).setOnClickListener(ProfileActivity.this);
         findViewById(R.id.button_send3).setOnClickListener(ProfileActivity.this);
         findViewById(R.id.button_Eval).setOnClickListener(ProfileActivity.this);
+        findViewById(R.id.button_Message).setOnClickListener(ProfileActivity.this);
         getEvals= findViewById(R.id.editTextEval);
         upcomingShifts = new ArrayList<>();
         evaluations = new ArrayList<>();
@@ -122,6 +123,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 Intent in1 = new Intent(ProfileActivity.this, CalendarActivity.class);
                 startActivity(in1);
+                break;
+            case R.id.button_Message:
+                finish();
+                Intent i = new Intent(ProfileActivity.this, ViewMessages.class);
+                startActivity(i);
                 break;
             case R.id.button_send3:
                 getAllUsers();
