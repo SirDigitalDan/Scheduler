@@ -8,9 +8,15 @@
     tools:context=".activities.ProfileActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+
+
 
         <Button
             android:id="@+id/button_send2"
@@ -22,12 +28,6 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent" />
 
-        <TextView
-            android:id="@+id/testID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
 
         <Button
             android:id="@+id/button_send3"
@@ -38,8 +38,32 @@
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent" />
-
-
+        <Button
+            android:id="@+id/button_Message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="View Messages"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/button_Eval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Get Evaluation"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent" />
+        <EditText
+            android:id="@+id/editTextEval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Click get Evaluation for this to update"
+            android:text="Name" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +76,7 @@
                 android:layout_height="wrap_content">
             </ListView>
         </LinearLayout>
-
+        
 
 
 
