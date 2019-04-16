@@ -1,9 +1,7 @@
 package com.example.project362.models;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
@@ -11,13 +9,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
+@SuppressWarnings({"unchecked", "WeakerAccess"})
 public class Shift
 {
 	private static final String TAG = "com-s-362-shift-project";
@@ -256,9 +254,7 @@ public class Shift
 		return db.collection(COLLECTION).document(id).delete();
 	}
 
-	public static Task<DocumentSnapshot> swapEmployees(DocumentReference shiftRef,
-	                                        DocumentReference empFromRef,
-	                                       DocumentReference empToRef)
+	public static Task<DocumentSnapshot> swapEmployees(DocumentReference shiftRef, DocumentReference empFromRef, DocumentReference empToRef)
 	{
 		return shiftRef.get().addOnCompleteListener((Task<DocumentSnapshot> t) -> {
 			if (t.isSuccessful() && t.getResult() != null)

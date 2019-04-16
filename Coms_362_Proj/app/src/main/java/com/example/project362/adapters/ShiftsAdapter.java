@@ -19,7 +19,6 @@ import com.example.project362.models.SwapRequest;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -27,7 +26,6 @@ public class ShiftsAdapter extends RecyclerView.Adapter<ShiftsAdapter.ShiftsView
 {
 	private ArrayList<Shift> shiftList;
 	private DocumentReference currentUser;
-	private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 	private static final String TAG = "com-s-362-project";
 

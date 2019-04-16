@@ -22,7 +22,7 @@ public class ViewAllShiftsActivity extends AppCompatActivity implements View.OnC
 
     private RecyclerView recyclerView;
 
-    public ArrayList<Shift> shifts = new ArrayList<Shift>();
+    public ArrayList<Shift> shifts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

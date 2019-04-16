@@ -7,8 +7,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +23,7 @@ public class Employee
 	public static final String EMAIL = "email";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
+	public static final String DEP_ID = "depId";
 
 	private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -179,5 +180,10 @@ public class Employee
 	public static DocumentReference getEmployeeReferenceByKey(String key)
 	{
 		return db.collection(COLLECTION).document(key);
+	}
+
+	public static Task<QuerySnapshot> getEmployeesByDepartment(String depId)
+	{
+		return db.collection(COLLECTION).whereEqualTo(DEP_ID, depId).get();
 	}
 }
