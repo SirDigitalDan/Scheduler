@@ -17,6 +17,7 @@ public class HomeActivity extends AppCompatActivity
 	private Button pendingReceivedSwapRequestsButton;
 
 	private Button paymentsButton;
+	private Button projectsButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceBundle)
@@ -27,6 +28,7 @@ public class HomeActivity extends AppCompatActivity
 		allShiftsButton = findViewById(R.id.allShiftsButton);
 		pendingReceivedSwapRequestsButton = findViewById(R.id.pendingReceivedSwapRequestsButton);
 		paymentsButton = findViewById(R.id.paymentsButton);
+		projectsButton = findViewById(R.id.projectsButton);
 	}
 
 	public void onStart()
@@ -49,6 +51,12 @@ public class HomeActivity extends AppCompatActivity
 		this.paymentsButton.setOnClickListener((View v) -> {
 			Payment.calculatePayments();
 			Toast.makeText(HomeActivity.this, "Payment Created Successfully!", Toast.LENGTH_SHORT).show();
+		});
+
+		////Generate Payment for current user's worked shifts
+		this.projectsButton.setOnClickListener((View v) -> {
+			Intent i = new Intent(this, ViewProjectsActivity.class);
+			startActivity(i);
 		});
 	}
 }

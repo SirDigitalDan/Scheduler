@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:elevation="4dp"
+    android:layout_margin="16dp"
+    android:background="@drawable/card_drawable">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/projectName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="Roboto"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="#0D1F2D"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/deleteProjectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_delete_forever_black_24dp"
+            app:backgroundTint="@android:color/holo_red_light"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintStart_toEndOf="@+id/projectName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="Roboto"
+        android:paddingStart="20dp"
+        android:text="Deadline"
+        android:textAlignment="textStart"
+        android:textColor="#70798C"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/projectDeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="Roboto"
+        android:paddingStart="40dp"
+        android:textAlignment="textStart"
+        android:textColor="#0D1F2D"
+        android:textSize="24sp" />
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="Roboto"
+        android:paddingStart="20dp"
+        android:text="Budget"
+        android:textAlignment="textStart"
+        android:textColor="#70798C"
+        android:textSize="20sp" />
+
+    <TextView
+    android:id="@+id/projectBudget"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    android:fontFamily="Roboto"
+
+    android:textSize="24sp"
+        android:textAlignment="textStart"
+        android:paddingStart="40dp"
+        android:textColor="#0D1F2D"
+    />
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="Roboto"
+        android:paddingStart="20dp"
+        android:text="Employees"
+        android:layout_marginTop="8dp"
+        android:textAlignment="textStart"
+        android:textColor="#70798C"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/projectEmployees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="Roboto"
+        android:paddingStart="40dp"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textColor="#0D1F2D"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/budgetButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Project Budget"
+        android:background="@drawable/rounded_btn_one"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:textColor="#fff"
+
+        />
+    <Button
+        android:id="@+id/deadlineButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Project Deadline"
+        android:background="@drawable/rounded_btn_one"
+        android:layout_marginStart="20dp"
+        android:textColor="#fff"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="20dp"
+
+
+        />
+
+
+</LinearLayout>
