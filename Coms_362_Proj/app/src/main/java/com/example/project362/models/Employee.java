@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"WeakerAccess", "unused", "UnusedReturnValue", "unchecked"})
+@SuppressWarnings({"WeakerAccess", "unused", "UnusedReturnValue", "unchecked", "NullableProblems"})
 public class Employee
 {
 	private static final double DEFAULT_WAGE = 10.00;
@@ -256,7 +256,7 @@ public class Employee
 		this.department = src.getDocumentReference(DEPARTMENT);
 		this.availability = (ArrayList<String>) src.get(AVAILABILITY);
 		this.message = (ArrayList<String>) src.get(MESSAGE);
-		this.evaluation= (double) src.get(EVALUATION);
+		this.evaluation = (double) src.getLong(EVALUATION);
 	}
 
 	// update this employees values in a database
@@ -308,5 +308,11 @@ public class Employee
 	public static Task<QuerySnapshot> getEmployeesByDepartment(DocumentReference dep)
 	{
 		return db.collection(COLLECTION).whereEqualTo(DEPARTMENT, dep).get();
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.email;
 	}
 }
