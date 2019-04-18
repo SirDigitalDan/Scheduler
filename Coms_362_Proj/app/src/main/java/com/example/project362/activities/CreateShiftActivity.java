@@ -36,6 +36,8 @@ public class CreateShiftActivity extends AppCompatActivity
 		super.onStart();
 		makeShiftBtn.setOnClickListener(v -> {
 			String name = shiftNameInput.getText().toString();
+
+			// get start and end time specified
 			Date start = new Date(shiftStartInput.getText().toString());
 			Date end = new Date(shiftEndInput.getText().toString());
 

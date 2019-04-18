@@ -46,6 +46,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 				e.getWage()));
 		employeeViewHolder.departmentInput.setText("Loading...");
 
+		// if the employee is assigned to an apartment, fetch department name from the database
 		if (e.getDepartment() != null)
 		{
 			e.getDepartment().get().addOnCompleteListener(t -> {
@@ -56,9 +57,11 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 				}
 			});
 		}
+		// else set as unassigned
 		else
 			employeeViewHolder.departmentInput.setText("Unassigned");
 
+		// updates the wage of the selected employee
 		employeeViewHolder.updateWageBtn.setOnClickListener(v ->
 			e.setWage(Double.parseDouble(employeeViewHolder.updateWageInput.getText().toString()))
 				.addOnCompleteListener(t -> {
@@ -67,11 +70,15 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 								Toast.LENGTH_SHORT).show();
 				}));
 
+		// updates the department of the selected employee
 		employeeViewHolder.updateDepartmentBtn.setOnClickListener(v -> {
+			// get name of the department
 			String depName = employeeViewHolder.departmentInput.getText().toString();
 			Department.getDepartmentsByName(depName).addOnCompleteListener(t -> {
+				// check if the department exists
 				if (t.isSuccessful() && t.getResult() != null && t.getResult().size() >= 1)
 				{
+					// get the department, then set the employees department
 					DocumentSnapshot ds = t.getResult().getDocuments().get(0);
 					e.setDepartment(ds.getReference())
 						.addOnCompleteListener(update -> {

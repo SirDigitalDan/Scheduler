@@ -44,7 +44,7 @@ public class ViewDepartmentsActivity extends AppCompatActivity
 
 		// get list of all the departments and add to the recycler view
 		Department.getDepartments().addOnCompleteListener((Task<QuerySnapshot> task) -> {
-			if (task.isSuccessful())
+			if (task.isSuccessful() && task.getResult() != null)
 			{
 				for (QueryDocumentSnapshot depDoc : task.getResult())
 					departments.add(new Department(depDoc));
@@ -62,6 +62,7 @@ public class ViewDepartmentsActivity extends AppCompatActivity
 	{
 		super.onStart();
 		createDepartmentButton.setOnClickListener(v -> {
+			// get the name of the new department to create
 			String name = departmentNameInput.getText().toString();
 
 			// create an instance of the new department
@@ -73,9 +74,11 @@ public class ViewDepartmentsActivity extends AppCompatActivity
 					t.getResult().get().addOnCompleteListener(getDepTask -> {
 						if (getDepTask.isSuccessful() && getDepTask.getResult() != null)
 						{
+							// update the departments list with the newly added department
 							Department created = new Department(getDepTask.getResult());
 							departments.add(created);
-							adapter.notifyDataSetChanged();
+							adapter.notifyDataSetChanged(); // notify that the new department was
+															// added
 							Toast.makeText(ViewDepartmentsActivity.this, "Department created!",
 									Toast.LENGTH_SHORT).show();
 						}

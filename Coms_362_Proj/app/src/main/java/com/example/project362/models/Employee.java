@@ -230,6 +230,7 @@ public class Employee
 	{
 		return this.availability;
 	}
+
 	public ArrayList<String> getMessage()
 	{
 		return this.message;
@@ -289,6 +290,7 @@ public class Employee
 
 		return db.collection(COLLECTION).document(this.email).set(h).addOnCompleteListener(t -> {
 			if (t.isSuccessful())
+				// if successfully created, update this object's id to the created one
 				this.id = this.email;
 		});
 	}
@@ -305,6 +307,7 @@ public class Employee
 		return db.collection(COLLECTION).document(key);
 	}
 
+	// get's all employees assigned to a specified department
 	public static Task<QuerySnapshot> getEmployeesByDepartment(DocumentReference dep)
 	{
 		return db.collection(COLLECTION).whereEqualTo(DEPARTMENT, dep).get();

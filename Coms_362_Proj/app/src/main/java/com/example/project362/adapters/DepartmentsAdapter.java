@@ -41,17 +41,24 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
 	{
 		Department d = departmentsList.get(i);
 
+		// display the department's name
 		viewHolder.name.setText(d.getName());
+
+		// get the employees assigned to the current department
 		d.getEmployees().addOnCompleteListener(t -> {
 			if (t.isSuccessful() && t.getResult() != null)
 			{
+				// make list of employee's (list of emails)
 				ArrayList<String> employees = new ArrayList<>();
 				for (DocumentSnapshot docSnap : t.getResult().getDocuments())
 					employees.add(new Employee(docSnap).toString());
+
+				// create adapter from the employee's list
 				ArrayAdapter<String> adapter = new ArrayAdapter<>(
 						viewHolder.v,
 						android.R.layout.simple_list_item_1,
 						employees);
+
 				viewHolder.list.setAdapter(adapter);
 			}
 			else
@@ -75,6 +82,7 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
 			super(itemView);
 			name = itemView.findViewById(R.id.department_name);
 			list = itemView.findViewById(R.id.department_employees_list);
+			// context
 			v = itemView.getContext();
 		}
 	}
