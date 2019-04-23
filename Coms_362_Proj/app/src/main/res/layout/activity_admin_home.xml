@@ -8,142 +8,105 @@
     tools:context=".activities.AdminHomeActivity"
     android:background="@color/colorPrimary">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
-    <Button
-        android:id="@+id/reviewPaymentsButton"
-        android:layout_width="394dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Review Pending Payments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adminStatusButton" />
-    <Button
-        android:id="@+id/calculatePerformance"
-        android:layout_width="394dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Employee Performance Evalution"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adminStatusButton" />
-
-    <Button
-        android:id="@+id/adminStatusButton"
-        android:layout_width="392dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Grant Admin Status"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/adminAttendance"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Check in Employees"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reviewPaymentsButton" />
-
-    <Button
-        android:id="@+id/createShift"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Create Shift"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adminAttendance" />
-
-
-    <Button
-        android:id="@+id/view_employees_nav_btn"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="View Employees"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createShift" />
-    <Button
-        android:id="@+id/goToMessage"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Send Message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createShift" />
-
-    <Button
-        android:id="@+id/view_departments"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="View Departments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_employees_nav_btn" />
-
-    <Button
-        android:id="@+id/adminViewProjects"
-        android:layout_width="394dp"
-        android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="View Projects"
-        app:layout_constraintBottom_toTopOf="@+id/shiftsList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_departments" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/shiftsList"
-        android:layout_width="411dp"
-        android:layout_height="406dp"
-        android:background="@android:color/darker_gray"
-        android:scrollbars="vertical"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/reviewPaymentsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Review Pending Payments" />
+
+                <Button
+                    android:id="@+id/calculatePerformance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Employee Performance Evalution" />
+
+                <Button
+                    android:id="@+id/adminAttendance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Check in Employees" />
+
+                <Button
+                    android:id="@+id/adminViewProjects"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="View Projects" />
+
+                <Button
+                    android:id="@+id/createShift"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Create Shift" />
+
+                <Button
+                    android:id="@+id/goToMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Send Message" />
+
+                <Button
+                    android:id="@+id/view_employees_nav_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="View Employees" />
+
+                <Button
+                    android:id="@+id/adminStatusButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Grant Admin Status" />
+
+                <Button
+                    android:id="@+id/view_departments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="View Departments" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/shiftsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/darker_gray"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+
 
 </android.support.constraint.ConstraintLayout>

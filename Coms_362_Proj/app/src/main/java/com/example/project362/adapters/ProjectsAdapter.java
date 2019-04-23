@@ -36,6 +36,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>
 {
@@ -51,21 +53,26 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         private final TextView budget;
         private final TextView employees;
 
+        private final EditText budgetChange;
+
         private final Button budgetButton;
         private final Button deadlineButton;
         private final FloatingActionButton deleteButton;
 
         ProjectsViewHolder(@NonNull View itemView)
         {
+            /**
+             * Initialize all items in the Project Card view
+             */
             super(itemView);
             name = itemView.findViewById(R.id.projectName);
             employees = itemView.findViewById(R.id.projectEmployees);
             budget = itemView.findViewById(R.id.projectBudget);
             deadline = itemView.findViewById(R.id.projectDeadline);
-
             deadlineButton = itemView.findViewById(R.id.deadlineButton);
             budgetButton = itemView.findViewById(R.id.budgetButton);
             deleteButton = itemView.findViewById(R.id.deleteProjectButton);
+            budgetChange = itemView.findViewById(R.id.editTextBudgetDetails);
 
         }
     }
@@ -89,23 +96,30 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     @Override
     public void onBindViewHolder(@NonNull final ProjectsViewHolder projectsViewHolder, int i)
     {
+        /**
+         * Set up view for each Project card
+         */
         final Project currentProject = projectList.get(i);
         projectsViewHolder.name.setText(currentProject.getName());
-
         String s = DateFormat.getDateInstance().format(currentProject.getDeadline());
-
         projectsViewHolder.deadline.setText(s);
-
         projectsViewHolder.employees.setText(this.formatEmployees(currentProject.getEmployees()));
         projectsViewHolder.budget.setText("$" + currentProject.getBudget().get("total").toString());
 
-
-
+        /**
+         * Hide some buttons that allow admin functions
+         */
         projectsViewHolder.deadlineButton.setVisibility(View.GONE);
         projectsViewHolder.budgetButton.setVisibility(View.GONE);
+        projectsViewHolder.budgetChange.setVisibility(View.GONE);
         projectsViewHolder.deleteButton.hide();
 
-
+        /**
+         * The Project card will only show admin functions if you are logged in as
+         * an Admin, because of this, the system needs to check if you are an Admin.
+         *
+         * If you are an admin, the system will show buttons that are normally invisible to normal employees
+         */
         Admin.getAdmins().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -123,22 +137,57 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             }
         });
 
+        /**
+         * Allows the user to change the deadline for the Project.
+         */
         projectsViewHolder.deadlineButton.setOnClickListener((final View v) -> {
 
         });
 
+        /**
+         * Delete the current project
+         */
         projectsViewHolder.deleteButton.setOnClickListener((final View v) -> {
             Project.delete(currentProject.getId());
             projectList.remove(i);
             notifyItemRemoved(i);
         });
 
-
+        /**
+         * This reveals an input for the user to edit the budget details for the project
+         *
+         * The input is initially hidden, but gets revealed on push of the button.
+         * If the button is clicked while the view is visible, it will take the text in the
+         * input and use it to caluclate the new project budget.  It will then update
+         * the Database with the new information.
+         */
         projectsViewHolder.budgetButton.setOnClickListener((final View v) -> {
+            if(projectsViewHolder.budgetChange.getVisibility() == View.GONE){
+                projectsViewHolder.budgetChange.setVisibility(View.VISIBLE);
+            }
+            else{
 
+                String budget = projectsViewHolder.budgetChange.getText().toString();
+                String[] values = budget.split(",");
+
+                Map<String, Long> budgetMap = new HashMap<>();
+                int k = 0;
+                int j = 1;
+                long total = 0;
+                while(j < values.length){
+                    long l = Long.parseLong(values[j].trim());
+                    budgetMap.put(values[k], l);
+                    k += 2;
+                    j += 2;
+                    total += l;
+                }
+
+                budgetMap.put("total", total);
+                currentProject.setBudget(budgetMap);
+                projectsViewHolder.budgetChange.setVisibility(View.GONE);
+
+            }
         });
-
-
     }
 
     //This method will format the list specified so that it displays vertically
