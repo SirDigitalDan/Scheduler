@@ -1,6 +1,7 @@
 package com.example.project362.adapters;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +49,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private DocumentReference currentUser;
 
     private static final String TAG = "com-s-362-project";
+
+    private Date date;
+    private Calendar cal = Calendar.getInstance();
 
     static class ProjectsViewHolder extends RecyclerView.ViewHolder
     {
@@ -58,6 +65,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         private final Button budgetButton;
         private final Button deadlineButton;
         private final FloatingActionButton deleteButton;
+
+        private CalendarView myCalendar;
 
         ProjectsViewHolder(@NonNull View itemView)
         {
@@ -73,7 +82,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             budgetButton = itemView.findViewById(R.id.budgetButton);
             deleteButton = itemView.findViewById(R.id.deleteProjectButton);
             budgetChange = itemView.findViewById(R.id.editTextBudgetDetails);
-
+            myCalendar = itemView.findViewById(R.id.projectDeadlineCalendarForAdapter);
         }
     }
 
@@ -113,6 +122,29 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         projectsViewHolder.budgetButton.setVisibility(View.GONE);
         projectsViewHolder.budgetChange.setVisibility(View.GONE);
         projectsViewHolder.deleteButton.hide();
+        projectsViewHolder.myCalendar.setVisibility(View.GONE);
+
+        projectsViewHolder.myCalendar.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                cal.set(year, month, dayOfMonth, 23, 59);
+                date = cal.getTime();
+
+                if(date != null) {
+                    currentProject.setDeadline(date);
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String s = DateFormat.getDateInstance().format(currentProject.getDeadline());
+                            projectsViewHolder.deadline.setText(s);
+                        }
+                    }, 500);
+                } else {
+                    Log.d(TAG, "date is null! failed setting current project deadline");
+                }
+            }
+        });
 
         /**
          * The Project card will only show admin functions if you are logged in as
@@ -141,8 +173,10 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
          * Allows the user to change the deadline for the Project.
          */
         projectsViewHolder.deadlineButton.setOnClickListener((final View v) -> {
-
+            projectsViewHolder.myCalendar.setVisibility(View.VISIBLE);
         });
+
+
 
         /**
          * Delete the current project
@@ -166,7 +200,6 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                 projectsViewHolder.budgetChange.setVisibility(View.VISIBLE);
             }
             else{
-
                 String budget = projectsViewHolder.budgetChange.getText().toString();
                 String[] values = budget.split(",");
 
@@ -181,11 +214,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                     j += 2;
                     total += l;
                 }
-
                 budgetMap.put("total", total);
                 currentProject.setBudget(budgetMap);
                 projectsViewHolder.budgetChange.setVisibility(View.GONE);
-
             }
         });
     }
