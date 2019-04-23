@@ -36,8 +36,6 @@ public class Project
 
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
-
     // make from a document snapshot from the db
     public Project(DocumentSnapshot docSnap)
     {
@@ -53,7 +51,7 @@ public class Project
 
     }
 
-    // set the start time and update in db
+    // set the deadline
     public Task<Void> setDeadline(final Date date)
     {
         return this.update(DEADLINE, date).addOnCompleteListener((Task<Void> task) ->
@@ -68,6 +66,7 @@ public class Project
         });
     }
 
+    //Set the budget of the project
     public Task<Void> setBudget(final Map<String, Long> budget)
     {
         return this.update(BUDGET, budget).addOnCompleteListener((Task<Void> task) ->
@@ -82,6 +81,7 @@ public class Project
         });
     }
 
+    //Set the employees working on the project
     public Task<Void> setEmployees(final ArrayList<DocumentReference> employees)
     {
         return this.update(EMPLOYEES, employees).addOnCompleteListener((Task<Void> t) ->
@@ -95,6 +95,8 @@ public class Project
         });
     }
 
+
+    //Add an employee to a project
     public Task<Void> addEmployee(final DocumentReference employee)
     {
         final ArrayList<DocumentReference> temp = new ArrayList<>(employees);
@@ -179,6 +181,7 @@ public class Project
         return db.collection(COLLECTION).document(key);
     }
 
+    ///Returns all projects
     public static Task<QuerySnapshot> getProjects()
     {
         return db.collection(COLLECTION).get();
@@ -191,12 +194,14 @@ public class Project
         return db.collection(COLLECTION).document(this.projectID).update(data);
     }
 
+    //delete a project
     public static Task<Void> delete(String id)
     {
         return db.collection(COLLECTION).document(id).delete();
     }
 
 
+    ///create a project in the DB
     public Task<DocumentReference> create()
     {
         HashMap<String, Object> h = new HashMap<>();

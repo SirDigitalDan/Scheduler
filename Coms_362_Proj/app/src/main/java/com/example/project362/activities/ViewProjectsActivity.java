@@ -40,14 +40,14 @@ public class ViewProjectsActivity extends AppCompatActivity implements View.OnCl
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // get all of the shifts
+        // get all of the Projects
         Project.getProjects().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             if (task.isSuccessful())
             {
-                // add each shift to the shifts arraylist
+                // add each Project to the Projects arraylist
                 for (QueryDocumentSnapshot projectDoc : task.getResult())
                     projects.add(new Project(projectDoc));
-                // update the display with the new shifts
+                // update the display with the new Projects
                 recyclerView.setAdapter(new ProjectsAdapter(projects));
             }
             else

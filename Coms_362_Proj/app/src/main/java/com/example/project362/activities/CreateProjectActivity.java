@@ -55,6 +55,7 @@ public class CreateProjectActivity extends AppCompatActivity
 
         this.submit.setOnClickListener((View v) -> {
             String name = projectName.getText().toString();
+
             String budget = projectBudget.getText().toString();
             String[] values = budget.split(",");
 
