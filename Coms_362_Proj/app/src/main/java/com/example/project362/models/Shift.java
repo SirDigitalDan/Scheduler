@@ -101,6 +101,7 @@ public class Shift
 		this.checkedIn = new ArrayList<>();
 		this.note = "";
 		this.attendance = "";
+		this.lock = LockStatus.UNLOCKED.getValue();
 	}
 
 	// set the start time and update in db

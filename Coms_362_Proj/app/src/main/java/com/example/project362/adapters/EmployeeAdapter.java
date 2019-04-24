@@ -62,13 +62,22 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 			employeeViewHolder.departmentInput.setText("Unassigned");
 
 		// updates the wage of the selected employee
-		employeeViewHolder.updateWageBtn.setOnClickListener(v ->
+		employeeViewHolder.updateWageBtn.setOnClickListener(v -> {
+			double newWage =
+					Double.parseDouble(employeeViewHolder.updateWageInput.getText().toString());
+			if (newWage < 0)
+			{
+				Toast.makeText(v.getContext(), "Wage cannot be less than 0!", Toast.LENGTH_SHORT).show();
+				return;
+			}
+
 			e.setWage(Double.parseDouble(employeeViewHolder.updateWageInput.getText().toString()))
-				.addOnCompleteListener(t -> {
-					if (t.isSuccessful())
-						Toast.makeText(v.getContext(), "Successfully updated wage",
-								Toast.LENGTH_SHORT).show();
-				}));
+					.addOnCompleteListener(t -> {
+						if (t.isSuccessful())
+							Toast.makeText(v.getContext(), "Successfully updated wage",
+									Toast.LENGTH_SHORT).show();
+					});
+		});
 
 		// updates the department of the selected employee
 		employeeViewHolder.updateDepartmentBtn.setOnClickListener(v -> {
