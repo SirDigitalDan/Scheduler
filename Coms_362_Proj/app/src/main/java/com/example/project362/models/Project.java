@@ -171,16 +171,6 @@ public class Project
     }
 
     // DATABASE LOGIC
-    public static Task<DocumentSnapshot> getProjectByKey(String key)
-    {
-        return Shift.getShiftReferenceByKey(key).get();
-    }
-
-    public static DocumentReference getProjectReferenceByKey(String key)
-    {
-        return db.collection(COLLECTION).document(key);
-    }
-
     ///Returns all projects
     public static Task<QuerySnapshot> getProjects()
     {
