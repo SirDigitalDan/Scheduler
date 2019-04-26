@@ -396,6 +396,12 @@ public class Shift
 		});
 	}
 
+	public static Task<QuerySnapshot> getExpiredShiftsContainingEmployee(DocumentReference employee)
+	{
+		return db.collection(COLLECTION).whereArrayContains(EMPLOYEES, employee)
+				.whereLessThan(END_TIME, Timestamp.now()).get();
+	}
+
 	public Task<DocumentReference> create()
 	{
 		HashMap<String, Object> h = new HashMap<>();

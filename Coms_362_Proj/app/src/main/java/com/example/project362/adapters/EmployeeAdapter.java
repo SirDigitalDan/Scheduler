@@ -21,6 +21,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,43 +61,24 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
 
 ///This calculates the worked hours of the employee and then sets it the their employee card
-		Shift.getShifts().addOnCompleteListener((@NonNull Task<QuerySnapshot> task) ->
+		Shift.getExpiredShiftsContainingEmployee(employee).addOnCompleteListener(t ->
 		{
 			int hours = 0;
 			////Iterate through all shifts
-			for (DocumentSnapshot shift : task.getResult())
+			for (DocumentSnapshot s : t.getResult())
 			{
-				List<DocumentReference> emps = (List<DocumentReference>) shift.get("employees");
+				Shift shift = new Shift(s);
 
-				///check if shift has occured yet
-				Date today = new Date();
-				Timestamp t = shift.getTimestamp("endTime");
-				Date shiftEndDate = t.toDate();
+				// calculate worked hours
+				long diff = shift.getEndTime().getTime() - shift.getStartTime().getTime();
 
-				long dateCheck = today.getTime() - shiftEndDate.getTime();
+				long diffMinutes = diff / (60 * 1000) % 60;
+				long diffHours = diff / (60 * 60 * 1000) % 24;
+				long diffDays = diff / (24 * 60 * 60 * 1000);
 
-
-
-				///check if employee is included in the shift and it has occured
-				if(emps.contains(employee) && dateCheck > 0)
-				{
-					////Calculate hours worked
-					Timestamp start = shift.getTimestamp("startTime");
-					Timestamp end = shift.getTimestamp("endTime");
-
-					Date startDate = start.toDate();
-					Date endDate = end.toDate();
-
-					long diff = endDate.getTime() - startDate.getTime();
-
-					long diffMinutes = diff / (60 * 1000) % 60;
-					long diffHours = diff / (60 * 60 * 1000) % 24;
-					long diffDays = diff / (24 * 60 * 60 * 1000);
-
-					hours = (int) diffMinutes / 60;
-					hours += diffHours;
-					hours += diffDays * 24;
-				}
+				hours = (int) diffMinutes / 60;
+				hours += diffHours;
+				hours += diffDays * 24;
 			}
 
 			employeeViewHolder.workedHours.setText("Worked Hours: " + hours);
