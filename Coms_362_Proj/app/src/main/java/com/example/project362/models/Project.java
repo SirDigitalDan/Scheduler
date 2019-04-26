@@ -48,7 +48,6 @@ public class Project
         this.deadline = deadline;
         this.budget = budget;
         this.employees = new ArrayList<>();
-
     }
 
     // set the deadline
